@@ -1,0 +1,75 @@
+Here is the metadata for this knowledge object:
+{
+    "@context": {
+      "dc": "http://purl.org/dc/elements/1.1/",
+      "koio": "http://kgrid.org/koio#",
+      "swo": "http://www.ebi.ac.uk/swo/",    
+      "implementedBy": "swo:SWO_0000085",
+      "API": "swo:interface/SWO_9000054",
+      "cli": "swo:interface/SWO_9000053",
+      "python": "swo:SWO_0000118",
+      "javascript": "swo:SWO_0000108",
+      "dependsOn": "http://purl.obolibrary.org/obo/RO_0002502",
+      "batch": "https://spec.pistoiaalliance.org/idmp/ontology/ISO/ISO11615-MedicinalProducts/Batch",
+      "function": "http://purl.obolibrary.org/obo/BFO_0000034",
+      "hasServiceSpecification": {
+        "@id": "koio:hasServiceSpcification",
+        "@type": "@id"
+      }
+    }, 
+    "@id":"alcoholConsumption",
+    "koio:kgrid":"2",
+    "@type" : "koio:KnowledgeObject",
+    "dc:title" : "QALY Gain By Stop Using Alcohol",
+    "dc:identifier" : "ark:alcoholConsumption",
+    "version" : "v1.1.0",
+    "dc:description" : "Quality-Adjusted Life Year Gain By Stop Using Alcohol",
+    "koio:contributors" : "Kgrid Team",
+    "koio:keywords" : [ "QALY", "Alcohol" ],
+    "koio:hasService":[      
+      {
+        "@type":"API",
+        "hasServiceSpecification":"ActivatorService/service.yaml",
+        "dependsOn":"alcoholConsumptionKnowledge",
+        "implementedBy" : [
+          {
+            "@id": "ActivatorService/DenoImplementation",
+            "@type":[
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "javascript"            
+            ]
+          },
+          {
+            "@id": "ActivatorService/PythonImplementation",
+            "@type":[
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "python"            
+            ]
+          }
+        ]  
+      },
+      {
+        "@type":["cli","javascript"],
+        "dependsOn":"alcoholConsumptionKnowledge",
+        "implementedBy" : "CLIService"
+      },
+      {
+        "@type":"StandAloneWebService",
+        "dependsOn":"bmiFunction",
+        "implementedBy" : "WebService"
+      }
+    ],
+    "koio:hasKnowledge":{
+      "@id":"alcoholConsumptionKnowledge",
+      "@type":"function",
+      "implementedBy" : ["knowledge/qalyValue.js","ActivatorService/PythonImplementation/alcohol_control_package/qalyValue.py"]
+    }
+  }
+
+  Here is the function implementation of this knowledge objct:
+    if (features.alcohol_abuse > 0){
+      return -0.0688071*features.age + 0.0570005*(features.gender==1) - 0.1667344*(features.race==1) + 0.1383614*(features.race==2) - 0.0536393*(features.race==3) - 0.0257437*((features.smokeyear > 0) && (features.cigpday > 0) && (features.quityear==0)) - 0.00000938*features.totalcholesterol + 0.0001198*features.hdl - 0.0002621*features.sbp + 0.0139843*features.htmedication - 0.0316753*features.diabetes + 5.446518
+    } 
+    else {
+      return 0
+    }
