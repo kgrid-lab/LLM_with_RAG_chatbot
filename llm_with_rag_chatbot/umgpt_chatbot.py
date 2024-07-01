@@ -22,10 +22,10 @@ except TypeError:
 
 # Define llm parameters
 llm = AzureChatOpenAI(
-    deployment_name=os.environ['model'],
+    deployment_name=os.environ['model1'],
     openai_api_version=os.environ['API_VERSION'],
-    openai_api_key=os.environ['OPENAI_API_KEY'],
-    azure_endpoint=os.environ['openai_api_base'],
+    openai_api_key=os.environ['OPENAI_API_KEY1'],
+    azure_endpoint=os.environ['openai_api_base1'],
     openai_organization=os.environ['OPENAI_organization'],    
     )
 knowledge_base=os.environ['KNOWLEDGE_BASE']
@@ -37,13 +37,12 @@ for file in files:
     ko = loader.load()
     splits.extend(ko)
     
-print(splits)
 
 # Settings for embeddings
 embeddings = AzureOpenAIEmbeddings(
-    azure_endpoint=os.environ['openai_api_base'], 
+    azure_endpoint=os.environ['openai_api_base1'], 
     openai_api_version=os.environ['API_VERSION'],  
-    openai_api_key=os.environ['OPENAI_API_KEY'],   
+    openai_api_key=os.environ['OPENAI_API_KEY1'],   
     openai_organization=os.environ['OPENAI_organization']   
 )
 print("Embedding documents...")
@@ -73,8 +72,8 @@ history_aware_retriever = create_history_aware_retriever(
 
 # Answer question
 qa_system_prompt = """You are an assistant for question-answering tasks. \
-Use the following pieces of retrieved context to answer the question. \
-Do not simplify the formulas used to calculate the values. \
+Use the following pieces of retrieved context which include a python function to answer the question. \
+Do not include code or logic of the function in the responses. Instead, use your python environment to execute code functions and only use the final calculated value by the function to answer the questions. \
 If you don't know the answer, just say that you don't know. \
 
 {context}"""
@@ -107,8 +106,10 @@ conversational_rag_chain = RunnableWithMessageHistory(
 
 # User requests
 while True:
-  text = input('Enter your query (Example: How many undergrad students are at U of M?): --> ') # Example: How many undergrad students are at U of M?
+  text = input('Enter your query: --> ') 
   print(conversational_rag_chain.invoke(
       {"input": text},
       config={"configurable": {"session_id": "0"}},
   )["answer"])
+# Can you calculate my life year gain if I stop using tobacco?
+# I am a 65 years old female that has been smoking for 10 years now and I still smoke and I smoke 5 cigarettes a day
