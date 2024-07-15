@@ -1,4 +1,3 @@
-Here is the metadata for this knowledge object:
 {
     "@context":"https://kgrid.org/koio/2.0/contexts/ko.jsonld",
     "@id":"tobacco",
@@ -21,49 +20,7 @@ Here is the metadata for this knowledge object:
     "koio:hasKnowledge":{
        "@id":"tobaccoKnowledge",
        "@type":"function",
-       "implementedBy":"knoeldge/tabacco.py" 
+       "implementedBy":"https://raw.githubusercontent.com/kgrid-lab/MCBK_2024_demo/main/tobacco/knowledge/tobacco.js" 
     }
   }
-    
-
-
-Here is the python function to calculate Quality-Adjusted Life Year Gain By Tobacco Cessation. (considering male = 1 and female = 0):
-def tobaccoKnowledge(smokeyear, quityear, cigpday, age, gender):
-    if (smokeyear > 0) and (quityear == 0) and (cigpday > 0):
-        x = 0
-        x -= (0.0624067 * age)
-        
-        if gender == 0:
-            x -= 1.314849
-            x += (0.0112053 * age)
-            if cigpday < 15:
-                x += 2.765361
-                x -= 0.027659 * age
-            if cigpday >= 25:
-                x += 5.994661
-                x -= (0.061088 * age)
-            if (15 <= cigpday) and (cigpday < 25):
-                x += 2.598462
-                x -= (0.0260393 * age)
-        
-        if cigpday < 15:
-            x += 5.455188
-            x -= (0.0502293 * age)
-        
-        if cigpday >= 25:
-            x += 11.44078
-            x -= (0.1073951 * age)
-        
-        if (15 <= cigpday) and (cigpday < 25):
-            x += 8.53844
-            x -= (0.0791994 * age)
-        
-        x += 6.808624
-        
-        if x > 1:
-            return x
-        else:
-            return 1
-    else:
-        return 0
-
+ 

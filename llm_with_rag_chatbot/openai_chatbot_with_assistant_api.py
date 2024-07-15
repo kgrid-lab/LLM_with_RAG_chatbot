@@ -1,8 +1,10 @@
+import json
 import os
 import re
 from collections import deque
 
 import openai
+import requests
 from dotenv import load_dotenv
 from langchain.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import TextLoader
@@ -29,11 +31,20 @@ model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name)
 embeddings = OpenAIEmbeddings()
 splits = []
 files = os.listdir(knowledge_base)
-for file in files:
-    loader = TextLoader(os.path.join(knowledge_base, file))
+for file_name in files:
+    loader = TextLoader(os.path.join(knowledge_base, file_name))
     ko = loader.load()
-    splits.extend(ko)
 
+    with open(os.path.join(knowledge_base, file_name), "r") as file:
+        code_file = json.load(file)
+    link = code_file["koio:hasKnowledge"]["implementedBy"]
+    response = requests.get(link)
+    data = response.text
+    ko[0].page_content += (
+        "Here is the function to calculate the value for this knowledge object: \n "
+        + data
+    )
+    splits.extend(ko)
 vectorstore2 = DocArrayInMemorySearch.from_documents(splits, embeddings)
 
 # Create the Chain
