@@ -16,7 +16,7 @@ load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
-model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=os.getenv("model"))
+model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=os.getenv("MODEL"))
 
 
 embeddings = OpenAIEmbeddings()

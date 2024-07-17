@@ -7,6 +7,15 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
+flask = "^3.0.3"
+flask-session = "^0.8.0"
+openai = "^1.35.14"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
+langchain = "^0.2.8"
+langchain-community = "^0.2.7"
+langchain-openai = "^0.1.16"
+docarray = "^0.40.0"
 
 
 [build-system]

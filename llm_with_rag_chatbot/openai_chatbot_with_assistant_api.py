@@ -18,7 +18,7 @@ from langchain_openai.embeddings import OpenAIEmbeddings
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-model_name = os.getenv("model")
+model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 
 # Setup OpenAI API client
@@ -110,11 +110,7 @@ def get_full_context(history, current_query):
     return full_context
 
 
-# Store the conversation history
-conversation_history = deque(maxlen=10)
-
-while True:
-    text = input("Enter your query: --> ")
+def process(text, conversation_history):
     full_context = get_full_context(conversation_history, text)
     response = chain.invoke(full_context)
     code = (
@@ -125,11 +121,30 @@ while True:
     if code:
         print("I am processing your request, this may take a few seconds...")
         execution_result = execute_code_with_assistant(response)
-        print(execution_result)
+        return execution_result
     else:
+        return response
+
+
+def main():
+    # Store the conversation history
+    conversation_history = deque(maxlen=10)
+
+    while True:
+        text = input("Enter your query: --> ")
+        response = process(text, conversation_history)
         print(response)
-    conversation_history.append(
-        (text, response.replace(code, ""))
-    )  # update history excluding code
+        code = (
+            re.search(r"```(.*?)```", response, re.DOTALL).group(1)
+            if "```" in response
+            else ""
+        )
+        conversation_history.append(
+            (text, response.replace(code, ""))
+        )  # update history excluding code
+
+
+if __name__ == "__main__":
+    main()
 
 # Example request: Can you calculate my life year gain if I stop using tobacco considering I am a 65 years old female that has been smoking for 10 years now and I still smoke and I smoke 5 cigarettes a day
