@@ -1,3 +1,4 @@
+import os
 from flask import Flask, jsonify, render_template, request
 
 from llm_with_rag_chatbot.openai_chatbot_with_assistant_api import process
@@ -24,4 +25,5 @@ def get_response():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
