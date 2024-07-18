@@ -6,17 +6,21 @@
     <title>Chatbot Interface</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-dyFBUkhN4yowHi-PTK1rH1m5bb5MZZkIx1Kb12/6fW1thqPnD9FE1GTEGOIBZ5go" crossorigin="anonymous">
+
     <style>
+        body {
+            overflow: hidden; /* Hide the page scroll bar */
+        }
         .container {
             margin-top: 20px;
-            margin-bottom: 150px; /* Increase this if you want more space for the input form */
-            max-width: 600px; /* Adjust the max-width as needed */
+            max-width: 800px; /* Adjust the max-width as needed */
         }
         .chat-history {
             border: 1px solid #ddd;
             padding: 10px;
             background-color: #f8f9fa;
-            max-width: 600px; /* Ensure this matches the container width */
+            max-width: 800px; /* Ensure this matches the container width */
             margin: auto; /* Center the chat history */
             overflow-y: auto; /* Enable vertical scrolling */
         }
@@ -37,9 +41,16 @@
             text-align: center;
             margin-top: 20px;
         }
+        .delay-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            justify-content: center;
+            align-items: center;
+        }
         .textarea-container {
             position: relative;
-            max-width: 600px; /* Ensure this matches the container width */
+            max-width: 800px; /* Ensure this matches the container width */
             margin: auto; /* Center the textarea */
         }
         .textarea-container textarea {
@@ -49,7 +60,7 @@
             max-height: calc(5 * 1.5em); /* 5 lines, with each line approximately 1.5em height */
             overflow-y: auto; /* Show scrollbar if content exceeds max-height */
         }
-        .textarea-container button {
+        .textarea-container button, .loading-icon {
             position: absolute;
             right: 10px;
             top: 50%;
@@ -57,15 +68,12 @@
             height: 30px;
             width: 30px;
             border-radius: 50%;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
             display: flex;
             justify-content: center;
             align-items: center;
         }
-        .textarea-container button:focus {
-            outline: none;
+        .loading-icon {
+            display: none; /* Hide the loading icon by default */
         }
         .message {
             display: flex;
@@ -107,14 +115,23 @@
             </div>
         </div>
     </div>
-
+    
     <div class="form-container">
+        <div id="delayedMessage" class="delay-message" role="alert">
+            <i class="fas fa-cog fa-spin"></i>
+            Executing code. This will take a few seconds ...
+        </div>
         <form onsubmit="event.preventDefault(); getResponse();">
             <div class="textarea-container">
                 <textarea id="question" name="question" class="form-control" rows="2" placeholder="Ask a question" required></textarea>
                 <button type="submit" id="submitButton" class="btn btn-primary">
                     <i class="fas fa-arrow-up"></i>
                 </button>
+                <div class="loading-icon">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -128,7 +145,7 @@
     <script>
         function adjustChatHistoryHeight() {
             const chatHistory = document.getElementById('history');
-            const newHeight = window.innerHeight - 160;
+            const newHeight = window.innerHeight - 185;
             chatHistory.style.maxHeight = `${newHeight}px`;
         }
 
@@ -136,11 +153,10 @@
             const questionElement = document.getElementById('question');
             const question = questionElement.value;
             let history = JSON.parse(sessionStorage.getItem('history')) || [];
-            // Disable the text box and button
+            // Disable the text box and button, show the loading icon
             questionElement.disabled = true;
-            document.getElementById('submitButton').disabled = true;
-            // Show the loading spinner
-            document.getElementById('spinner').style.display = 'block';
+            document.getElementById('submitButton').style.display = 'none';
+            document.querySelector('.loading-icon').style.display = 'flex';
 
             fetch('/get_response', {
                 method: 'POST',
@@ -151,23 +167,44 @@
             })
             .then(response => response.json())
             .then(data => {
-                history.push({ question: question, response: data.response });
-                sessionStorage.setItem('history', JSON.stringify(history));
-                displayHistory(history);
-                // Clear the text box content
-                questionElement.value = '';
+                const taskId = data.task_id;
+                // Show delayed message if response is not ready after 5 seconds
+                setTimeout(() => {
+                    if (document.getElementById('submitButton').style.display === 'none') {
+                        document.getElementById('delayedMessage').style.display = 'block';
+                    }
+                }, 8000);
+                checkResponse(taskId, history, question);
             })
-            .catch(error => console.error('Error:', error))
-            .finally(() => {
-                // Re-enable the text box and button
-                questionElement.disabled = false;
-                document.getElementById('submitButton').disabled = false;
-                // Hide the loading spinner
-                document.getElementById('spinner').style.display = 'none';
-                // Scroll to the bottom of the chat history
-                const historyDiv = document.getElementById('history');
-                historyDiv.scrollTop = historyDiv.scrollHeight;
-            });
+            .catch(error => console.error('Error:', error));
+        }
+
+        function checkResponse(taskId, history, question) {
+            fetch(`/check_response/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "processing") {
+                        setTimeout(() => checkResponse(taskId, history, question), 1000);
+                    } else {
+                        const botResponse = data.response;
+                        history.push({ question: question, response: botResponse });
+                        sessionStorage.setItem('history', JSON.stringify(history));
+                        displayHistory(history);
+                        // Clear the text box content
+                        document.getElementById('question').value = '';
+                        // Re-enable the text box and button, hide the loading icon
+                        document.getElementById('question').disabled = false;
+                        document.getElementById('submitButton').style.display = 'flex';
+                        document.querySelector('.loading-icon').style.display = 'none';
+                        document.getElementById('delayedMessage').style.display = 'none';
+                        document.getElementById('question').focus();
+
+                        // Scroll to the bottom of the chat history
+                        const historyDiv = document.getElementById('history');
+                        historyDiv.scrollTop = historyDiv.scrollHeight;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         function displayHistory(history) {
@@ -211,6 +248,7 @@
 
             // Adjust chat history height on window resize
             window.addEventListener('resize', adjustChatHistoryHeight);
+            document.getElementById('question').focus();
         };
     </script>
 </body>
