@@ -197,6 +197,7 @@
                         document.getElementById('submitButton').style.display = 'flex';
                         document.querySelector('.loading-icon').style.display = 'none';
                         document.getElementById('delayedMessage').style.display = 'none';
+                        document.getElementById('question').focus();
 
                         // Scroll to the bottom of the chat history
                         const historyDiv = document.getElementById('history');
@@ -247,6 +248,7 @@
 
             // Adjust chat history height on window resize
             window.addEventListener('resize', adjustChatHistoryHeight);
+            document.getElementById('question').focus();
         };
     </script>
 </body>
