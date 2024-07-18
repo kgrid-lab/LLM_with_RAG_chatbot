@@ -141,7 +141,7 @@
             document.getElementById('submitButton').disabled = true;
             // Show the loading spinner
             document.getElementById('spinner').style.display = 'block';
-
+        
             fetch('/get_response', {
                 method: 'POST',
                 headers: {
@@ -151,23 +151,36 @@
             })
             .then(response => response.json())
             .then(data => {
-                history.push({ question: question, response: data.response });
-                sessionStorage.setItem('history', JSON.stringify(history));
-                displayHistory(history);
-                // Clear the text box content
-                questionElement.value = '';
+                const taskId = data.task_id;
+                checkResponse(taskId, history, question);
             })
-            .catch(error => console.error('Error:', error))
-            .finally(() => {
-                // Re-enable the text box and button
-                questionElement.disabled = false;
-                document.getElementById('submitButton').disabled = false;
-                // Hide the loading spinner
-                document.getElementById('spinner').style.display = 'none';
-                // Scroll to the bottom of the chat history
-                const historyDiv = document.getElementById('history');
-                historyDiv.scrollTop = historyDiv.scrollHeight;
-            });
+            .catch(error => console.error('Error:', error));
+        }
+        
+        function checkResponse(taskId, history, question) {
+            fetch(`/check_response/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "processing") {
+                        setTimeout(() => checkResponse(taskId, history, question), 1000);
+                    } else {
+                        const botResponse = data.response;
+                        history.push({ question: question, response: botResponse });
+                        sessionStorage.setItem('history', JSON.stringify(history));
+                        displayHistory(history);
+                        // Clear the text box content
+                        document.getElementById('question').value = '';
+                        // Re-enable the text box and button
+                        document.getElementById('question').disabled = false;
+                        document.getElementById('submitButton').disabled = false;
+                        // Hide the loading spinner
+                        document.getElementById('spinner').style.display = 'none';
+                        // Scroll to the bottom of the chat history
+                        const historyDiv = document.getElementById('history');
+                        historyDiv.scrollTop = historyDiv.scrollHeight;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
         }
 
         function displayHistory(history) {
