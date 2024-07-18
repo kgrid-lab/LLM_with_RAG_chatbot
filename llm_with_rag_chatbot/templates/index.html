@@ -6,19 +6,21 @@
     <title>Chatbot Interface</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-dyFBUkhN4yowHi-PTK1rH1m5bb5MZZkIx1Kb12/6fW1thqPnD9FE1GTEGOIBZ5go" crossorigin="anonymous">
+
     <style>
         body {
             overflow: hidden; /* Hide the page scroll bar */
         }
         .container {
             margin-top: 20px;
-            max-width: 600px; /* Adjust the max-width as needed */
+            max-width: 800px; /* Adjust the max-width as needed */
         }
         .chat-history {
             border: 1px solid #ddd;
             padding: 10px;
             background-color: #f8f9fa;
-            max-width: 600px; /* Ensure this matches the container width */
+            max-width: 800px; /* Ensure this matches the container width */
             margin: auto; /* Center the chat history */
             overflow-y: auto; /* Enable vertical scrolling */
         }
@@ -39,9 +41,16 @@
             text-align: center;
             margin-top: 20px;
         }
+        .delay-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            justify-content: center;
+            align-items: center;
+        }
         .textarea-container {
             position: relative;
-            max-width: 600px; /* Ensure this matches the container width */
+            max-width: 800px; /* Ensure this matches the container width */
             margin: auto; /* Center the textarea */
         }
         .textarea-container textarea {
@@ -106,8 +115,12 @@
             </div>
         </div>
     </div>
-
+    
     <div class="form-container">
+        <div id="delayedMessage" class="delay-message" role="alert">
+            <i class="fas fa-cog fa-spin"></i>
+            Executing code. This will take a few seconds ...
+        </div>
         <form onsubmit="event.preventDefault(); getResponse();">
             <div class="textarea-container">
                 <textarea id="question" name="question" class="form-control" rows="2" placeholder="Ask a question" required></textarea>
@@ -132,7 +145,7 @@
     <script>
         function adjustChatHistoryHeight() {
             const chatHistory = document.getElementById('history');
-            const newHeight = window.innerHeight - 175;
+            const newHeight = window.innerHeight - 185;
             chatHistory.style.maxHeight = `${newHeight}px`;
         }
 
@@ -155,6 +168,12 @@
             .then(response => response.json())
             .then(data => {
                 const taskId = data.task_id;
+                // Show delayed message if response is not ready after 5 seconds
+                setTimeout(() => {
+                    if (document.getElementById('submitButton').style.display === 'none') {
+                        document.getElementById('delayedMessage').style.display = 'block';
+                    }
+                }, 8000);
                 checkResponse(taskId, history, question);
             })
             .catch(error => console.error('Error:', error));
@@ -177,6 +196,8 @@
                         document.getElementById('question').disabled = false;
                         document.getElementById('submitButton').style.display = 'flex';
                         document.querySelector('.loading-icon').style.display = 'none';
+                        document.getElementById('delayedMessage').style.display = 'none';
+
                         // Scroll to the bottom of the chat history
                         const historyDiv = document.getElementById('history');
                         historyDiv.scrollTop = historyDiv.scrollHeight;
