@@ -20,7 +20,7 @@
     "koio:hasKnowledge":{
        "@id":"tobaccoKnowledge",
        "@type":"function",
-       "implementedBy":"https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/tobacco.py" 
+       "implementedBy":"https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/code/tobacco.py" 
     }
   }
  
