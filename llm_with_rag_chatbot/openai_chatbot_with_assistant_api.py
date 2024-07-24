@@ -32,6 +32,8 @@ embeddings = OpenAIEmbeddings()
 splits = []
 files = os.listdir(knowledge_base)
 for file_name in files:
+    if file_name == 'code':
+        continue
     loader = TextLoader(os.path.join(knowledge_base, file_name))
     ko = loader.load()
 

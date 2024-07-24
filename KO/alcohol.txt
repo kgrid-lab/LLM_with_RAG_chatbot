@@ -61,6 +61,6 @@
     "koio:hasKnowledge":{
       "@id":"alcoholConsumptionKnowledge",
       "@type":"function",
-      "implementedBy" : "https://raw.githubusercontent.com/faridseifi/lab_demo/main/alcoholKG2/knowledge/qalyValue.js"
+      "implementedBy" : "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/alcohol.py"
     }
   }
