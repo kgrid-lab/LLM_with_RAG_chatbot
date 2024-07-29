@@ -1,11 +1,11 @@
-def qaly_value(age, gender, race, smokeyear, cigpday, quityear, totalcholesterol, hdl, sbp, htmedication, diabetes, alcohol_abuse):
+def qaly_value(age, gender, race, smokeyear, cigperday, quityear, totalcholesterol, hdl, sbp, htmedication, diabetes, alcohol_abuse):
     """  
     Parameters:
     age (int): Age of the individual in years. 
     gender (int): Gender of the individual (1 for male, 0 for female).
     race (int): Race of the individual (1 for white, 2 for black, and 3 for other).
     smokeyear (int): Number of years the individual has been smoking. 
-    cigpday (int): Average number of cigarettes smoked per day.
+    cigperday (int): Average number of cigarettes smoked per day.
     quityear (int): Number of years since the individual quit smoking. 
     totalcholesterol (float): Total cholesterol level in mg/dL. 
     hdl (float): High-density lipoprotein (HDL) cholesterol level in mg/dL. 
@@ -21,7 +21,7 @@ def qaly_value(age, gender, race, smokeyear, cigpday, quityear, totalcholesterol
             - 0.1667344 * (race == 1)
             + 0.1383614 * (race == 2)
             - 0.0536393 * (race == 3)
-            - 0.0257437 * ((smokeyear > 0) and (cigpday > 0) and (quityear == 0))
+            - 0.0257437 * ((smokeyear > 0) and (cigperday > 0) and (quityear == 0))
             - 0.00000938 * totalcholesterol
             + 0.0001198 * hdl
             - 0.0002621 * sbp

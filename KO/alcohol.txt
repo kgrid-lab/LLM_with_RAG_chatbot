@@ -1,21 +1,5 @@
 {
-    "@context": {
-      "dc": "http://purl.org/dc/elements/1.1/",
-      "koio": "http://kgrid.org/koio#",
-      "swo": "http://www.ebi.ac.uk/swo/",    
-      "implementedBy": "swo:SWO_0000085",
-      "API": "swo:interface/SWO_9000054",
-      "cli": "swo:interface/SWO_9000053",
-      "python": "swo:SWO_0000118",
-      "javascript": "swo:SWO_0000108",
-      "dependsOn": "http://purl.obolibrary.org/obo/RO_0002502",
-      "batch": "https://spec.pistoiaalliance.org/idmp/ontology/ISO/ISO11615-MedicinalProducts/Batch",
-      "function": "http://purl.obolibrary.org/obo/BFO_0000034",
-      "hasServiceSpecification": {
-        "@id": "koio:hasServiceSpcification",
-        "@type": "@id"
-      }
-    }, 
+    "@context":"https://kgrid.org/koio/1.0/context",
     "@id":"alcoholConsumption",
     "koio:kgrid":"2",
     "@type" : "koio:KnowledgeObject",

@@ -1,5 +1,5 @@
 {
-    "@context":"https://kgrid.org/koio/2.0/contexts/ko.jsonld",
+    "@context":"https://kgrid.org/koio/1.0/context",
     "@id":"tobacco",
     "koio:kgrid":"2",
     "@type" : "koio:KnowledgeObject",
