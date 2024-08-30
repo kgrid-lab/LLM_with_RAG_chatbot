@@ -1,0 +1,91 @@
+{
+  "@context": [
+    "https://kgrid.org/koio/1.1/context",
+    {
+      "fairplust": "https://onlinelibrary.wiley.com/doi/full/10.1002/lrh2.10271/",
+      "premis": "https://www.loc.gov/standards/premis/",
+      "koio": "http://kgrid.org/koio#"
+    }
+  ],
+  "@id": "alcohol",
+  "koio:kgrid": "2",
+  "@type": "koio:KnowledgeObject",
+  "fairplust:metadataCategories": {
+    "Type": "Benefits_estimator",
+    "Domain": [
+      "Alcohol cessation",
+      "Alcohol cessation (also known as quitting alcohol or stopping alcohol use) refers to the process of discontinuing the consumption of alcoholic beverages. Alcohol is a psychoactive substance that can lead to addiction and dependence, making the cessation process challenging. Withdrawal symptoms can occur when alcohol use is abruptly stopped, which may require medical support for some individuals."
+    ],
+    "Purpose": "To provide a numerical estimate of life-year gain, measured in QALYs, for an individual who consumes alcohol regularly and stops drinking alcohol today",
+    "Identification": "ark:12345/alcoholqalycalculator",
+    "Location": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/code/alcohol.py",
+    "CBK_to_CBK_relationships": "none",
+    "Technical": {
+      "fileextension": "py",
+      "filesize": "4kb",
+      "has_inputs": [
+        "Age of the individual in years.", 
+        "Gender of the individual (1 for male, 0 for female).",
+        "Race of the individual (1 for white, 2 for black, and 3 for other).",
+        "Number of years the individual has been smoking.", 
+        "Average number of cigarettes smoked per day.",
+        "Number of years since the individual quit smoking.", 
+        "Total cholesterol level in mg/dL.", 
+        "High-density lipoprotein (HDL) cholesterol level in mg/dL.", 
+        "Systolic blood pressure in mmHg.", 
+        "Hypertension medication status (1 if on medication, 0 if not).",
+        "Diabetes status (1 if diabetic, 0 if not).",
+        "Alcohol abuse status (1 if yes, 0 if no)."    
+      ],
+      "has_outputs": "QALY gain from stop using alcohol"
+    },
+    "Authorization_and_rights_management": {
+      "license": "The MIT License",
+      "licensed_on": "August 30, 2024",
+      "user_action_required": "Copyright and permission notices should be included in all copies of this software",
+      "copyright_clause": "Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so.",
+      "permissions_clause": "THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+    },
+    "Preservation": [
+      {
+        "premis:Objects": {
+          "premis:Environment": "github.com",
+          "Manifest": ""
+        },
+        "premis:Events": "",
+        "premis:Agents": "",
+        "premis:Rights": ""
+      }
+    ],
+    "Integrity": "",
+    "Provenance": "",
+    "Evidential_basis": "",
+    "Evidence_from_use": ""
+  },
+  "dc:title": "Quality-Adjusted Life Year Gain By Tobacco Cessation",
+  "dc:identifier": "ark:tobacco",
+  "version": "v1.0.0",
+  "dc:description": "Quality-Adjusted Life Year Gain By Tobacco Cessation",
+  "koio:contributors": "team a",
+  "koio:keywords": [
+    "tobacco",
+    "life year",
+    "gain"
+  ],
+  "koio:hasService": [
+    {
+      "@id": "CLI",
+      "@type": [
+        "cli",
+        "javascript"
+      ],
+      "dependsOn": "tobaccoKnowledge",
+      "implementedBy": "cli"
+    }
+  ],
+  "koio:hasKnowledge": {
+    "@id": "tobaccoKnowledge",
+    "@type": "function",
+    "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/code/tobacco.py"
+  }
+}
