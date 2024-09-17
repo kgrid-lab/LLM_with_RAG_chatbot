@@ -2,3 +2,4 @@
 flask_session
 __pycache__/
 chatbot_logs.log
+chatbot_logs.log.*
