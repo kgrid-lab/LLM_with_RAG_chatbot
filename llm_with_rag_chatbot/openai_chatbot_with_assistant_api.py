@@ -34,10 +34,10 @@ files = os.listdir(knowledge_base)
 for file_name in files:
     if file_name == 'code':
         continue
-    loader = TextLoader(os.path.join(knowledge_base, file_name))
+    loader = TextLoader(os.path.join(knowledge_base, file_name), "utf-8")
     ko = loader.load()
 
-    with open(os.path.join(knowledge_base, file_name), "r") as file:
+    with open(os.path.join(knowledge_base, file_name), "r", encoding="utf-8") as file:
         code_file = json.load(file)
     link = code_file["koio:hasKnowledge"]["implementedBy"]
     response = requests.get(link)
@@ -51,11 +51,7 @@ vectorstore2 = DocArrayInMemorySearch.from_documents(splits, embeddings)
 
 # Create the Chain
 template = """
-Use the context to prepare the code to be executed to answer the question. \
-If not provided, ask the user for the input values that are needed to execute the code.
-Do not return code unless you have received the input values.
-Include the input values provided by the user in the code.
-Include the sentences that could be used with the result of the code execution to answer the question.
+Given the question and the context, is there code that can answer the question? If so, what are the required input values? Does the question contain all these input values? If not, ask the user for the input values that are missing. Otherwise, return the code.
 
 Context: {context}
 
