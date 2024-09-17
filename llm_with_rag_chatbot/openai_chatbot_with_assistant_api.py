@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import argparse
 from collections import deque
 
 import openai
@@ -14,12 +15,24 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 
+# Parse command-line arguments.
+parser = argparse.ArgumentParser(
+    prog="openai_chatbot_with_assistant.py",
+    description="Provides an interactive interface to our Knowledge Object Chatbot.")
+parser.add_argument("-s", "--slm", action="store_true", help="Use a small language model (SLM). If not specified, the default is to use a LLM.")
+args = parser.parse_args()
+
 # Load environment variables
 load_dotenv()
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
+
+# Select model to use depending on command-line arguments.
+if args.slm:
+    model_name = "gpt-4o-mini"
+else:
+    model_name = os.getenv("MODEL")
 
 # Setup OpenAI API client
 openai.api_key = OPENAI_API_KEY
