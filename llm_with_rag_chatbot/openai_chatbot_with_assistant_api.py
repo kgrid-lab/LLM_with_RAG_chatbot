@@ -51,11 +51,10 @@ vectorstore2 = DocArrayInMemorySearch.from_documents(splits, embeddings)
 
 # Create the Chain
 template = """
-Use the context to prepare the code to be executed to answer the question. \
-If not provided, ask the user for the input values that are needed to execute the code.
-Do not return code unless you have received the input values.
-Include the input values provided by the user in the code.
-Include the sentences that could be used with the result of the code execution to answer the question.
+If the user is asking to calculate something, do not calculate it. Instead follow these steps: 
+1. Find the code that could calculate what the user is asking. 
+2. Identify what parameters that code requires. 
+3. If the user's responses include values for all these parameters, return the code with these values immediately. Otherwise, ask the user for the missing values.
 
 Context: {context}
 
