@@ -25,7 +25,7 @@ knowledge_base = os.getenv("KNOWLEDGE_BASE")
 openai.api_key = OPENAI_API_KEY
 
 # Initialize the language model
-model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name)
+model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name, temperature=0)
 
 # Initialize embeddings and vector store
 embeddings = OpenAIEmbeddings()
