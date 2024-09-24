@@ -52,11 +52,12 @@ vectorstore2 = DocArrayInMemorySearch.from_documents(splits, embeddings)
 
 # Create the Chain
 template = """
-If I am not asking to calculate something, answer my question using the context.
-If I am asking to calculate something, do not answer. Instead follow these steps: 
-1. Find the code function in the context that could calculate what I am asking. 
-2. Identify what parameters that function requires. 
-3. If the user's responses include values for all these parameters, give me a code snippet which includes the function definition, the parameters assigned to my values, and a call to the function. Otherwise, ask the user for the missing values.
+You will answer user questions with the help of computable biomedical knowledge objects.
+You may prepare and return the code attached to a context that could be executed by the chatbot to prepare response for the user.
+If the user is asking to calculate something, do not calculate it. Instead follow these steps:
+1. Find the code that could calculate what the user is asking.
+2. Identify what parameters that code requires.
+3. If the user's responses include values for all these parameters, return the code with these values immediately. Otherwise, ask the user for the missing values.
 
 Context: {context}
 
