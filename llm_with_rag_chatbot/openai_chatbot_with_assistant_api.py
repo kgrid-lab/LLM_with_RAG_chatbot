@@ -20,12 +20,13 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
+model_seed = int(os.getenv("MODEL_SEED"))
 
 # Setup OpenAI API client
 openai.api_key = OPENAI_API_KEY
 
 # Initialize the language model
-model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name, temperature=0)
+model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name, temperature=0, seed=model_seed)
 
 # Initialize embeddings and vector store
 embeddings = OpenAIEmbeddings()

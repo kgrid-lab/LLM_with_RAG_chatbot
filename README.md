@@ -20,6 +20,7 @@ Create a .env file in the root of the project and store the following values in 
 ```
 KNOWLEDGE_BASE="KO/"
 MODEL="gpt-4o"
+MODEL_SEED=1762259501
 OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
 ```
 - The KNOWLEDGE_BASE points to the location of knowledge object context files.
