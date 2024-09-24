@@ -20,12 +20,13 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
+model_seed = int(os.getenv("MODEL_SEED"))
 
 # Setup OpenAI API client
 openai.api_key = OPENAI_API_KEY
 
 # Initialize the language model
-model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name)
+model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name, temperature=0, seed=model_seed)
 
 # Initialize embeddings and vector store
 embeddings = OpenAIEmbeddings()
@@ -34,10 +35,10 @@ files = os.listdir(knowledge_base)
 for file_name in files:
     if file_name == 'code':
         continue
-    loader = TextLoader(os.path.join(knowledge_base, file_name))
+    loader = TextLoader(os.path.join(knowledge_base, file_name), encoding="utf-8")
     ko = loader.load()
 
-    with open(os.path.join(knowledge_base, file_name), "r") as file:
+    with open(os.path.join(knowledge_base, file_name), "r", encoding="utf-8") as file:
         code_file = json.load(file)
     link = code_file["koio:hasKnowledge"]["implementedBy"]
     response = requests.get(link)
@@ -51,10 +52,11 @@ vectorstore2 = DocArrayInMemorySearch.from_documents(splits, embeddings)
 
 # Create the Chain
 template = """
-If the user is asking to calculate something, do not calculate it. Instead follow these steps: 
-1. Find the code that could calculate what the user is asking. 
-2. Identify what parameters that code requires. 
-3. If the user's responses include values for all these parameters, return the code with these values immediately. Otherwise, ask the user for the missing values.
+If I am not asking to calculate something, answer my question using the context.
+If I am asking to calculate something, do not answer. Instead follow these steps: 
+1. Find the code function in the context that could calculate what I am asking. 
+2. Identify what parameters that function requires. 
+3. If the user's responses include values for all these parameters, give me a code snippet which includes the function definition, the parameters assigned to my values, and a call to the function. Otherwise, ask the user for the missing values.
 
 Context: {context}
 
