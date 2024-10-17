@@ -1,0 +1,56 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "abdominal-aortic-aneurysm-screening",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Abdominal Aortic Aneurysm: Screening",
+    "dc:identifier": "ark:AbdominalAorticAneurysmScreening",
+    "version": "v1.0",
+    "dc:description": "The USPSTF recommends that:\nFor men aged 65 to 75 years who have ever smoked:\nPerform 1-time screening for abdominal aortic aneurysm (AAA) with ultrasonography in men who have a history of smoking.\nGrade B\n\nFor men aged 65 to 75 years who have never smoked:\nSelectively offer screening to men who do not have a history of smoking, rather than routinely screening all men in this group\nGrade C\n\nFor women who have never smoked and have no family history of AAA:\nDo not screen women who have never smoked and do not have a family history of AAA.\nGrade D\n\nFor women aged 65 to 75 years who have ever smoked or have a family history of AAA:\nEvidence is insufficient to assess the balance of benefits and harms of screening for AAA with ultrasonography in women aged 65 to 75 years who have ever smoked or have a family history of AAA.\nGrade I",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "Abdominal Aortic Aneurysm",
+      "USPSTF",
+      "Screening"
+    ],
+    "koio:hasService": [      
+      {
+        "@type": [
+          "Service",
+          "API"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": [
+          {
+            "@id": ".",
+            "@type": [
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "Python"
+            ]
+          }
+        ]
+      },
+      {
+        "@type": [
+          "Service",
+          "CLI"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": {
+          "@id": "abdominal_aortic_aneurysm_screening/cli_service",
+          "@type": [
+            "Python"
+          ]
+        }
+      }
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-objects/USPSTF-collection/refs/heads/main/abdominal-aortic-aneurysm-screening/abdominal_aortic_aneurysm_screening/knowledge.py",
+      "hasTest": "tests/test_knowledge.py"
+    }
+  }

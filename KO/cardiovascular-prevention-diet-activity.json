@@ -1,0 +1,58 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "cardiovascular-prevention-diet-activity",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Healthy Diet and Physical Activity for Cardiovascular Disease Prevention in Adults With Cardiovascular Risk Factors: Behavioral Counseling Interventions",
+    "dc:identifier": "ark:CardiovascularDietActivity",
+    "version": "v1.0",
+    "dc:description": "The USPSTF recommends that:\nFor adults 18 years or older at increased risk of cardiovascular disease (CVD):\nProvide behavioral counseling to promote a healthy diet and physical activity.\nGrade: B",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "Healthy diet",
+      "Healthy activity",
+      "Cardiovascular Disease",
+      "USPSTF",
+      "Counseling"
+    ],
+    "koio:hasService": [      
+      {
+        "@type": [
+          "Service",
+          "API"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": [
+          {
+            "@id": ".",
+            "@type": [
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "Python"
+            ]
+          }
+        ]
+      },
+      {
+        "@type": [
+          "Service",
+          "CLI"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": {
+          "@id": "cardiovascular_prevention_diet_activity/cli_service",
+          "@type": [
+            "Python"
+          ]
+        }
+      }
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-objects/USPSTF-collection/refs/heads/main/cardiovascular-prevention-diet-activity/cardiovascular_prevention_diet_activity/knowledge.py",
+      "hasTest": "tests/test_knowledge.py"
+    }
+  }

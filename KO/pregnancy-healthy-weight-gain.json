@@ -1,0 +1,58 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "pregnancy-healthy-weight-gain",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Healthy Weight and Weight Gain In Pregnancy: Behavioral Counseling Interventions",
+    "dc:identifier": "ark:PregnancyWeight",
+    "version": "v1.0",
+    "dc:description": "For pregnant adolescents and adults:\nThe USPSTF recommends that clinicians offer effective behavioral counseling interventions aimed at promoting healthy weight gain and preventing excess gestational weight gain in pregnancy.\nGrade B",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "Pregnancy",
+      "Weight gain",
+      "Healthy weight",
+      "USPSTF",
+      "Behavioral Counseling Interventions"
+    ],
+    "koio:hasService": [      
+      {
+        "@type": [
+          "Service",
+          "API"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": [
+          {
+            "@id": ".",
+            "@type": [
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "Python"
+            ]
+          }
+        ]
+      },
+      {
+        "@type": [
+          "Service",
+          "CLI"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": {
+          "@id": "pregnancy_healthy_weight_gain/cli_service",
+          "@type": [
+            "Python"
+          ]
+        }
+      }
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-objects/USPSTF-collection/refs/heads/main/pregnancy-healthy-weight-gain/pregnancy_healthy_weight_gain/knowledge.py",
+      "hasTest": "tests/test_knowledge.py"
+    }
+  }

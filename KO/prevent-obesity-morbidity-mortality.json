@@ -1,0 +1,60 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "prevent-obesity-morbidity-mortality",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Weight Loss to Prevent Obesity-Related Morbidity and Mortality in Adults: Behavioral Interventions",
+    "dc:identifier": "ark:PreventObesityMorbidityMortality",
+    "version": "v1.0",
+    "dc:description": "Adults with a BMI ≥30:\nThe USPSTF recommends that clinicians offer or refer to intensive, multicomponent behavioral interventions.\nGrade: B",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "Weight Loss",
+      "Obesity",
+      "Morbidity",
+      "Mortality",
+      "Behavioral Interventions",
+      "USPSTF",
+      "Counseling"
+    ],
+    "koio:hasService": [      
+      {
+        "@type": [
+          "Service",
+          "API"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": [
+          {
+            "@id": ".",
+            "@type": [
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "Python"
+            ]
+          }
+        ]
+      },
+      {
+        "@type": [
+          "Service",
+          "CLI"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": {
+          "@id": "prevent_obesity_morbidity_mortality/cli_service",
+          "@type": [
+            "Python"
+          ]
+        }
+      }
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-objects/USPSTF-collection/refs/heads/main/prevent-obesity-morbidity-mortality/prevent_obesity_morbidity_mortality/knowledge.py",
+      "hasTest": "tests/test_knowledge.py"
+    }
+  }

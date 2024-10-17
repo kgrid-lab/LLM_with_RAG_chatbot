@@ -1,0 +1,57 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "hight-body-mass-index",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "High Body Mass Index in Children and Adolescents: Interventions",
+    "dc:identifier": "ark:HBMI",
+    "version": "v1.0",
+    "dc:description": "Children and adolescents 6 years or older:\nThe USPSTF recommends that clinicians should provide or refer children and adolescents 6 years or older with a high body mass index (BMI) (≥95th percentile for age and sex) to comprehensive, intensive behavioral interventions.\nGrade: B",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "High bmi",
+      "Interventions",
+      "USPSTF",
+      "Counseling"
+    ],
+    "koio:hasService": [      
+      {
+        "@type": [
+          "Service",
+          "API"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": [
+          {
+            "@id": ".",
+            "@type": [
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "Python"
+            ]
+          }
+        ]
+      },
+      {
+        "@type": [
+          "Service",
+          "CLI"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": {
+          "@id": "high_body_mass_index/cli_service",
+          "@type": [
+            "Python"
+          ]
+        }
+      }
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-objects/USPSTF-collection/refs/heads/main/high-body-mass-index/high_body_mass_index/knowledge.py",
+      "hasTest": "tests/test_knowledge.py"
+    }
+  }

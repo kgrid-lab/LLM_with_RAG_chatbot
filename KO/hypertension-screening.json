@@ -1,0 +1,56 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "hypertension-screening",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Hypertension in Adults: Screening",
+    "dc:identifier": "ark:HypertensionScreening",
+    "version": "v1.0",
+    "dc:description": "Adults 18 years or older without known hypertension:\nThe USPSTF recommends screening for hypertension in adults 18 years or older with office blood pressure measurement (OBPM). The USPSTF recommends obtaining blood pressure measurements outside of the clinical setting for diagnostic confirmation before starting treatment.\nGrade: A",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "hypertension",
+      "USPSTF",
+      "Counseling"
+    ],
+    "koio:hasService": [      
+      {
+        "@type": [
+          "Service",
+          "API"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": [
+          {
+            "@id": ".",
+            "@type": [
+              "https://kgrid.org/specs/activationSpec.html#object",
+              "Python"
+            ]
+          }
+        ]
+      },
+      {
+        "@type": [
+          "Service",
+          "CLI"
+        ],
+        "dependsOn": "knowledge",
+        "implementedBy": {
+          "@id": "hypertension_screening/cli_service",
+          "@type": [
+            "Python"
+          ]
+        }
+      }
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-objects/USPSTF-collection/refs/heads/main/hypertension-screening/hypertension_screening/knowledge.py",
+      "hasTest": "tests/test_knowledge.py"
+    }
+  }

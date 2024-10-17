@@ -26,7 +26,7 @@ model_seed = int(os.getenv("MODEL_SEED"))
 openai.api_key = OPENAI_API_KEY
 
 # Initialize the language model
-model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name, temperature=0, seed=model_seed)
+model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name) # add tempurture and seed: , temperature=0, seed=model_seed
 
 # Initialize embeddings and vector store
 embeddings = OpenAIEmbeddings()
@@ -66,7 +66,7 @@ Question: {question}
 prompt = ChatPromptTemplate.from_template(template)
 parser = StrOutputParser()
 chain = (
-    {"context": vectorstore2.as_retriever(), "question": RunnablePassthrough()}
+    {"context": vectorstore2.as_retriever(search_kwargs={"k": 20}), "question": RunnablePassthrough()}
     | prompt
     | model
     | parser
