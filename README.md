@@ -14,6 +14,7 @@ setup a virtual environment using poetry
 cd LLM_with_RAG_chatbot
 poetry env use 3.11
 poetry shell
+poetry install
 ```
 
 Create a .env file in the root of the project and store the following values in it
