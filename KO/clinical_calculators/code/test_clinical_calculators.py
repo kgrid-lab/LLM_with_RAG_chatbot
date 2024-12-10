@@ -3,6 +3,7 @@ import unittest
 from cockroft_gault_cr_cl import cockroft_gault_cr_cl
 from ckd_epi_gfr_2021 import ckd_epi_gfr_2021
 from chadsvasc import chadsvasc
+from mean_arterial_pressure import mean_arterial_pressure
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -20,6 +21,11 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertEqual(chadsvasc(62, "female", False, False, False, False, False), 1)
         self.assertEqual(chadsvasc(68, "female", False, False, False, False, False), 2)
         self.assertEqual(chadsvasc(68, "male", False, True, False, False, False), 2)
+
+    def test_mean_arterial_pressure(self):
+        self.assertEqual(mean_arterial_pressure(150, 90), 110)
+        self.assertEqual(mean_arterial_pressure(110, 65), 80)
+        self.assertEqual(mean_arterial_pressure(80, 50), 60)
 
 if __name__ == '__main__':
     unittest.main()
