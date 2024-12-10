@@ -4,6 +4,7 @@ from cockroft_gault_cr_cl import cockroft_gault_cr_cl
 from ckd_epi_gfr_2021 import ckd_epi_gfr_2021
 from chadsvasc import chadsvasc
 from mean_arterial_pressure import mean_arterial_pressure
+from ascvd_2013 import ascvd_2013
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -26,6 +27,12 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertEqual(mean_arterial_pressure(150, 90), 110)
         self.assertEqual(mean_arterial_pressure(110, 65), 80)
         self.assertEqual(mean_arterial_pressure(80, 50), 60)
+
+    def test_ascvd_2013(self):
+        self.assertAlmostEqual(ascvd_2013(55, False, "female", False, 213, 50, 120, False, "white"), 0.021, places=3)
+        self.assertAlmostEqual(ascvd_2013(55, False, "female", False, 213, 50, 120, False, "african american"), 0.030, places=3)
+        self.assertAlmostEqual(ascvd_2013(55, False, "male", False, 213, 50, 120, False, "white"), 0.054, places=3)
+        self.assertAlmostEqual(ascvd_2013(55, False, "male", False, 213, 50, 120, False, "african american"), 0.061, places=3)
 
 if __name__ == '__main__':
     unittest.main()
