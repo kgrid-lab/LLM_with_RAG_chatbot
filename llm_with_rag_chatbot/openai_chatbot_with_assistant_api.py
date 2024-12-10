@@ -121,6 +121,7 @@ def process(text, conversation_history):
         else ""
     )
     if code:
+        print(response)
         print("I am processing your request, this may take a few seconds...")
         execution_result = execute_code_with_assistant(response)
         return execution_result
