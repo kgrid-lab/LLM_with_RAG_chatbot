@@ -1,15 +1,15 @@
 {
     "@context": "https://kgrid.org/koio/2.0/context",
-    "@id": "ckd-epi-gfr-2021",
+    "@id": "chadsvasc",
     "koio:kgrid": "2",
     "@type": "koio:KnowledgeObject",
-    "dc:title": "2021 CKD-EPI equation for Glomerular Filtration Rate (GFR)",
-    "dc:identifier": "ark:ckdepigfr",
+    "dc:title": "CHA2DS2-VASc Score",
+    "dc:identifier": "ark:chadsvasc",
     "version": "v1.0",
-    "dc:description": "Steady-state estimate of glomerular filtration rate (GFR) using 2021 CKD-EPI equations using either creatinine alone or both creatinine and cystatin-C.",
+    "dc:description": "A score representing the risk of stroke in a patient with atrial fibrillation. 0 is low-risk in males. 0 or 1 is low-risk in females. All other scores are higher risk.",
     "koio:contributors": "Kgrid Team",
     "koio:keywords": [
-      "glomerular filtration rate",
+      "creatinine clearance",
       "renal function"
     ],
     "koio:hasService": [      
@@ -36,7 +36,7 @@
         ],
         "dependsOn": "knowledge",
         "implementedBy": {
-          "@id": "ckd-epi-gfr-2021/cli_service",
+          "@id": "chadsvasc/cli_service",
           "@type": [
             "Python"
           ]
@@ -49,6 +49,6 @@
         "Knowledge",
         "Function"
       ],
-      "implementedBy": "https://raw.githubusercontent.com/niranjan93/LLM_with_RAG_chatbot/calc_exp/KO/clinical_calculators/code/ckd_epi_gfr_2021.py"
+      "implementedBy": "https://raw.githubusercontent.com/niranjan93/LLM_with_RAG_chatbot/calc_exp/KO/clinical_calculators/code/chadsvasc.py"
     }
   }

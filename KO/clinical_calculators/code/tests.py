@@ -11,3 +11,9 @@ assert round(ckd_epi_gfr_2021("male", 60, 0.8)) == 101
 assert round(ckd_epi_gfr_2021("female", 60, 0.8, 0.75)) == 98
 
 assert round(ckd_epi_gfr_2021("male", 60, 0.8, 0.75)) == 111
+
+assert chadsvasc(62, "female", False, False, False, False, False) == 1
+
+assert chadsvasc(68, "female", False, False, False, False, False) == 2
+
+assert chadsvasc(68, "male", False, True, False, False, False) == 2
