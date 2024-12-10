@@ -21,6 +21,7 @@ except TypeError:
     quit()
 
 # Define llm parameters
+# Note: OPENAI_ORGANIZATION environment variable must be populated with the shortcode used for billing.
 llm = AzureChatOpenAI(
     deployment_name=os.environ['model1'],
     openai_api_version=os.environ['API_VERSION'],
