@@ -7,6 +7,7 @@ from mean_arterial_pressure import mean_arterial_pressure
 from ascvd_2013 import ascvd_2013
 from bmi import bmi
 from bsa import bsa
+from corr_ca_alb import corr_ca_alb
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -47,6 +48,15 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertAlmostEqual(bsa(200, 80), 2.11, places=2)
         self.assertAlmostEqual(bsa(180, 75), 1.94, places=2)
         self.assertAlmostEqual(bsa(161, 72), 1.79, places=2)
+
+    def test_corr_ca_alb(self):
+        self.assertAlmostEqual(corr_ca_alb(10, 4, 4), 10, places=1)
+        self.assertAlmostEqual(corr_ca_alb(10, 4, 4.1), 10.1, places=1)
+        self.assertAlmostEqual(corr_ca_alb(10.5, 4.8, 4), 9.9, places=1)
+        self.assertAlmostEqual(corr_ca_alb(10.5, 4.8, 4.1), 9.9, places=1)
+        self.assertAlmostEqual(corr_ca_alb(10.5, 2.8, 4), 11.5, places=1)
+        self.assertAlmostEqual(corr_ca_alb(10.5, 2.8, 4.1), 11.5, places=1)
+        self.assertAlmostEqual(corr_ca_alb(10.5, 2.8, 4.2), 11.6, places=1)
 
 if __name__ == '__main__':
     unittest.main()
