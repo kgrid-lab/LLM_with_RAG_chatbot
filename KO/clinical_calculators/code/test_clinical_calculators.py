@@ -6,6 +6,7 @@ from chadsvasc import chadsvasc
 from mean_arterial_pressure import mean_arterial_pressure
 from ascvd_2013 import ascvd_2013
 from bmi import bmi
+from bsa import bsa
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -39,6 +40,13 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertAlmostEqual(bmi(2, 80), 20, places=1)
         self.assertAlmostEqual(bmi(1.8, 75), 23.1, places=1)
         self.assertAlmostEqual(bmi(1.61, 72), 27.8, places=1)
+
+    def test_bsa(self):
+        self.assertAlmostEqual(bsa(180, 180), 3.00, places=2)
+        self.assertAlmostEqual(bsa(216, 150), 3.00, places=2)
+        self.assertAlmostEqual(bsa(200, 80), 2.11, places=2)
+        self.assertAlmostEqual(bsa(180, 75), 1.94, places=2)
+        self.assertAlmostEqual(bsa(161, 72), 1.79, places=2)
 
 if __name__ == '__main__':
     unittest.main()
