@@ -5,6 +5,7 @@ from ckd_epi_gfr_2021 import ckd_epi_gfr_2021
 from chadsvasc import chadsvasc
 from mean_arterial_pressure import mean_arterial_pressure
 from ascvd_2013 import ascvd_2013
+from bmi import bmi
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -33,6 +34,11 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertAlmostEqual(ascvd_2013(55, False, "female", False, 213, 50, 120, False, "african american"), 0.030, places=3)
         self.assertAlmostEqual(ascvd_2013(55, False, "male", False, 213, 50, 120, False, "white"), 0.054, places=3)
         self.assertAlmostEqual(ascvd_2013(55, False, "male", False, 213, 50, 120, False, "african american"), 0.061, places=3)
+
+    def test_bmi(self):
+        self.assertAlmostEqual(bmi(2, 80), 20, places=1)
+        self.assertAlmostEqual(bmi(1.8, 75), 23.1, places=1)
+        self.assertAlmostEqual(bmi(1.61, 72), 27.8, places=1)
 
 if __name__ == '__main__':
     unittest.main()
