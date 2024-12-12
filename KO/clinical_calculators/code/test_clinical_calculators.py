@@ -8,6 +8,7 @@ from ascvd_2013 import ascvd_2013
 from bmi import bmi
 from bsa import bsa
 from corr_ca_alb import corr_ca_alb
+from wells import wells
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -57,6 +58,15 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertAlmostEqual(corr_ca_alb(10.5, 2.8, 4), 11.5, places=1)
         self.assertAlmostEqual(corr_ca_alb(10.5, 2.8, 4.1), 11.5, places=1)
         self.assertAlmostEqual(corr_ca_alb(10.5, 2.8, 4.2), 11.6, places=1)
+
+    def test_wells(self):
+        self.assertEqual(wells(False, False, False, False, False, False, False), 0)
+        self.assertEqual(wells(False, False, False, False, False, True, False), 1)
+        self.assertEqual(wells(True, False, False, False, False, False, False), 3)
+        self.assertEqual(wells(True, False, True, False, False, False, False), 4.5)
+        self.assertEqual(wells(True, False, True, False, False, False, True), 5.5)
+        self.assertEqual(wells(True, False, True, True, False, False, True), 7)
+        self.assertEqual(wells(True, True, True, True, True, True, True), 12.5)
 
 if __name__ == '__main__':
     unittest.main()
