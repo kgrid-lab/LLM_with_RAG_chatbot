@@ -9,6 +9,7 @@ from bmi import bmi
 from bsa import bsa
 from corr_ca_alb import corr_ca_alb
 from wells import wells
+from mdrd_gfr import mdrd_gfr
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -67,6 +68,20 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertEqual(wells(True, False, True, False, False, False, True), 5.5)
         self.assertEqual(wells(True, False, True, True, False, False, True), 7)
         self.assertEqual(wells(True, True, True, True, True, True, True), 12.5)
+
+    def test_mdrd_gfr(self):
+        self.assertAlmostEqual(mdrd_gfr("female", 60, 0.8), 73.2, places=1)
+        self.assertAlmostEqual(mdrd_gfr("female", 60, 0.8, False), 73.2, places=1)
+        self.assertAlmostEqual(mdrd_gfr("female", 60, 0.8, True), 88.7, places=1)
+        self.assertAlmostEqual(mdrd_gfr("female", 45, 0.75), 83.6, places=1)
+        self.assertAlmostEqual(mdrd_gfr("female", 45, 0.75, False), 83.6, places=1)
+        self.assertAlmostEqual(mdrd_gfr("female", 45, 0.75, True), 101.3, places=1)
+        self.assertAlmostEqual(mdrd_gfr("male", 60, 0.8), 98.6, places=1)
+        self.assertAlmostEqual(mdrd_gfr("male", 60, 0.8, False), 98.6, places=1)
+        self.assertAlmostEqual(mdrd_gfr("male", 60, 0.8, True), 119.5, places=1)
+        self.assertAlmostEqual(mdrd_gfr("male", 45, 0.75), 112.6, places=1)
+        self.assertAlmostEqual(mdrd_gfr("male", 45, 0.75, False), 112.6, places=1)
+        self.assertAlmostEqual(mdrd_gfr("male", 45, 0.75, True), 136.5, places=1)
 
 if __name__ == '__main__':
     unittest.main()
