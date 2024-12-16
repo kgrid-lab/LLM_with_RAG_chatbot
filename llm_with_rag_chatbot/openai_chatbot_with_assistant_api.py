@@ -31,14 +31,12 @@ model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=model_name) # add tempur
 # Initialize embeddings and vector store
 embeddings = OpenAIEmbeddings()
 splits = []
-files = os.listdir(knowledge_base)
-for file_name in files:
-    if file_name == 'code':
-        continue
-    loader = TextLoader(os.path.join(knowledge_base, file_name), encoding="utf-8")
+file_paths = (file.path for file in os.scandir(knowledge_base) if file.is_file())
+for file_path in file_paths:
+    loader = TextLoader(file_path, encoding="utf-8")
     ko = loader.load()
 
-    with open(os.path.join(knowledge_base, file_name), "r", encoding="utf-8") as file:
+    with open(file_path, "r", encoding="utf-8") as file:
         code_file = json.load(file)
     link = code_file["koio:hasKnowledge"]["implementedBy"]
     response = requests.get(link)
