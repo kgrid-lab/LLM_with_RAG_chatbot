@@ -10,6 +10,7 @@ from bsa import bsa
 from corr_ca_alb import corr_ca_alb
 from wells import wells
 from mdrd_gfr import mdrd_gfr
+import nihss
 
 class TestClinicalCalculators(unittest.TestCase):
 
@@ -82,6 +83,103 @@ class TestClinicalCalculators(unittest.TestCase):
         self.assertAlmostEqual(mdrd_gfr("male", 45, 0.75), 112.6, places=1)
         self.assertAlmostEqual(mdrd_gfr("male", 45, 0.75, False), 112.6, places=1)
         self.assertAlmostEqual(mdrd_gfr("male", 45, 0.75, True), 136.5, places=1)
+
+    def test_nihss(self):
+        self.assertEqual(nihss.nihss(nihss.Consciousness.ALERT_KEENLY_RESPONSIVE,
+                                     nihss.MonthAndAgeQuestions.BOTH_QUESTIONS_RIGHT,
+                                     nihss.BlinkEyesAndSqueezeHands.PERFORMS_BOTH_TASKS,
+                                     nihss.HorizontalExtraocularMovements.NORMAL,
+                                     nihss.VisualFields.NO_VISUAL_LOSS,
+                                     nihss.FacialPalsy.NORMAL_SYMMETRY,
+                                     nihss.ArmMotorDrift.NO_DRIFT_FOR_10_SECONDS,
+                                     nihss.ArmMotorDrift.NO_DRIFT_FOR_10_SECONDS,
+                                     nihss.LegMotorDrift.NO_DRIFT_FOR_5_SECONDS,
+                                     nihss.LegMotorDrift.NO_DRIFT_FOR_5_SECONDS,
+                                     nihss.LimbAtaxia.NO_ATAXIA,
+                                     nihss.Sensation.NORMAL_NO_SENSORY_LOSS,
+                                     nihss.LanguageAphasia.NORMAL_NO_APHASIA,
+                                     nihss.Dysarthria.NORMAL,
+                                     nihss.ExtinctionInattention.NO_ABNORMALITY), 0)
+        
+        self.assertEqual(nihss.nihss(nihss.Consciousness.AROUSES_TO_MINOR_STIMULATION,
+                                     nihss.MonthAndAgeQuestions.BOTH_QUESTIONS_RIGHT,
+                                     nihss.BlinkEyesAndSqueezeHands.PERFORMS_BOTH_TASKS,
+                                     nihss.HorizontalExtraocularMovements.NORMAL,
+                                     nihss.VisualFields.NO_VISUAL_LOSS,
+                                     nihss.FacialPalsy.NORMAL_SYMMETRY,
+                                     nihss.ArmMotorDrift.DRIFTS_BUT_DOES_NOT_HIT_BED,
+                                     nihss.ArmMotorDrift.NO_DRIFT_FOR_10_SECONDS,
+                                     nihss.LegMotorDrift.NO_DRIFT_FOR_5_SECONDS,
+                                     nihss.LegMotorDrift.DRIFTS_HITS_BED,
+                                     nihss.LimbAtaxia.ATAXIA_IN_2_LIMBS,
+                                     nihss.Sensation.NORMAL_NO_SENSORY_LOSS,
+                                     nihss.LanguageAphasia.NORMAL_NO_APHASIA,
+                                     nihss.Dysarthria.NORMAL,
+                                     nihss.ExtinctionInattention.NO_ABNORMALITY), 6)
+        
+        self.assertEqual(nihss.nihss(nihss.Consciousness.REQUIRES_REPEATED_STIMULATION_TO_AROUSE,
+                                     nihss.MonthAndAgeQuestions.ONE_QUESTION_RIGHT,
+                                     nihss.BlinkEyesAndSqueezeHands.PERFORMS_BOTH_TASKS,
+                                     nihss.HorizontalExtraocularMovements.NORMAL,
+                                     nihss.VisualFields.NO_VISUAL_LOSS,
+                                     nihss.FacialPalsy.NORMAL_SYMMETRY,
+                                     nihss.ArmMotorDrift.DRIFTS_BUT_DOES_NOT_HIT_BED,
+                                     nihss.ArmMotorDrift.DRIFTS_HITS_BED,
+                                     nihss.LegMotorDrift.SOME_EFFORT_AGAINST_GRAVITY,
+                                     nihss.LegMotorDrift.SOME_EFFORT_AGAINST_GRAVITY,
+                                     nihss.LimbAtaxia.DOES_NOT_UNDERSTAND,
+                                     nihss.Sensation.MILD_MODERATE_LOSS_CAN_SENSE_BEING_TOUCHED,
+                                     nihss.LanguageAphasia.NORMAL_NO_APHASIA,
+                                     nihss.Dysarthria.NORMAL,
+                                     nihss.ExtinctionInattention.VISUAL_TACTILE_AUDITORY_SPATIAL_PERSONAL_INATTENTION), 12)
+        
+        self.assertEqual(nihss.nihss(nihss.Consciousness.REQUIRES_REPEATED_STIMULATION_TO_AROUSE,
+                                     nihss.MonthAndAgeQuestions.ONE_QUESTION_RIGHT,
+                                     nihss.BlinkEyesAndSqueezeHands.PERFORMS_BOTH_TASKS,
+                                     nihss.HorizontalExtraocularMovements.NORMAL,
+                                     nihss.VisualFields.NO_VISUAL_LOSS,
+                                     nihss.FacialPalsy.UNILATERAL_COMPLETE_PARALYSIS,
+                                     nihss.ArmMotorDrift.DRIFTS_BUT_DOES_NOT_HIT_BED,
+                                     nihss.ArmMotorDrift.NO_EFFORT_AGAINST_GRAVITY,
+                                     nihss.LegMotorDrift.SOME_EFFORT_AGAINST_GRAVITY,
+                                     nihss.LegMotorDrift.SOME_EFFORT_AGAINST_GRAVITY,
+                                     nihss.LimbAtaxia.DOES_NOT_UNDERSTAND,
+                                     nihss.Sensation.MILD_MODERATE_LOSS_CAN_SENSE_BEING_TOUCHED,
+                                     nihss.LanguageAphasia.NORMAL_NO_APHASIA,
+                                     nihss.Dysarthria.NORMAL,
+                                     nihss.ExtinctionInattention.VISUAL_TACTILE_AUDITORY_SPATIAL_PERSONAL_INATTENTION), 16)
+        
+        self.assertEqual(nihss.nihss(nihss.Consciousness.ALERT_KEENLY_RESPONSIVE,
+                                     nihss.MonthAndAgeQuestions.BOTH_QUESTIONS_RIGHT,
+                                     nihss.BlinkEyesAndSqueezeHands.PERFORMS_BOTH_TASKS,
+                                     nihss.HorizontalExtraocularMovements.NORMAL,
+                                     nihss.VisualFields.NO_VISUAL_LOSS,
+                                     nihss.FacialPalsy.NORMAL_SYMMETRY,
+                                     nihss.ArmMotorDrift.NO_DRIFT_FOR_10_SECONDS,
+                                     nihss.ArmMotorDrift.NO_DRIFT_FOR_10_SECONDS,
+                                     nihss.LegMotorDrift.NO_DRIFT_FOR_5_SECONDS,
+                                     nihss.LegMotorDrift.NO_DRIFT_FOR_5_SECONDS,
+                                     nihss.LimbAtaxia.ATAXIA_IN_2_LIMBS,
+                                     nihss.Sensation.COMPLETE_LOSS_CANNOT_SENSE_BEING_TOUCHED_AT_ALL,
+                                     nihss.LanguageAphasia.NORMAL_NO_APHASIA,
+                                     nihss.Dysarthria.MILD_MODERATE_DYSARTHRIA_SLURRING_BUT_CAN_BE_UNDERSTOOD,
+                                     nihss.ExtinctionInattention.NO_ABNORMALITY), 5)
+        
+        self.assertEqual(nihss.nihss(nihss.Consciousness.MOVEMENTS_TO_PAIN,
+                                     nihss.MonthAndAgeQuestions.APHASIC,
+                                     nihss.BlinkEyesAndSqueezeHands.PERFORMS_ZERO_TASKS,
+                                     nihss.HorizontalExtraocularMovements.NORMAL,
+                                     nihss.VisualFields.NO_VISUAL_LOSS,
+                                     nihss.FacialPalsy.NORMAL_SYMMETRY,
+                                     nihss.ArmMotorDrift.NO_MOVEMENT,
+                                     nihss.ArmMotorDrift.NO_MOVEMENT,
+                                     nihss.LegMotorDrift.NO_MOVEMENT,
+                                     nihss.LegMotorDrift.NO_MOVEMENT,
+                                     nihss.LimbAtaxia.DOES_NOT_UNDERSTAND,
+                                     nihss.Sensation.COMA_UNRESPONSIVE,
+                                     nihss.LanguageAphasia.COMA_UNRESPONSIVE,
+                                     nihss.Dysarthria.MUTE_ANARTHRIC,
+                                     nihss.ExtinctionInattention.NO_ABNORMALITY), 29)
 
 if __name__ == '__main__':
     unittest.main()
