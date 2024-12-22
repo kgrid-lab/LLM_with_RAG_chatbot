@@ -21,6 +21,6 @@
         "Knowledge",
         "Function"
       ],
-      "implementedBy": "https://raw.githubusercontent.com/niranjan93/LLM_with_RAG_chatbot/calc_exp/KO/clinical_calculators/code/ascvd_2013.py"
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ascvd_2013.py"
     }
   }
