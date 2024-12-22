@@ -13,37 +13,6 @@
       "renal function",
       "creatinine"
     ],
-    "koio:hasService": [      
-      {
-        "@type": [
-          "Service",
-          "API"
-        ],
-        "dependsOn": "knowledge",
-        "implementedBy": [
-          {
-            "@id": ".",
-            "@type": [
-              "https://kgrid.org/specs/activationSpec.html#object",
-              "Python"
-            ]
-          }
-        ]
-      },
-      {
-        "@type": [
-          "Service",
-          "CLI"
-        ],
-        "dependsOn": "knowledge",
-        "implementedBy": {
-          "@id": "mdrd_gfr/cli_service",
-          "@type": [
-            "Python"
-          ]
-        }
-      }
-    ],
     "koio:hasKnowledge": {
       "@id": "knowledge",
       "@type": [
