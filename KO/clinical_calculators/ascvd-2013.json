@@ -1,0 +1,26 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "ascvd-2013",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "ASCVD (Atherosclerotic Cardiovascular Disease) 2013 Risk Calculator from AHA/ACC",
+    "dc:identifier": "ark:ascvd",
+    "version": "v1.0",
+    "dc:description": "Estimates the patient's risk of developing their first myocardial infarction or stroke in the next 10 years",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "atherosclerotic cardiovascular disease",
+      "coronary artery disease",
+      "myocardial infarction",
+      "stroke",
+      "risk"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ascvd_2013.py"
+    }
+  }

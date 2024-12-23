@@ -1,0 +1,26 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "nihss",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "NIH Stroke Scale",
+    "dc:identifier": "ark:nihss",
+    "version": "v1.0",
+    "dc:description": "The NIH Stroke Scale uses the patient's presenting symptoms and signs to quantify the severity of a suspected stroke.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "stroke",
+      "cerebrovascular accident",
+      "CVA",
+      "cerebral ischemia",
+      "focal neurologic deficit"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/nihss.py"
+    }
+  }

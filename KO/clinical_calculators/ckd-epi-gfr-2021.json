@@ -1,0 +1,23 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "ckd-epi-gfr-2021",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "2021 CKD-EPI equation for Glomerular Filtration Rate (GFR)",
+    "dc:identifier": "ark:ckdepigfr",
+    "version": "v1.0",
+    "dc:description": "Steady-state estimate of glomerular filtration rate (GFR) using 2021 CKD-EPI equations using either creatinine alone or both creatinine and cystatin-C.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "glomerular filtration rate",
+      "renal function"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ckd_epi_gfr_2021.py"
+    }
+  }

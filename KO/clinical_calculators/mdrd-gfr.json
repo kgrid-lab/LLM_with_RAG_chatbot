@@ -1,0 +1,24 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "mdrd-gfr",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "MDRD GFR",
+    "dc:identifier": "ark:mdrd-gfr",
+    "version": "v1.0",
+    "dc:description": "Estimates the patient's glomerular filtration rate (GFR) given their sex, age, serum creatinine, and race.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "glomerular filtration rate",
+      "renal function",
+      "creatinine"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/mdrd_gfr.py"
+    }
+  }

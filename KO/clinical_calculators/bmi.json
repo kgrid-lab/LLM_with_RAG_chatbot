@@ -1,0 +1,26 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "bmi",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Body Mass Index",
+    "dc:identifier": "ark:bmi",
+    "version": "v1.0",
+    "dc:description": "The Body Mass Index is computed using the patient's height in meters and weight in kilograms. It can be used to estimate whether a patient is underweight or overweight. 18.5 - 25 is the normal range.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "body mass index",
+      "body weight",
+      "underweight",
+      "overweight",
+      "obesity"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/bmi.py"
+    }
+  }

@@ -1,0 +1,22 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "bsa",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Body Surface Area",
+    "dc:identifier": "ark:bsa",
+    "version": "v1.0",
+    "dc:description": "Estimates the patient's body surface area in square meters using the Mosteller formula, given the patient's height in centimeters and weight in kilograms.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "body surface area"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/bsa.py"
+    }
+  }

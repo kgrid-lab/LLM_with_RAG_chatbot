@@ -1,0 +1,25 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "wells",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Wells' Criteria for Pulmonary Embolism",
+    "dc:identifier": "ark:wells",
+    "version": "v1.0",
+    "dc:description": "Given features of the patient's history and presenting symptoms and signs, computes a score representing the probability of a non-pregnant adult patient having a pulmonary embolism in the emergency department.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "pulmonary embolism",
+      "PE",
+      "deep vein thrombosis",
+      "DVT"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/wells.py"
+    }
+  }

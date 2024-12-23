@@ -1,0 +1,23 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "chadsvasc",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "CHA2DS2-VASc Score",
+    "dc:identifier": "ark:chadsvasc",
+    "version": "v1.0",
+    "dc:description": "A score representing the risk of stroke in a patient with atrial fibrillation. 0 is low-risk in males. 0 or 1 is low-risk in females. All other scores are higher risk.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "creatinine clearance",
+      "renal function"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/chadsvasc.py"
+    }
+  }

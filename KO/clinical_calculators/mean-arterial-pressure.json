@@ -1,0 +1,25 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "mean-arterial-pressure",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Mean Arterial Pressure",
+    "dc:identifier": "ark:map",
+    "version": "v1.0",
+    "dc:description": "Estimates the mean arterial pressure given the systolic and diastolic pressures.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "mean arterial pressure",
+      "blood pressure",
+      "systolic",
+      "diastolic"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/mean_arterial_pressure.py"
+    }
+  }
