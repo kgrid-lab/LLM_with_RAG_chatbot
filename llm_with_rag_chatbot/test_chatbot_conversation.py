@@ -24,6 +24,8 @@ import os
 import re
 
 from dotenv import load_dotenv
+from langchain_core.prompts import PromptTemplate
+from langchain_openai.chat_models import ChatOpenAI
 from rouge import Rouge
 
 from llm_with_rag_chatbot.openai_chatbot_with_assistant_api import process
@@ -35,69 +37,103 @@ class Evaluator:
     """
     Evaluates chatbot responses.
     """
-    def record_response(self, response: str, rubric: dict) -> None:
+    def __init__(self):
+        self._scores = []
+
+    def get_name(self) -> str:
         """
-        Scores the chatbot response and makes an internal note of its correctness.
+        Returns the name of the approach/metric used by this Evaluator.
         """
         pass
+
+    def score(self, response: str, exchange: dict) -> float:
+        """
+        Scores the chatbot response and makes an internal note of its correctness.
+
+        :param response: the chatbot response
+        :param exchange: a dict containing the query given to the chatbot and a rubric with which to evaluate the chatbot's response
+        """
+        pass
+
+    def record_response(self, response: str, exchange: dict) -> None:
+        """
+        Scores the chatbot response and makes an internal note of its correctness.
+
+        :param response: the chatbot response
+        :param exchange: a dict containing the query given to the chatbot and a rubric with which to evaluate the chatbot's response
+        """
+        self._scores.append(self.score(response, exchange))
 
     def get_results(self) -> str:
         """
         Returns results of evaluating all chatbot responses.
         """
-        pass
+        points = sum(self._scores)
+        total = len(self._scores)
+        return "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items: {}".format(self.get_name(), points / total, points, total, self._scores)
 
 class KeywordEvaluator(Evaluator):
-    def __init__(self):
-        self._items = []
-
-    def get_results(self) -> str:
-        points = sum(self._items)
-        total = len(self._items)
-        return "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items: {}".format("Keyword", points / total, points, total, self._items)
-
-    def score(self, response: str, rubric: dict) -> bool:
-        """
-        Scores the chatbot response according to the list of keywords specified in the rubric.
-        Returns True if the response is correct and False otherwise.
-        See the file-level docstring for documentation of the "keywords" field of the rubric.
-        """
-        keywords = rubric["keywords"]
+    """
+    Evaluates chatbot responses based on the presence of keywords specified in the rubric.
+    See the file-level docstring for documentation of the "keywords" field of the rubric.
+    """
+    def score(self, response: str, exchange: dict) -> float:
+        keywords = exchange["rubric"]["keywords"]
         for rule in keywords:
             if rule == "containsAll":
                 if not all(term.casefold() in response.casefold() for term in keywords[rule]):
-                    return False
+                    return 0.0
             elif rule == "containsAny":
                 if not any(term.casefold() in response.casefold() for term in keywords[rule]):
-                    return False
+                    return 0.0
             else:
                 raise ValueError("Invalid field {} found in keywords!".format(rule))
-        return True
+        return 1.0
     
-    def record_response(self, response: str, rubric: dict) -> None:
-        if self.score(response, rubric):
-            self._items.append(1)
-        else:
-            self._items.append(0)
+    def get_name(self) -> str:
+        return "Keyword"
 
 class RougelEvaluator(Evaluator):
     """
     Evaluates each response by computing the ROUGE-L score between it and the standard.
     """
-    def __init__(self):
-        self._responses = []
-        self._standards = []
-
-    def record_response(self, response: str, rubric: dict) -> None:
-        self._responses.append(response)
-        self._standards.append(rubric["standard"])
-
-    def get_results(self) -> str:
+    def score(self, response: str, exchange: dict) -> float:
         rouge = Rouge(metrics=["rouge-l"], stats=["f"])
-        item_scores = [score_obj["rouge-l"]["f"] for score_obj in rouge.get_scores(self._responses, self._standards)]
-        score = rouge.get_scores(self._responses, self._standards, avg=True)["rouge-l"]["f"]
-        return "{} Evaluation Results:\nTotal score {}\nIndividual items: {}".format("Rouge-L", score, item_scores)
+        return rouge.get_scores(response, exchange["rubric"]["standard"])[0]["rouge-l"]["f"]
+    
+    def get_name(self) -> str:
+        return "ROUGE-L"
 
+class LlmEvaluator(Evaluator):
+    """
+    Uses an LLM to assess how close the chatbot's responses are to gold standard responses.
+    """
+    def score(self, response: str, exchange: dict) -> float:
+        OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+        model = ChatOpenAI(openai_api_key=OPENAI_API_KEY, model=os.getenv("MODEL"))
+        prompt = PromptTemplate.from_template(
+            """You are grading an agent's responses to questions.
+            Question: {question}
+            Example of correct response: {standard}
+            Agent's response: {response}
+            The agent's response is considered correct if it has the same meaning as the example response, even if it is not identical.
+            Is the agent's response correct?
+            Please answer CORRECT or INCORRECT.
+            """
+        )
+        fields = {
+            "question": exchange["query"],
+            "standard": exchange["rubric"]["standard"],
+            "response": response
+        }
+        result = model.invoke(prompt.invoke(fields))
+        if result.content.lower() == "correct":
+            return 1.0
+        else:
+            return 0.0
+        
+    def get_name(self) -> str:
+        return "LLM"
 
 def report(msg, f):
     """
@@ -124,7 +160,7 @@ args = parser.parse_args()
 conversation_history = deque(maxlen=10)
 
 # Keep track of correctness.
-evaluators = (KeywordEvaluator(), RougelEvaluator())
+evaluators = (KeywordEvaluator(), RougelEvaluator(), LlmEvaluator())
 
 # Feed the chatbot each query in the conversation and score each resulting response.
 # Meanwhile, write the chatbot responses to the provided file for debugging purposes.
@@ -135,7 +171,7 @@ with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
             response = process(exchange["query"], conversation_history)
             response_output.write(response)
             for e in evaluators:
-                e.record_response(response, exchange["rubric"])
+                e.record_response(response, exchange)
             code = (
                 re.search(r"```(.*?)```", response, re.DOTALL).group(1)
                 if "```" in response
