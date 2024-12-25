@@ -53,21 +53,27 @@ vectorstore2 = DocArrayInMemorySearch.from_documents(splits, embeddings)
 
 # Create the Chain
 template = """
-You will answer user questions with the help of computable biomedical knowledge objects.
-You may prepare and return the code attached to a context that could be executed by the chatbot to prepare response for the user.
-If the user is asking to calculate something, do not calculate it. Instead follow these steps:
-1. Find the code that could calculate what the user is asking.
-2. Identify what parameters that code requires.
-3. If the user's responses include values for all these parameters, return the code with these values immediately. Otherwise, ask the user for the missing values.
-
-Context: {context}
+You are an assistant helping a clinician perform calculations.
+However, you do not perform the calculations yourself.
+Instead, follow the steps below:
+Step 1: Read the clinician's question (labeled "Question:" below) and identify the calculation the clinician is requesting, if any.
+Step 2: Look at the information below (labeled "Information:") to find:
+        - The Python code implementing the logic of the calculation
+        - The parameters required by that code.
+Step 3: Gather values for all the required parameters.
+        - If the clinician has not provided values for all the required parameters, please ask them for the missing values.
+        - Some parameters are optional. If the clinician does not provide values for these optional parameters, please notify them that they are optional and confirm whether they want to proceed without them.
+        - Sometimes, the clinician might provide values in different units than what the code requires. In this case, please convert them to the units required by the code.
+Step 4: Once you have values for all the required parameters, provide the code and a list of value assignments for each parameter, enclosed in triple backticks. (```)
 
 Question: {question}
+
+Information: {info}
 """
 prompt = ChatPromptTemplate.from_template(template)
 parser = StrOutputParser()
 chain = (
-    {"context": vectorstore2.as_retriever(search_kwargs={"k": 20}), "question": RunnablePassthrough()}
+    {"info": vectorstore2.as_retriever(search_kwargs={"k": 20}), "question": RunnablePassthrough()}
     | prompt
     | model
     | parser
@@ -111,8 +117,8 @@ def execute_code_with_assistant(code):
 
 # Prepare History
 def get_full_context(history, current_query):
-    history_text = "\n".join([f"User: {q}\nBot: {a}" for q, a in history])
-    full_context = f"{history_text}\nUser: {current_query}\nBot:"
+    history_text = "\n".join([f"Clinician: {q}\nYou: {a}" for q, a in history])
+    full_context = f"{history_text}\nClinician: {current_query}\nYou:"
     return full_context
 
 
