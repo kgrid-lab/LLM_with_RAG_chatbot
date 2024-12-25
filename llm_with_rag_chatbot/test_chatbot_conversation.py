@@ -31,65 +31,71 @@ from llm_with_rag_chatbot.openai_chatbot_with_assistant_api import process
 TIME_FMT = "%Y-%m-%d-%H%M.%S.%f"
 ENC = "utf-8"
 
-def report(msg, f):
-    """
-    Writes msg to both stdout and the file f.
-    TODO: Find more "pythonic" way of doing this.
-    """
-    print(msg)
-    f.write(msg)
-
 start_time = datetime.now()
 
-# Load environment variables
+# Print message so that user does not think program has frozen.
+print("Chatbot test running...\n")
+
+# Load environment variables.
 load_dotenv()
 
 # Process command line arguments.
 parser = argparse.ArgumentParser()
 parser.add_argument("--conversation", "-c", type=str, required=True, help="Text file containing prepared conversation.")
 parser.add_argument("--output_log", "-o",
-                    default="chatbot_output_{}.log".format(start_time.strftime(TIME_FMT)),
-                    type=str, help="If desired, specify a file other than the default to which the log the chatbot output.")
-parser.add_argument("--result_log", "-r",
-                    default="result_{}.log".format(start_time.strftime(TIME_FMT)),
-                    type=str, help="If desired, specify a file other than the default to which the log the test results.")
+                    default="chatbot_test_output_{}.log".format(start_time.strftime(TIME_FMT)),
+                    type=str, help="If desired, specify a file other than the default to which the log the chatbot test output.")
 args = parser.parse_args()
 
 # Store the conversation history.
 conversation_history = deque(maxlen=10)
 
-# Keep track of correctness.
+# Initialize Evaluator objects to keep track of correctness.
 evaluators = (KeywordEvaluator(), RougelEvaluator(), LlmEvaluator(os.getenv("OPENAI_API_KEY"), os.getenv("MODEL")))
 
-# Feed the chatbot each query in the conversation and score each resulting response.
-# Meanwhile, write the chatbot responses to the provided file for debugging purposes.
-with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
-    with open(args.output_log, mode='w', encoding=ENC) as response_output:
+with open(args.output_log, mode='w', encoding=ENC) as log:
+    # Print model and architecture information.
+    log.write("Model and Architecture Information:\n")
+    log.write("Architecture: LLM with KO RAG and Code Executor LLM\n")  # TODO: Make this configurable when other architectures are available.
+    log.write("Model name: {}\n".format(os.getenv("MODEL")))
+    log.write("Model seed: {}\n".format(os.getenv("MODEL_SEED")))
+    log.write("RAG Knowledge Base: {}\n".format(os.getenv("KNOWLEDGE_BASE")))
+    log.write("\n")
+
+    # Feed the chatbot each query in the conversation and score each resulting response.
+    with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
         conversation = json.load(conversation_file)
+        log.write("Transcript for Conversation {}:\n".format(args.conversation))
         for exchange in conversation:
-            response = process(exchange["query"], conversation_history)
-            response_output.write(response)
+            query = exchange["query"]
+            log.write("USR> {}\n".format(query))
+
+            # Feed the chatbot the query.
+            response = process(query, conversation_history)
+            log.write("BOT> {}\n".format(response))
+
+            # Score the response using each method of evaluation.
             for e in evaluators:
                 e.record_response(response, exchange)
+
+            # Update the conversation history for the chatbot. TODO: Encapsulate this logic in the chatbot itself.
             code = (
                 re.search(r"```(.*?)```", response, re.DOTALL).group(1)
                 if "```" in response
                 else ""
             )
             conversation_history.append(
-                (exchange["query"], response.replace(code, ""))
+                (query, response.replace(code, ""))
             )  # update history excluding code
 
-# Report results to stdout and log file.
-with open(args.result_log,  mode='w', encoding=ENC) as result_log_file:
-    # Report model and architecture information.
-    report("model: {}".format(os.getenv("MODEL")), result_log_file)
-    report("knowledge_base: {}".format(os.getenv("KNOWLEDGE_BASE")), result_log_file)
-    report("model_seed: {}".format(os.getenv("MODEL_SEED")), result_log_file)
-
-    # Report score information.
+    # Report results of chatbot testing.
     for e in evaluators:
-        report(e.get_results(), result_log_file)
+        log.write("{}\n".format(e.get_results()))
 
+    # Record time elapsed.
     end_time = datetime.now()
-    report("Ran test in {}".format(end_time - start_time), result_log_file)
+    elapsed = end_time - start_time
+    log.write("Ran test in {}\n".format(elapsed))
+
+    print("Ran test in {}\n".format(elapsed))
+    print("Output in {}\n".format(args.output_log))
