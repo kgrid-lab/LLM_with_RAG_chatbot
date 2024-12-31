@@ -6,17 +6,18 @@
             "keywords": {
                 "containsAll": ["cockcroft", "weight"]
             }
-        }
-        
+        },
+        "notes": "The chatbot should notice that weight, a required parameter, is missing, and should prompt the clinician for it."
     },
     {
         "query": "The patient weighs 80 kg.",
         "rubric": {
-            "standard": "The patient's creatinine clearance is 94 mL/min/1.73m^2.",
+            "standard": "The patient's creatinine clearance is 94 mL/min.",
             "keywords": {
                 "containsAny": ["mL", "mililiters"],
                 "containsAll": ["94", "min"]
             }
-        }
+        },
+        "notes": "Now that all required information has been provided, the chatbot should perform the calculation."
     }
 ]
