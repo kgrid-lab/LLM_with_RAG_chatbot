@@ -21,11 +21,14 @@ Create a .env file in the root of the project and store the following values in 
 ```
 KNOWLEDGE_BASE="KO/"
 MODEL="gpt-4o"
+EVAL_MODEL="gpt-4o"
 MODEL_SEED=1762259501
 OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
 ```
-- The KNOWLEDGE_BASE points to the location of knowledge object context files.
-- MODEL defines the version of the GPT to be used. We recomment use of gpt-4o or newer versions.
+- The KNOWLEDGE_BASE points to the location of knowledge object context files. Currently "KO" and "KO/clinical_calculators" are supported.
+- MODEL defines which OpenAI language model to use. We recommend "gpt-4o" if using an LLM or "gpt-4o-mini" if using an SLM. We currently do not support other vendors.
+- EVAL_MODEL defines which OpenAI language model to use for evaluation of language model output.
+- MODEL_SEED provides a numerical seed to the OpenAI language model specified by MODEL. Specifying MODEL_SEED is optional. It only affects MODEL, not EVAL_MODEL.
 - Get your own API key at [OpenAI's API keys section](https://platform.openai.com/api-keys) and set OPENAI_API_KEY with its value. 
 ## Run the app 
 Once the environment is set up you can run this app to be useed from command line using

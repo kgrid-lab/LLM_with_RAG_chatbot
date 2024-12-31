@@ -51,7 +51,7 @@ args = parser.parse_args()
 conversation_history = deque(maxlen=10)
 
 # Initialize Evaluator objects to keep track of correctness.
-evaluators = (KeywordEvaluator(), RougelEvaluator(), LlmEvaluator(os.getenv("OPENAI_API_KEY"), os.getenv("MODEL")))
+evaluators = (KeywordEvaluator(), RougelEvaluator(), LlmEvaluator(os.getenv("OPENAI_API_KEY"), os.getenv("EVAL_MODEL")))
 
 with open(args.output_log, mode='w', encoding=ENC) as log:
     # Print model and architecture information.
