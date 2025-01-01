@@ -46,7 +46,8 @@ class Evaluator:
         """
         points = sum(self._scores)
         total = len(self._scores)
-        return "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items: {}".format(self.get_name(), points / total, points, total, self._scores)
+        scores = "\n".join(("Item {}: {}".format(i, self._scores[i]) for i in range(total)))
+        return "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items:\n{}".format(self.get_name(), points / total, points, total, scores)
 
 class KeywordEvaluator(Evaluator):
     """
