@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 from collections import deque
@@ -13,6 +14,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
+
+logger = logging.getLogger(__name__)
 
 # Load environment variables
 load_dotenv()
@@ -102,6 +105,7 @@ def execute_code_with_assistant(code):
                 result = message.content[0].text.value
         return result
     else:
+        logger.error("Code execution failed!\nInput code:\n%s\n", code)
         return "Code execution failed."
 
 
@@ -113,6 +117,7 @@ def get_full_context(history, current_query):
 
 
 def process(text, conversation_history):
+    logger.info("Received input:\n%s\nWith history:\n%s\n", text, "\n".join(("USR> {}\nBOT> {}".format(h[0], h[1]) for h in conversation_history)))
     full_context = get_full_context(conversation_history, text)
     response = chain.invoke(full_context)
     code = (
@@ -121,10 +126,12 @@ def process(text, conversation_history):
         else ""
     )
     if code:
+        logger.info("Found code:\n%s\n", code)
         print("I am processing your request, this may take a few seconds...")
         execution_result = execute_code_with_assistant(response)
         return execution_result
     else:
+        logger.info("No code\n")
         return response
 
 
