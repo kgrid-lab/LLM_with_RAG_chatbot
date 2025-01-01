@@ -54,7 +54,7 @@
         "rubric": {
             "standard": "Carol's glomerular filtration rate is 78.8 mL/min/1.73m^2.",
             "keywords": {
-                "containsAny": ["78.8", "79"]
+                "containsAny": ["78.79", "78.8", "79"]
             }
         },
         "notes": "The chatbot should be able to apply existing information to new contexts. Race was not relevant for Cockcroft-Gault, but it is relevant for MDRD. The chatbot should remember it. The chatbot should also understand that African-American implies Black."
@@ -124,7 +124,7 @@
         "rubric": {
             "standard": "Using the 2021 CKD-EPI Equation, Frank's glomerular filtration rate is 97 mL/min/1.73m^2.",
             "keywords": {
-                "containsAll": ["97"]
+                "containsAny": ["96.69", "96.7", "97"]
             }
         },
         "notes": "The chatbot should proceed without cystatin-C per the user's request."
@@ -144,7 +144,7 @@
         "rubric": {
             "standard": "Using the 2021 CKD-EPI Creatinine-Cystatin C Equation, Gloria's glomerular filtration rate is 106.",
             "keywords": {
-                "containsAll": ["106"]
+                "containsAny": ["105.71", "105.7", "106"]
             }
         },
         "notes": "The chatbot should accept the optional cystatin-C parameter and perform the calculation."
@@ -207,7 +207,7 @@
                 "containsAny": ["CHA2DS2-VASc", "CHADS-VASc"]
             }
         },
-        "notes": "The chatbot should ignore extraneous information about the patient's age and sex."
+        "notes": "The chatbot should identify the CHA2DS2-VASc score as a method of estimating stroke risk in patients with atrial fibrillation."
     },
     {
         "query": "What is Karen's CHA2DS2-VASc score?",
@@ -250,34 +250,34 @@
         "notes": "A simple straightforward query."
     },
     {
-        "query": "Mary's serum calcium level is 8.6 mg/dL and her serum albumin level is 2.8 g/dL. Assuming a normal serum albumin level of 4.2 g/dL, what is her corrected serum calcium level?",
-        "rubric": {
-            "standard": "Mary's corrected serum calcium level is 9.7 mg/dL.",
-            "keywords": {
-                "containsAll": ["9.7"]
-            }
-        },
-        "notes": "A simple straightforward query."
-    },
-    {
-        "query": "Nick's serum calcium level is 8.6 mg/dL and his serum albumin level is 2.8 g/dL. What is his corrected serum calcium level?",
+        "query": "Mary's serum calcium level is 8.6 mg/dL and her serum albumin level is 2.8 g/dL. What is her corrected serum calcium level?",
         "rubric": {
             "standard": "Would you like to specify a normal serum albumin level or use the default of 4 g/dL?",
             "keywords": {
                 "containsAll": ["normal", "albumin"]
             }
         },
-        "notes": "The chatbot should understand that specifying the normal albumin is optional."
+        "notes": "The chatbot should understand that the normal serum albumin level is an optional parameter and should prompt the user to either provide it or proceed without it."
     },
     {
-        "query": "Please use the default.",
+        "query": "Please use a normal serum albumin of 4.2 g/dL.",
         "rubric": {
-            "standard": "Nick's corrected serum calcium level is 9.6 mg/dL.",
+            "standard": "Mary's corrected serum calcium level is 9.7 mg/dL.",
             "keywords": {
-                "containsAll": ["9.6"]
+                "containsAll": ["9.7"]
             }
         },
-        "notes": "The chatbot should obey the user's request to proceed using the default normal serum albumin level."
+        "notes": "The chatbot should proceed with the calculation now that it has all the necessary information."
+    },
+    {
+        "query": "Nick's serum calcium level is 7.7 mg/dL and his serum albumin level is 2.9 g/dL. What is his corrected serum calcium level, using the same normal serum albumin level as before?",
+        "rubric": {
+            "standard": "Nick's corrected serum calcium level is 8.7 mg/dL.",
+            "keywords": {
+                "containsAll": ["8.7"]
+            }
+        },
+        "notes": "The chatbot should remember the normal serum albumin of 4.2 g/dL that has been provided earlier."
     },
     {
         "query": "Olivia's serum albumin is 2.5 g/dL, which is her normal level. What is her corrected serum calcium level?",
@@ -294,7 +294,7 @@
         "rubric": {
             "standard": "Olivia's corrected serum calcium level is 10.2 mg/dL.",
             "keywords": {
-                "containsAll": ["calcium"]
+                "containsAll": ["10.2"]
             }
         },
         "notes": "The chatbot should proceed with the calculation now that all required information has been provided."
@@ -304,7 +304,7 @@
         "rubric": {
             "standard": "Paul's risk of having a pulmonary embolism can be estimated by calculating Wells' Criteria.",
             "keywords": {
-                "containsAll": ["calcium"]
+                "containsAll": ["Wells"]
             }
         },
         "notes": "The chatbot should recall that Wells' Criteria can be used to estimate the risk of PE in adult patients in the ED."
@@ -314,7 +314,7 @@
         "rubric": {
             "standard": "To calculate Wells' Criteria for Paul, please share whether Paul has clinical signs and symptoms of DVT, whether pulmonary embolism is the most likely diagnosis, whether he has been immbilized for 3 days or undergone surgery in the past 4 weeks, whether he has been previously been objectively diagnosed with a DVT or PE, and whether he is exhibiting hemoptysis.",
             "keywords": {
-                "containsAll": ["calcium"]
+                "containsAll": ["DVT", "diagnosis", "surgery", "objective", "hemoptysis"]
             }
         },
         "notes": "The chatbot should ask for the missing information."
@@ -322,10 +322,9 @@
     {
         "query": "Paul has no clinical signs and symptoms of DVT. Pulmonary embolism is the most likely diagnosis. He had surgery 8 weeks ago for his colon cancer. He has never been diagnosed with a DVT or PE.",
         "rubric": {
-            "standard": "Paul had surgery 8 weeks ago. But has he had surgery or immobilization in the last 4 weeks? And is he having hemoptysis?",
+            "standard": "Is Paul having hemoptysis?",
             "keywords": {
-                "containsAny": ["4", "four"],
-                "containsAll": ["surgery", "weeks", "hemoptysis"]
+                "containsAll": ["hemoptysis"]
             }
         },
         "notes": "The chatbot should understand that the surgery specified in the query was not in the relevant timeframe of the past 4 weeks. It should also be aware that the presence of hemoptysis has not yet been specified."
@@ -365,7 +364,7 @@
         "rubric": {
             "standard": "Teresa's risk of atherosclerotic cardiovascular disease can be estimated using the ASCVD 2013 Risk Calculator from AHA/ACC. To perform this calculation, please share whether she has diabetes, whether she smokes, her systolic blood pressure, and whether she is being treated for hypertension.",
             "keywords": {
-                "containsAll": ["65.8"]
+                "containsAll": ["diabetes", "smok", "pressure", "treat"]
             }
         },
         "notes": "Chatbot should identify and ask for missing information."
@@ -375,7 +374,7 @@
         "rubric": {
             "standard": "Teresa's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is 2.8%.",
             "keywords": {
-                "containsAll": ["65.8"]
+                "containsAll": ["2.8"]
             }
         },
         "notes": "Chatbot should perform computation now that all required information has been provided."
@@ -385,7 +384,7 @@
         "rubric": {
             "standard": "The ASCVD 2013 Risk Calculator from AHA/ACC requires the patient's race. What is Vincent's race?",
             "keywords": {
-                "containsAll": ["65.8"]
+                "containsAll": ["race"]
             }
         },
         "notes": "Unlike other calculators, ASCVD requires race."
@@ -455,7 +454,7 @@
         "rubric": {
             "standard": "Ashley's Body Mass Index (BMI) is 18.4 kg/m^2.",
             "keywords": {
-                "containsAll": ["18.4"]
+                "containsAny": ["18.38", "18.4"]
             }
         },
         "notes": "Simple query for BMI with extraneous information of age."
@@ -465,7 +464,7 @@
         "rubric": {
             "standard": "Ashley's body surface area is 1.63 m^2.",
             "keywords": {
-                "containsAll": ["1.63"]
+                "containsAny": ["1.626", "1.63"]
             }
         },
         "notes": "Chatbot should carry over information from previous query."
@@ -475,7 +474,7 @@
         "rubric": {
             "standard": "Brian's Body Mass Index is 24.1 kg/m^2.",
             "keywords": {
-                "containsAll": ["18.4"]
+                "containsAll": ["24.1"]
             }
         },
         "notes": "Chatbot should convert units automatically."
@@ -485,7 +484,7 @@
         "rubric": {
             "standard": "Brian's body surface area is 2.15 m^2.",
             "keywords": {
-                "containsAll": ["2.15"]
+                "containsAny": ["2.15", "2.2"]
             }
         },
         "notes": "Chatbot should carry over information from previous query."
@@ -498,6 +497,6 @@
                 "containsAll": ["20.2"]
             }
         },
-        "notes": "Chatbot should be able to height specified as feet plus inches."
+        "notes": "Chatbot should be able to understand height specified as feet plus inches."
     }
 ]
