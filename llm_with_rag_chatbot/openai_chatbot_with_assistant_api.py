@@ -120,11 +120,15 @@ def process(text, conversation_history):
     logger.info("Received input:\n%s\nWith history:\n%s\n", text, "\n".join(("USR> {}\nBOT> {}".format(h[0], h[1]) for h in conversation_history)))
     full_context = get_full_context(conversation_history, text)
     response = chain.invoke(full_context)
-    code = (
-        re.search(r"```(.*?)```", response, re.DOTALL).group(1)
-        if "```" in response
-        else ""
-    )
+    if "```" in response:
+        search_result = re.search(r"```(.*?)```", response, re.DOTALL)
+        if search_result is not None:
+            code = search_result.group(1)
+        else:
+            code = ""
+    else:
+        code = ""
+
     if code:
         logger.info("Found code:\n%s\n", code)
         print("I am processing your request, this may take a few seconds...")
