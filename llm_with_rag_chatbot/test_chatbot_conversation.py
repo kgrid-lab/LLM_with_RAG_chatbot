@@ -32,6 +32,15 @@ from llm_with_rag_chatbot.openai_chatbot_with_assistant_api import process
 TIME_FMT = "%Y-%m-%d-%H%M.%S.%f"
 ENC = "utf-8"
 
+def select(conversation: list, indices: list) -> list:
+    if indices is None:
+        return conversation
+    else:
+        for i in indices:
+            if (i < 0) or i >= len(conversation):
+                raise ValueError("Invalid test case {}".format(i))
+        return (conversation[i] for i in indices)
+
 start_time = datetime.now()
 
 # Print message so that user does not think program has frozen.
@@ -43,6 +52,7 @@ load_dotenv()
 # Process command line arguments.
 parser = argparse.ArgumentParser()
 parser.add_argument("--conversation", "-c", type=str, required=True, help="Text file containing prepared conversation.")
+parser.add_argument("--test_cases", "-t", nargs="+", type=int, help="If desired, specify which test cases to run. The first is #0. Default is to run all tests.")
 parser.add_argument("--output_log", "-o",
                     default="chatbot_test_output_{}.log".format(start_time.strftime(TIME_FMT)),
                     type=str, help="If desired, specify a file other than the default to which the log the chatbot test output.")
@@ -74,8 +84,11 @@ transcript = []
 # Feed the chatbot each query in the conversation and score each resulting response.
 with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
     conversation = json.load(conversation_file)
-    logger.info("Transcript for Conversation {}:\n".format(args.conversation))
-    for exchange in conversation:
+
+    # Select a subset of the conversation if desired.
+    selected_conversation = select(conversation, args.test_cases)
+
+    for exchange in selected_conversation:
         query = exchange["query"]
         transcript.append("USR> {}\n".format(query))
         logger.info(transcript[-1])
