@@ -27,7 +27,7 @@ import re
 from dotenv import load_dotenv
 
 from evaluators import KeywordEvaluator, RougelEvaluator, LlmEvaluator
-from llm_with_rag_chatbot.openai_chatbot_with_assistant_api import process
+from chatbots import LlmWithRagKosAndExternalInterpreter
 
 TIME_FMT = "%Y-%m-%d-%H%M.%S.%f"
 ENC = "utf-8"
@@ -64,18 +64,22 @@ args = parser.parse_args()
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename=args.output_log, filemode="w", level=logging.getLevelNamesMapping()[args.log_level], encoding=ENC)
 
-# Store the conversation history.
-conversation_history = deque(maxlen=10)
-
 # Initialize Evaluator objects to keep track of correctness.
 evaluators = (KeywordEvaluator(), RougelEvaluator(), LlmEvaluator(os.getenv("OPENAI_API_KEY"), os.getenv("EVAL_MODEL")))
 
+# Initialize chatbot.
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+model_name = os.getenv("MODEL")
+knowledge_base = os.getenv("KNOWLEDGE_BASE")
+model_seed = int(os.getenv("MODEL_SEED"))
+chatbot = LlmWithRagKosAndExternalInterpreter(OPENAI_API_KEY, model_name, model_seed, knowledge_base)
+
 # Print model and architecture information.
 logger.info("Model and Architecture Information:\n")
-logger.info("Architecture: LLM with KO RAG and Code Executor LLM\n")  # TODO: Make this configurable when other architectures are available.
-logger.info("Model name: {}\n".format(os.getenv("MODEL")))
-logger.info("Model seed: {}\n".format(os.getenv("MODEL_SEED")))
-logger.info("RAG Knowledge Base: {}\n".format(os.getenv("KNOWLEDGE_BASE")))
+logger.info("Architecture: {})\n".format(chatbot.get_architecture()))
+logger.info("Model name: {}\n".format(model_name))
+logger.info("Model seed: {}\n".format(model_seed))
+logger.info("RAG Knowledge Base: {}\n".format(knowledge_base))
 logger.info("\n")
 
 # Keep track of chat transcript for logging purposes.
@@ -94,23 +98,13 @@ with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
         logger.info(transcript[-1])
 
         # Feed the chatbot the query.
-        response = process(query, conversation_history)
+        response = chatbot.invoke(query)
         transcript.append("BOT> {}\n".format(response))
         logger.info(transcript[-1])
 
         # Score the response using each method of evaluation.
         for e in evaluators:
             e.record_response(response, exchange)
-
-        # Update the conversation history for the chatbot. TODO: Encapsulate this logic in the chatbot itself.
-        code = (
-            re.search(r"```(.*?)```", response, re.DOTALL).group(1)
-            if "```" in response
-            else ""
-        )
-        conversation_history.append(
-            (query, response.replace(code, ""))
-        )  # update history excluding code
 
 # Report results of chatbot testing.
 logger.info("Chat Transcript:\n{}\n".format("\n".join(transcript)))

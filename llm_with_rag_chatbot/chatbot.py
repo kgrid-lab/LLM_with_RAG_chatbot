@@ -3,9 +3,12 @@ import threading
 import uuid
 import logging
 from logging.handlers import RotatingFileHandler
+
+from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 from flask_caching import Cache
-from llm_with_rag_chatbot.openai_chatbot_with_assistant_api import process
+
+from chatbots import LlmWithRagKosAndExternalInterpreter
 
 # Configure logging to include date and time
 logger = logging.getLogger()
@@ -27,14 +30,21 @@ logger.addHandler(console_handler)
 app = Flask(__name__)
 cache = Cache(app, config={"CACHE_TYPE": "simple"})
 
+# Initialize the chatbot.
+load_dotenv()
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+model_name = os.getenv("MODEL")
+knowledge_base = os.getenv("KNOWLEDGE_BASE")
+model_seed = int(os.getenv("MODEL_SEED"))
+chatbot = LlmWithRagKosAndExternalInterpreter(OPENAI_API_KEY, model_name, model_seed, knowledge_base)
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-def background_task(task_id, user_question, chat_history_tuples):
-    response = process(user_question, chat_history_tuples)
+def background_task(task_id, user_question):
+    response = chatbot.invoke(user_question)
     # Log the question and response with date and time
     logger.info("Question: %s", user_question)
     logger.info("Response: %s", response)
@@ -45,15 +55,10 @@ def background_task(task_id, user_question, chat_history_tuples):
 def get_response():
     data = request.get_json()
     user_question = data["question"]
-    chat_history = data["history"]
-    chat_history = chat_history[-5:]
-    chat_history_tuples = [
-        (item["question"], item["response"]) for item in chat_history
-    ]
 
     task_id = str(uuid.uuid4())
     thread = threading.Thread(
-        target=background_task, args=(task_id, user_question, chat_history_tuples)
+        target=background_task, args=(task_id, user_question)
     )
     thread.start()
 
