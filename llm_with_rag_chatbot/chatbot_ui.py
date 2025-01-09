@@ -1,3 +1,11 @@
+"""
+Web UI for chatbot.
+
+Can specify which chatbot to use when launching with -a.
+Point your browser to http://localhost:5000
+"""
+
+import argparse
 import os
 import threading
 import uuid
@@ -8,7 +16,16 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 from flask_caching import Cache
 
-from chatbots import LlmWithRagKosAndExternalInterpreter
+from chatbots import LlmWithRagKosAndExternalInterpreter, LlmWithKoCodeTools
+
+parser = argparse.ArgumentParser(description="Web UI for chatbot. Point your browser to http://localhost:5000")
+parser.add_argument("--chatbot_architecture", "-a", default="LlmWithKoCodeTools", type=str, choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"), help="Which chatbot architecture to use.")
+args = parser.parse_args()
+
+class_mapping = {
+    "LlmWithRagKosAndExternalInterpreter": LlmWithRagKosAndExternalInterpreter,
+    "LlmWithKoCodeTools": LlmWithKoCodeTools
+}
 
 # Configure logging to include date and time
 logger = logging.getLogger()
@@ -36,7 +53,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
-chatbot = LlmWithRagKosAndExternalInterpreter(OPENAI_API_KEY, model_name, model_seed, knowledge_base)
+chatbot = class_mapping[args.chatbot_architecture](OPENAI_API_KEY, model_name, model_seed, knowledge_base)
 
 @app.route("/")
 def home():

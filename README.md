@@ -31,12 +31,13 @@ OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
 - MODEL_SEED provides a numerical seed to the OpenAI language model specified by MODEL. Specifying MODEL_SEED is optional. It only affects MODEL, not EVAL_MODEL.
 - Get your own API key at [OpenAI's API keys section](https://platform.openai.com/api-keys) and set OPENAI_API_KEY with its value. 
 ## Run the app 
-Once the environment is set up you can run this app to be useed from command line using
+Once the environment is set up you can run this app from the command line using
 ```
-python llm_with_rag_chatbot/openai_chatbot_with_assistant_api.py 
+python llm_with_rag_chatbot/chatbot_cmd.py 
 ```
 
-To run this app locally to access web interface use 
+To run this app in a web interface, use 
 ```
-python llm_with_rag_chatbot/chatbot.py
+python llm_with_rag_chatbot/chatbot_ui.py
 ``` 
+and point your browser to http://localhost:5000
