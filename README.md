@@ -33,11 +33,11 @@ OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
 ## Run the app 
 Once the environment is set up you can run this app from the command line using
 ```
-python llm_with_rag_chatbot/chatbot_cmd.py 
+python chatbot_cmd.py 
 ```
 
 To run this app in a web interface, use 
 ```
-python llm_with_rag_chatbot/chatbot_ui.py
+python chatbot_ui.py
 ``` 
 and point your browser to http://localhost:5000
