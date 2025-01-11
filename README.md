@@ -49,5 +49,10 @@ python src/chatbot_ui.py
 ``` 
 and point your browser to http://localhost:5000
 
+## Testing
+To test the performance of the chatbot, use the test_chatbot_conversation.py script. Example:
+python tests/test_chatbot_conversation.py -a LlmWithKoCodeTools -c tests/comprehensive_convo.json
+The results will be stored in a log file.
+
 ## Previous Version
 A working copy of the previous version of the chatbot is in llm_with_rag_chatbot. Consult the [README within that folder](/llm_with_rag_chatbot/README.md) for instructions to operate it.

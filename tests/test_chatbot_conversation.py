@@ -22,12 +22,11 @@ from datetime import datetime
 import json
 import logging
 import os
-import re
 
 from dotenv import load_dotenv
 
 from evaluators import KeywordEvaluator, RougelEvaluator, LlmEvaluator
-from chatbots import LlmWithRagKosAndExternalInterpreter, LlmWithKoCodeTools
+from src.chatbots import LlmWithRagKosAndExternalInterpreter, LlmWithKoCodeTools
 
 TIME_FMT = "%Y-%m-%d-%H%M.%S.%f"
 ENC = "utf-8"
