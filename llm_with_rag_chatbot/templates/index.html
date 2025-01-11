@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Interface</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-dyFBUkhN4yowHi-PTK1rH1m5bb5MZZkIx1Kb12/6fW1thqPnD9FE1GTEGOIBZ5go" crossorigin="anonymous">
+
+    <style>
+        body {
+            overflow: hidden; /* Hide the page scroll bar */
+        }
+        .container {
+            margin-top: 20px;
+            max-width: 800px; /* Adjust the max-width as needed */
+        }
+        .chat-history {
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f8f9fa;
+            max-width: 800px; /* Ensure this matches the container width */
+            margin: auto; /* Center the chat history */
+            overflow-y: auto; /* Enable vertical scrolling */
+        }
+        .placeholder-text {
+            font-style: italic;
+            color: #888;
+        }
+        .form-container {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            padding: 0 15px;
+            background-color: #fff;
+        }
+        .spinner-container {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .delay-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+        .textarea-container {
+            position: relative;
+            max-width: 800px; /* Ensure this matches the container width */
+            margin: auto; /* Center the textarea */
+        }
+        .textarea-container textarea {
+            resize: none;
+            width: 100%;
+            padding-right: 50px; /* Adjust padding to make space for the button */
+            max-height: calc(5 * 1.5em); /* 5 lines, with each line approximately 1.5em height */
+            overflow-y: auto; /* Show scrollbar if content exceeds max-height */
+        }
+        .textarea-container button, .loading-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading-icon {
+            display: none; /* Hide the loading icon by default */
+        }
+        .message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        .message .icon {
+            margin-right: 10px;
+        }
+        .message.user .icon {
+            color: #007bff;
+        }
+        .message.bot .icon {
+            color: #343a40;
+        }
+        .message .text {
+            flex: 1;
+        }
+        .message.user .text {
+            font-weight: bold; /* Make user messages bold */
+        }
+        .conversation-divider {
+            border-top: 1px solid #ddd;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Chatbot Interface</h1>
+        <div id="history" class="chat-history">
+            <p class="placeholder-text">No chat history yet...</p>
+        </div>
+
+        <!-- Spinner for loading state -->
+        <div id="spinner" class="spinner-container">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-container">
+        <div id="delayedMessage" class="delay-message" role="alert">
+            <i class="fas fa-cog fa-spin"></i>
+            Executing code. This will take a few seconds ...
+        </div>
+        <form onsubmit="event.preventDefault(); getResponse();">
+            <div class="textarea-container">
+                <textarea id="question" name="question" class="form-control" rows="2" placeholder="Ask a question" required></textarea>
+                <button type="submit" id="submitButton" class="btn btn-primary">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+                <div class="loading-icon">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Font Awesome for the icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script>
+        function adjustChatHistoryHeight() {
+            const chatHistory = document.getElementById('history');
+            const newHeight = window.innerHeight - 185;
+            chatHistory.style.maxHeight = `${newHeight}px`;
+        }
+
+        function getResponse() {
+            const questionElement = document.getElementById('question');
+            const question = questionElement.value;
+            let history = JSON.parse(sessionStorage.getItem('history')) || [];
+            // Disable the text box and button, show the loading icon
+            questionElement.disabled = true;
+            document.getElementById('submitButton').style.display = 'none';
+            document.querySelector('.loading-icon').style.display = 'flex';
+
+            fetch('/get_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question: question, history: history })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const taskId = data.task_id;
+                // Show delayed message if response is not ready after 5 seconds
+                setTimeout(() => {
+                    if (document.getElementById('submitButton').style.display === 'none') {
+                        document.getElementById('delayedMessage').style.display = 'block';
+                    }
+                }, 8000);
+                checkResponse(taskId, history, question);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function checkResponse(taskId, history, question) {
+            fetch(`/check_response/${taskId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === "processing") {
+                        setTimeout(() => checkResponse(taskId, history, question), 1000);
+                    } else {
+                        const botResponse = data.response;
+                        history.push({ question: question, response: botResponse });
+                        sessionStorage.setItem('history', JSON.stringify(history));
+                        displayHistory(history);
+                        // Clear the text box content
+                        document.getElementById('question').value = '';
+                        // Re-enable the text box and button, hide the loading icon
+                        document.getElementById('question').disabled = false;
+                        document.getElementById('submitButton').style.display = 'flex';
+                        document.querySelector('.loading-icon').style.display = 'none';
+                        document.getElementById('delayedMessage').style.display = 'none';
+                        document.getElementById('question').focus();
+
+                        // Scroll to the bottom of the chat history
+                        const historyDiv = document.getElementById('history');
+                        historyDiv.scrollTop = historyDiv.scrollHeight;
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function displayHistory(history) {
+            const historyDiv = document.getElementById('history');
+            historyDiv.innerHTML = '';
+            if (history.length === 0) {
+                historyDiv.innerHTML = '<p class="placeholder-text">No chat history yet...</p>';
+            }
+            history.forEach(entry => {
+                const formattedResponse = entry.response.replace(/\n/g, '<br>');
+                historyDiv.innerHTML += `
+                    <div class="message user">
+                        <div class="icon"><i class="fas fa-user fa-lg"></i></div>
+                        <div class="text">${entry.question}</div>
+                    </div>
+                    <div class="message bot">
+                        <div class="icon"><i class="fas fa-robot fa-lg"></i></div>
+                        <div class="text">${formattedResponse}</div>
+                    </div>
+                    <div class="conversation-divider"></div>
+                `;
+            });
+        }
+
+        window.onload = function() {
+            const history = JSON.parse(sessionStorage.getItem('history')) || [];
+            displayHistory(history);
+            adjustChatHistoryHeight();
+
+            // Attach event listener to the textarea for key events
+            document.getElementById('question').addEventListener('keydown', function(event) {
+                if (event.key === 'Enter' && !event.shiftKey) {
+                    event.preventDefault(); // Prevent form submission on Enter
+                    document.querySelector('button[type="submit"]').click(); // Trigger button click
+                }
+                if (event.key === 'Enter' && event.shiftKey) {
+                    event.preventDefault();
+                    this.value += '\n'; // Add a new line on SHIFT + Enter
+                }
+            });
+
+            // Adjust chat history height on window resize
+            window.addEventListener('resize', adjustChatHistoryHeight);
+            document.getElementById('question').focus();
+        };
+    </script>
+</body>
+</html>

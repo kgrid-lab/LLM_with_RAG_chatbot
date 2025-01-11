@@ -1,7 +1,5 @@
 import json
 import logging
-import os
-import sys
 
 from dotenv import load_dotenv
 import openai
@@ -9,19 +7,19 @@ import openai
 from . import Chatbot
 
 # Import KO Python code functions so they can be called directly.
-load_dotenv()
-sys.path.append(os.path.join(os.getenv("KNOWLEDGE_BASE"), "code"))
-from ascvd_2013 import ascvd_2013
-from bmi import bmi
-from bsa import bsa
-from chadsvasc import chadsvasc
-from ckd_epi_gfr_2021 import ckd_epi_gfr_2021
-from cockcroft_gault_cr_cl import cockcroft_gault_cr_cl
-from corr_ca_alb import corr_ca_alb
-from mdrd_gfr import mdrd_gfr
-from mean_arterial_pressure import mean_arterial_pressure
-import nihss
-from wells import wells
+#load_dotenv()
+#sys.path.append(os.path.join(os.getenv("KNOWLEDGE_BASE"), "code"))
+from KO.clinical_calculators.code.ascvd_2013 import ascvd_2013
+from KO.clinical_calculators.code.bmi import bmi
+from KO.clinical_calculators.code.bsa import bsa
+from KO.clinical_calculators.code.chadsvasc import chadsvasc
+from KO.clinical_calculators.code.ckd_epi_gfr_2021 import ckd_epi_gfr_2021
+from KO.clinical_calculators.code.cockcroft_gault_cr_cl import cockcroft_gault_cr_cl
+from KO.clinical_calculators.code.corr_ca_alb import corr_ca_alb
+from KO.clinical_calculators.code.mdrd_gfr import mdrd_gfr
+from KO.clinical_calculators.code.mean_arterial_pressure import mean_arterial_pressure
+import KO.clinical_calculators.code.nihss as nihss
+from KO.clinical_calculators.code.wells import wells
 
 def nihss_adapter(consciousness: str,
           month_and_age_questions: str,
