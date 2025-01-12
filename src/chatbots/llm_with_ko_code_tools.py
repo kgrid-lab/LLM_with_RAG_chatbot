@@ -646,8 +646,7 @@ class LlmWithKoCodeTools(Chatbot):
         # so we simply wait until it is done (i.e. create_and_poll).
         run = self._client.beta.threads.runs.create_and_poll(
         thread_id=self._thread.id,
-        assistant_id=self._assistant.id,
-        instructions="Respond to the user's question following the steps provided."
+        assistant_id=self._assistant.id
         )
 
         # If the LLM finishes without needing to call a tool, return the response.
@@ -667,7 +666,7 @@ class LlmWithKoCodeTools(Chatbot):
                 params = json.loads(tool.function.arguments)
                 tool_outputs.append({
                     "tool_call_id": tool.id,
-                    "output": "*{}*".format(CODE_MAP[tool.function.name](**params))
+                    "output": str(CODE_MAP[tool.function.name](**params))
                 })
 
             # Submit all tool outputs at once after collecting them in a list
