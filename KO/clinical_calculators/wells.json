@@ -6,7 +6,7 @@
     "dc:title": "Wells' Criteria for Pulmonary Embolism",
     "dc:identifier": "ark:wells",
     "version": "v1.0",
-    "dc:description": "Given features of the patient's history and presenting symptoms and signs, computes a score representing the probability of a non-pregnant adult patient having a pulmonary embolism in the emergency department.",
+    "dc:description": "Given features of the patient's history and presenting symptoms and signs, computes a score that can be used to estimate the probability of a non-pregnant adult patient having a pulmonary embolism in the emergency department.",
     "koio:contributors": "Kgrid Team",
     "koio:keywords": [
       "pulmonary embolism",
@@ -20,6 +20,37 @@
         "Knowledge",
         "Function"
       ],
+      "parameters": {
+        "clin_sx_dvt": {
+          "type": "boolean",
+          "description": "True if the patient has clinical signs or symptoms of DVT (deep vein thrombosis). False otherwise."
+        },
+        "pe_1_dx": {
+          "type": "boolean",
+          "description": "True if pulmonary embolism is the leading diagnosis or equally likely as another diagnosis. False otherwise."
+        },
+        "hr_gt_100": {
+          "type": "boolean",
+          "description": "True if the patient's heart rate is greater than 100 beats per minute. False otherwise."
+        },
+        "immob_surg": {
+          "type": "boolean",
+          "description": "True if the patient has been immobilized for at least 3 days or has had surgery in the previous 4 weeks. False otherwise."
+        },
+        "prev_dx": {
+          "type": "boolean",
+          "description": "True if the patient has previously been objectively diagnosed with DVT or pulmonary embolism. False otherwise."
+        },
+        "hemoptysis": {
+          "type": "boolean",
+          "description": "True if the patient is experiencing hemoptysis. False otherwise."
+        },
+        "malignancy": {
+          "type": "boolean",
+          "description": "True if the patient has a malignancy that has been treated within the past 6 months or has received palliative care. False otherwise."
+        }
+      },
+      "requiredParameters": ["clin_sx_dvt", "pe_1_dx", "hr_gt_100", "immob_surg", "prev_dx", "hemoptysis", "malignancy"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/wells.py"
     }
   }

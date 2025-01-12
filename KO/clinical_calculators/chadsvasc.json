@@ -6,7 +6,7 @@
     "dc:title": "CHA2DS2-VASc Score",
     "dc:identifier": "ark:chadsvasc",
     "version": "v1.0",
-    "dc:description": "A score representing the risk of stroke in a patient with atrial fibrillation. 0 is low-risk in males. 0 or 1 is low-risk in females. All other scores are higher risk.",
+    "dc:description": "A score that can be used to estimate the risk of stroke in a patient with atrial fibrillation. 0 is low-risk in males. 0 or 1 is low-risk in females. All other scores are higher risk.",
     "koio:contributors": "Kgrid Team",
     "koio:keywords": [
       "creatinine clearance",
@@ -18,6 +18,37 @@
         "Knowledge",
         "Function"
       ],
+      "parameters": {
+        "age": {
+          "type": "integer",
+          "description": "The patient's age in years."
+        },
+        "sex": {
+          "type": "string",
+          "description": "The patient's sex, male or female."
+        },
+        "chf": {
+          "type": "boolean",
+          "description": "True if the patient has a history of heart failure. False otherwise."
+        },
+        "htn": {
+          "type": "boolean",
+          "description": "True if the patient has a history of hypertension. False otherwise."
+        },
+        "stroke": {
+          "type": "boolean",
+          "description": "True if the patient has a history of stroke, TIA, or thromboembolism. False otherwise."
+        },
+        "vasc": {
+          "type": "boolean",
+          "description": "True if the patient has a history of vascular disease, including prior myocardial infarction, peripheral arterial disease, or aortic plaque. False otherwise."
+        },
+        "dm": {
+          "type": "boolean",
+          "description": "True if the patient has a history of diabetes. False otherwise."
+        }
+      },
+      "requiredParameters": ["age", "sex", "chf", "htn", "stroke", "vasc", "dm"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/chadsvasc.py"
     }
   }

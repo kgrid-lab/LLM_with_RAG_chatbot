@@ -19,6 +19,25 @@
         "Knowledge",
         "Function"
       ],
+      "parameters": {
+        "sex": {
+          "type": "string",
+          "description": "The patient's sex, either male or female."
+        },
+        "age": {
+          "type": "integer",
+          "description": "The patient's age in years."
+        },
+        "cr": {
+          "type": "number",
+          "description": "The patient's serum creatinine level in miligrams per deciliter."
+        },
+        "race_black": {
+          "type": "boolean",
+          "description": "Optional. True if the patient's race is Black. False otherwise."
+        }
+      },
+      "requiredParameters": ["sex", "age", "cr"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/mdrd_gfr.py"
     }
   }
