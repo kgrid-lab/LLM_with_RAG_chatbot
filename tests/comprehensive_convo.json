@@ -2,7 +2,7 @@
     {
         "query": "Alice is a 60-year-old female weighing 80 kg with a serum creatinine of 0.8 mg/dL. What is her creatinine clearance?",
         "rubric": {
-            "standard": "Alice's creatinine clearance using the Cockcroft-Gault formula is 94 mL/min.",
+            "standard": "Alice's creatinine clearance using the Cockcroft-Gault formula is *94* mL/min.",
             "keywords": {
                 "containsAll": ["cockcroft", "94"]
             }
@@ -42,7 +42,7 @@
     {
         "query": "Her creatinine is 0.9.",
         "rubric": {
-            "standard": "Carol's creatinine clearance is 91 mL/min.",
+            "standard": "Carol's creatinine clearance is *91* mL/min.",
             "keywords": {
                 "containsAll": ["91"]
             }
@@ -52,7 +52,7 @@
     {
         "query": "What is her glomerular filtration rate using the MDRD GFR Equation?",
         "rubric": {
-            "standard": "Carol's glomerular filtration rate is 78.8 mL/min/1.73m^2.",
+            "standard": "Carol's glomerular filtration rate is *78.8* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["78.79", "78.8", "79"]
             }
@@ -62,7 +62,7 @@
     {
         "query": "David is a 62-year-old Asian-American man with a serum creatinine of 0.85 mg/dL. What is his glomerular filtration rate per the MDRD GFR Equation?",
         "rubric": {
-            "standard": "David's glomerular filtration rate 91.3 mL/min/1.73m^2.",
+            "standard": "David's glomerular filtration rate *91.3* mL/min/1.73m^2.",
             "keywords": {
                 "containsAll": ["91"]
             }
@@ -92,7 +92,7 @@
     {
         "query": "Please proceed without her race.",
         "rubric": {
-            "standard": "Emily's glomerular filtration rate is 68.7 mL/min/1.73m^2.",
+            "standard": "Emily's glomerular filtration rate is *68.7* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["69", "68.7", "68.69"]
             }
@@ -122,7 +122,7 @@
     {
         "query": "Please proceed without cystatin-C.",
         "rubric": {
-            "standard": "Using the 2021 CKD-EPI Equation, Frank's glomerular filtration rate is 97 mL/min/1.73m^2.",
+            "standard": "Using the 2021 CKD-EPI Equation, Frank's glomerular filtration rate is *97* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["96.69", "96.7", "97"]
             }
@@ -142,7 +142,7 @@
     {
         "query": "Gloria's serum cystatin-C is 0.62.",
         "rubric": {
-            "standard": "Using the 2021 CKD-EPI Creatinine-Cystatin C Equation, Gloria's glomerular filtration rate is 106.",
+            "standard": "Using the 2021 CKD-EPI Creatinine-Cystatin C Equation, Gloria's glomerular filtration rate is *106* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["105.71", "105.7", "106"]
             }
@@ -152,7 +152,7 @@
     {
         "query": "Henry's systolic blood pressure is 120 mm Hg and his diastolic blood pressure is 80 mm Hg. What is his mean arterial pressure?",
         "rubric": {
-            "standard": "Henry's mean arterial pressure is 93 mm Hg.",
+            "standard": "Henry's mean arterial pressure is *93* mm Hg.",
             "keywords": {
                 "containsAny": ["93.3", "93"]
             }
@@ -172,7 +172,7 @@
     {
         "query": "Isabella's diastolic blood pressure is 71 mm Hg.",
         "rubric": {
-            "standard": "Isabella's mean arterial pressure is 84 mm Hg.",
+            "standard": "Isabella's mean arterial pressure is *84* mm Hg.",
             "keywords": {
                 "containsAny": ["84"]
             }
@@ -182,7 +182,7 @@
     {
         "query": "James' blood pressure is 98/57. What is his mean arterial pressure?",
         "rubric": {
-            "standard": "James' mean arterial pressure is 71 mm Hg.",
+            "standard": "James' mean arterial pressure is *71* mm Hg.",
             "keywords": {
                 "containsAny": ["70.67", "70.7", "71"]
             }
@@ -192,7 +192,7 @@
     {
         "query": "Karen is a 58-year-old woman with a blood pressure of 145/91. What is her mean arterial pressure?",
         "rubric": {
-            "standard": "Karen's mean arterial pressure is 109 mm Hg.",
+            "standard": "Karen's mean arterial pressure is *109* mm Hg.",
             "keywords": {
                 "containsAll": ["109"]
             }
@@ -232,7 +232,7 @@
     {
         "query": "Karen has diabetes, hypertension, and asthma, but no history of vascular disease.",
         "rubric": {
-            "standard": "Karen's CHA2DS2-VASc score is 5.",
+            "standard": "Karen's CHA2DS2-VASc score is *5*.",
             "keywords": {
                 "containsAll": ["5"]
             }
@@ -242,7 +242,7 @@
     {
         "query": "Larry is an 82-year-old man with atrial fibrillation and hypertension, but no history of any other medical conditions. What is his CHA2DS2-VASc score?",
         "rubric": {
-            "standard": "Larry's CHA2DS2-VASc score is 3.",
+            "standard": "Larry's CHA2DS2-VASc score is *3*.",
             "keywords": {
                 "containsAll": ["3"]
             }
@@ -262,7 +262,7 @@
     {
         "query": "Please use a normal serum albumin of 4.2 g/dL.",
         "rubric": {
-            "standard": "Mary's corrected serum calcium level is 9.7 mg/dL.",
+            "standard": "Mary's corrected serum calcium level is *9.7* mg/dL.",
             "keywords": {
                 "containsAll": ["9.7"]
             }
@@ -272,7 +272,7 @@
     {
         "query": "Nick's serum calcium level is 7.7 mg/dL and his serum albumin level is 2.9 g/dL. What is his corrected serum calcium level, using the same normal serum albumin level as before?",
         "rubric": {
-            "standard": "Nick's corrected serum calcium level is 8.7 mg/dL.",
+            "standard": "Nick's corrected serum calcium level is *8.7* mg/dL.",
             "keywords": {
                 "containsAll": ["8.7"]
             }
@@ -292,7 +292,7 @@
     {
         "query": "Olivia's calcium is 10.2 mg/dL.",
         "rubric": {
-            "standard": "Olivia's corrected serum calcium level is 10.2 mg/dL.",
+            "standard": "Olivia's corrected serum calcium level is *10.2* mg/dL.",
             "keywords": {
                 "containsAll": ["10.2"]
             }
@@ -332,7 +332,7 @@
     {
         "query": "Paul has not had surgery or been immobilized in the past 4 weeks. He is not having hemoptysis.",
         "rubric": {
-            "standard": "Paul's Wells' Criteria score is 5.5 points.",
+            "standard": "Paul's Wells' Criteria score is *5.5* points.",
             "keywords": {
                 "containsAll": ["5.5"]
             }
@@ -342,7 +342,7 @@
     {
         "query": "Rebecca is an 87-year-old woman who presents to the ED with new-onset dyspnea, cough, hemoptysis, and a red swollen right leg. Her heart rate is 112 and her blood pressure is 88/52. PE is her most likely diagnosis and she was diagnosed with a PE 2 years ago. She has no history of immobilization, surgery, or malignancy. What is her Wells' Criteria score?",
         "rubric": {
-            "standard": "Rebecca's Wells' Criteria score is 10 points.",
+            "standard": "Rebecca's Wells' Criteria score is *10* points.",
             "keywords": {
                 "containsAll": ["10"]
             }
@@ -352,7 +352,7 @@
     {
         "query": "Steven is a 68-year-old White male smoker with diabetes and total cholesterol of 220 mg/dL and HDL of 15 mg/dL, and blood pressure of 145/92 mm Hg, currently not treated for hypertension. What is his risk of atheroclerotic cardiovascular disease in the next 10 years?",
         "rubric": {
-            "standard": "Steven's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is 65.8%.",
+            "standard": "Steven's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *65.8%*.",
             "keywords": {
                 "containsAll": ["65.8"]
             }
@@ -372,7 +372,7 @@
     {
         "query": "Teresa does not smoke and does not have diabetes. Her systolic blood pressure is 118 mm Hg and she is not being treated for hypertension.",
         "rubric": {
-            "standard": "Teresa's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is 2.8%.",
+            "standard": "Teresa's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *2.8%*.",
             "keywords": {
                 "containsAll": ["2.8"]
             }
@@ -392,7 +392,7 @@
     {
         "query": "Vincent is White.",
         "rubric": {
-            "standard": "Vincent's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is 0.7%.",
+            "standard": "Vincent's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *0.7%*.",
             "keywords": {
                 "containsAll": ["0.7"]
             }
@@ -432,7 +432,7 @@
     {
         "query": "Wendy has severe aphasia, no dysarthria, and extinction to bilateral simultaneous stimulation.",
         "rubric": {
-            "standard": "Wendy's NIH Stroke Score (NIHSS) is 17.",
+            "standard": "Wendy's NIH Stroke Score (NIHSS) is *17*.",
             "keywords": {
                 "containsAll": ["17"]
             }
@@ -442,7 +442,7 @@
     {
         "query": "Zachary is a 72-year-old man in the ED with a suspected stroke. He moves in response to pain. He cannot answer questions about the month and his age. He cannot follow commands to blink eyes or squeeze hands. He has a forced gaze palsy that cannot be overcome. He is bilaterally blind. He has normal facial symmetry. There is no movement of any of his limbs. He does not understand commands to test ataxia. He is unresponsive when testing sensation. He is unresponsive when testing language. He is mute. He has extinction to more than one modality.",
         "rubric": {
-            "standard": "Zachary's NIH Stroke Score (NIHSS) is 36",
+            "standard": "Zachary's NIH Stroke Score (NIHSS) is *36*",
             "keywords": {
                 "containsAll": ["36"]
             }
@@ -452,7 +452,7 @@
     {
         "query": "Ashley is a 79-year-old woman who weighs 55 kg and measures 173 cm tall. What is her Body Mass Index?",
         "rubric": {
-            "standard": "Ashley's Body Mass Index (BMI) is 18.4 kg/m^2.",
+            "standard": "Ashley's Body Mass Index (BMI) is *18.4* kg/m^2.",
             "keywords": {
                 "containsAny": ["18.38", "18.4"]
             }
@@ -462,7 +462,7 @@
     {
         "query": "What is Ashley's body surface area?",
         "rubric": {
-            "standard": "Ashley's body surface area is 1.63 m^2.",
+            "standard": "Ashley's body surface area is *1.63* m^2.",
             "keywords": {
                 "containsAny": ["1.626", "1.63"]
             }
@@ -472,7 +472,7 @@
     {
         "query": "Brian is 75 in. tall and weighs 193 lbs. What is his Body Mass Index?",
         "rubric": {
-            "standard": "Brian's Body Mass Index is 24.1 kg/m^2.",
+            "standard": "Brian's Body Mass Index is *24.1* kg/m^2.",
             "keywords": {
                 "containsAll": ["24.1"]
             }
@@ -482,7 +482,7 @@
     {
         "query": "What is Brian's body surface area?",
         "rubric": {
-            "standard": "Brian's body surface area is 2.15 m^2.",
+            "standard": "Brian's body surface area is *2.15* m^2.",
             "keywords": {
                 "containsAny": ["2.15", "2.2"]
             }
@@ -492,7 +492,7 @@
     {
         "query": "Cynthia is 5 ft. 9 in. tall and weighs 137 lbs. What is her BMI?",
         "rubric": {
-            "standard": "Cynthia's Body Mass Index is 20.2 kg/m^2.",
+            "standard": "Cynthia's Body Mass Index is *20.2* kg/m^2.",
             "keywords": {
                 "containsAll": ["20.2"]
             }

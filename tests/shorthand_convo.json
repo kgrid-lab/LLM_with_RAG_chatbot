@@ -2,7 +2,7 @@
     {
         "query": "Cr clerance for 60yo F weighing 80 kg w SCr 0.8?",
         "rubric": {
-            "standard": "The patient's creatinine clearance using the Cockcroft-Gault formula is 94 mL/min.",
+            "standard": "The patient's creatinine clearance using the Cockcroft-Gault formula is *94* mL/min.",
             "keywords": {
                 "containsAll": ["cockcroft", "94"]
             }
@@ -22,7 +22,7 @@
     {
         "query": "Wt 65 kg",
         "rubric": {
-            "standard": "The patient's creatinine clearance is 68 mL/min.",
+            "standard": "The patient's creatinine clearance is *68* mL/min.",
             "keywords": {
                 "containsAll": ["68"]
             }
@@ -42,7 +42,7 @@
     {
         "query": "0.9",
         "rubric": {
-            "standard": "The patient's creatinine clearance is 91 mL/min.",
+            "standard": "The patient's creatinine clearance is *91* mL/min.",
             "keywords": {
                 "containsAll": ["91"]
             }
@@ -52,7 +52,7 @@
     {
         "query": "GFR for this pt using MDRD?",
         "rubric": {
-            "standard": "Carol's glomerular filtration rate is 78.8 mL/min/1.73m^2.",
+            "standard": "Carol's glomerular filtration rate is *78.8* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["78.79", "78.8", "79"]
             }
@@ -62,7 +62,7 @@
     {
         "query": "MDRD GFR for 62yo Asian-American M w SCr 0.85?",
         "rubric": {
-            "standard": "The patient's glomerular filtration rate 91.3 mL/min/1.73m^2.",
+            "standard": "The patient's glomerular filtration rate *91.3* mL/min/1.73m^2.",
             "keywords": {
                 "containsAll": ["91"]
             }
@@ -92,7 +92,7 @@
     {
         "query": "No race",
         "rubric": {
-            "standard": "Emily's glomerular filtration rate is 68.7 mL/min/1.73m^2.",
+            "standard": "Emily's glomerular filtration rate is *68.7* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["69", "68.7", "68.69"]
             }
@@ -122,7 +122,7 @@
     {
         "query": "No cystatin-C",
         "rubric": {
-            "standard": "Using the 2021 CKD-EPI Equation, the patient's glomerular filtration rate is 97 mL/min/1.73m^2.",
+            "standard": "Using the 2021 CKD-EPI Equation, the patient's glomerular filtration rate is *97* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["96.69", "96.7", "97"]
             }
@@ -142,7 +142,7 @@
     {
         "query": "cystatin-C is 0.62",
         "rubric": {
-            "standard": "Using the 2021 CKD-EPI Creatinine-Cystatin C Equation, Gloria's glomerular filtration rate is 106.",
+            "standard": "Using the 2021 CKD-EPI Creatinine-Cystatin C Equation, Gloria's glomerular filtration rate is *106* mL/min/1.73m^2.",
             "keywords": {
                 "containsAny": ["105.71", "105.7", "106"]
             }
@@ -152,7 +152,7 @@
     {
         "query": "MAP for pt w BP 120/80?",
         "rubric": {
-            "standard": "The patient's mean arterial pressure is 93 mm Hg.",
+            "standard": "The patient's mean arterial pressure is *93* mm Hg.",
             "keywords": {
                 "containsAny": ["93.3", "93"]
             }
@@ -172,7 +172,7 @@
     {
         "query": "DBP 71",
         "rubric": {
-            "standard": "The patient's mean arterial pressure is 84 mm Hg.",
+            "standard": "The patient's mean arterial pressure is *84* mm Hg.",
             "keywords": {
                 "containsAny": ["84"]
             }
@@ -182,7 +182,7 @@
     {
         "query": "Pt BP 98/57. MAP?",
         "rubric": {
-            "standard": "James' mean arterial pressure is 71 mm Hg.",
+            "standard": "James' mean arterial pressure is *71* mm Hg.",
             "keywords": {
                 "containsAny": ["70.67", "70.7", "71"]
             }
@@ -192,7 +192,7 @@
     {
         "query": "Karen is 58yo F w BP 145/91. What is her MAP?",
         "rubric": {
-            "standard": "Karen's mean arterial pressure is 109 mm Hg.",
+            "standard": "Karen's mean arterial pressure is *109* mm Hg.",
             "keywords": {
                 "containsAll": ["109"]
             }
@@ -232,7 +232,7 @@
     {
         "query": "Karen has diabetes, HTN, & asthma, but no h/o vascular disease.",
         "rubric": {
-            "standard": "Karen's CHA2DS2-VASc score is 5.",
+            "standard": "Karen's CHA2DS2-VASc score is *5*.",
             "keywords": {
                 "containsAll": ["5"]
             }
@@ -242,7 +242,7 @@
     {
         "query": "CHA2DS2-VASc score for 82yo M w PMH of afib & HTN, and no other PMH?",
         "rubric": {
-            "standard": "The patient's CHA2DS2-VASc score is 3.",
+            "standard": "The patient's CHA2DS2-VASc score is *3*.",
             "keywords": {
                 "containsAll": ["3"]
             }
@@ -262,7 +262,7 @@
     {
         "query": "Use nl albumin 4.2",
         "rubric": {
-            "standard": "Mary's corrected serum calcium level is 9.7 mg/dL.",
+            "standard": "Mary's corrected serum calcium level is *9.7* mg/dL.",
             "keywords": {
                 "containsAll": ["9.7"]
             }
@@ -272,7 +272,7 @@
     {
         "query": "Nick: Ca 7.7, albumin 2.9. What is his corrected Ca using same nl albumin as before?",
         "rubric": {
-            "standard": "Nick's corrected serum calcium level is 8.7 mg/dL.",
+            "standard": "Nick's corrected serum calcium level is *8.7* mg/dL.",
             "keywords": {
                 "containsAll": ["8.7"]
             }
@@ -292,7 +292,7 @@
     {
         "query": "Ca 10.2",
         "rubric": {
-            "standard": "The patient's corrected serum calcium level is 10.2 mg/dL.",
+            "standard": "The patient's corrected serum calcium level is *10.2* mg/dL.",
             "keywords": {
                 "containsAll": ["10.2"]
             }
@@ -332,7 +332,7 @@
     {
         "query": "No hemoptysis",
         "rubric": {
-            "standard": "Paul's Wells' Criteria score is 5.5 points.",
+            "standard": "Paul's Wells' Criteria score is *5.5* points.",
             "keywords": {
                 "containsAll": ["5.5"]
             }
@@ -342,7 +342,7 @@
     {
         "query": "Calculate Wells' criteria 87yo F w PMH PE 2y ago & no h/o immobilization, surgery, or malignancy, presenting to ED w new-onset dyspnea, cough, hemoptysis, & erythematous edematous right leg. Vitals: HR 112, BP 88/52. PE is most likely dx.",
         "rubric": {
-            "standard": "The patient's Wells' Criteria score is 10 points.",
+            "standard": "The patient's Wells' Criteria score is *10* points.",
             "keywords": {
                 "containsAll": ["10"]
             }
@@ -352,7 +352,7 @@
     {
         "query": "10y ASCVD risk for 68yo White M smoker w diabetes, total cholesterol 220, HDL 15, BP 145/92, currently not treated for HTN.",
         "rubric": {
-            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is 65.8%.",
+            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *65.8%*.",
             "keywords": {
                 "containsAll": ["65.8"]
             }
@@ -372,7 +372,7 @@
     {
         "query": "Non-smoker. No h/o diabetes. SBP 118. No tx for HTN.",
         "rubric": {
-            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is 2.8%.",
+            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *2.8%*.",
             "keywords": {
                 "containsAll": ["2.8"]
             }
@@ -392,7 +392,7 @@
     {
         "query": "Pt is White.",
         "rubric": {
-            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is 0.7%.",
+            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *0.7%*.",
             "keywords": {
                 "containsAll": ["0.7"]
             }
@@ -432,7 +432,7 @@
     {
         "query": "Severe aphasia. No dysarthria. Extinction to bilateral simultaneous stimulation.",
         "rubric": {
-            "standard": "The patient's NIH Stroke Score (NIHSS) is 17.",
+            "standard": "The patient's NIH Stroke Score (NIHSS) is *17*.",
             "keywords": {
                 "containsAll": ["17"]
             }
@@ -442,7 +442,7 @@
     {
         "query": "Zachary is 72yo M in ED w a suspected stroke. Moves in response to pain. Can't answer month or age. Can't follow commands to blink eyes or squeeze hands. Forced gaze palsy that cannot be overcome. Bilaterally blind. Normal facial symmetry. No movement of any limbs. Doesn't understand commands to test ataxia. Unresponsive when testing sensation and language. Mute. Extinction to more than one modality.",
         "rubric": {
-            "standard": "Zachary's NIH Stroke Score (NIHSS) is 36",
+            "standard": "Zachary's NIH Stroke Score (NIHSS) is *36*",
             "keywords": {
                 "containsAll": ["36"]
             }
@@ -452,7 +452,7 @@
     {
         "query": "Ashley is 79yo F weighing 55 kg and 173 cm tall. What is her BMI?",
         "rubric": {
-            "standard": "Ashley's Body Mass Index (BMI) is 18.4 kg/m^2.",
+            "standard": "Ashley's Body Mass Index (BMI) is *18.4* kg/m^2.",
             "keywords": {
                 "containsAny": ["18.38", "18.4"]
             }
@@ -462,7 +462,7 @@
     {
         "query": "Ashley's BSA?",
         "rubric": {
-            "standard": "Ashley's body surface area is 1.63 m^2.",
+            "standard": "Ashley's body surface area is *1.63* m^2.",
             "keywords": {
                 "containsAny": ["1.626", "1.63"]
             }
@@ -472,7 +472,7 @@
     {
         "query": "BMI of pt 75 in. tall and weighing 193 lbs?",
         "rubric": {
-            "standard": "The patient's Body Mass Index is 24.1 kg/m^2.",
+            "standard": "The patient's Body Mass Index is *24.1* kg/m^2.",
             "keywords": {
                 "containsAll": ["24.1"]
             }
@@ -482,7 +482,7 @@
     {
         "query": "This pt's BSA?",
         "rubric": {
-            "standard": "This patient's body surface area is 2.15 m^2.",
+            "standard": "This patient's body surface area is *2.15* m^2.",
             "keywords": {
                 "containsAny": ["2.15", "2.2"]
             }
@@ -492,7 +492,7 @@
     {
         "query": "BMI of pt 5 ft. 9 in. tall and weighing 137 lbs?",
         "rubric": {
-            "standard": "The patient's Body Mass Index is 20.2 kg/m^2.",
+            "standard": "The patient's Body Mass Index is *20.2* kg/m^2.",
             "keywords": {
                 "containsAll": ["20.2"]
             }

@@ -624,7 +624,7 @@ class LlmWithKoCodeTools(Chatbot):
                 - Some parameters are optional. Ask the user if they would like to provide values for the optional parameters. Do not proceed until the user has either provided values for the optional parameters or explicitly stated that they do not want to provide values.
                 - Sometimes, the user might provide values in different units than what the code requires. In this case, please convert them to the units required by the code.
         Step 3: Once values have been obtained for all required parameters, call the function tool for the requested calculation with the gathered parameter values.
-        Step 4: Tell the user the result of the call to the function tool.
+        Step 4: Enclose the result of calling the function tool in asterisks and communicate it to the user. (e.g. The patient's creatinine clearance is *75* mL/min.)
         """,
         tools=CODE_TOOLS,
         model=model_name
