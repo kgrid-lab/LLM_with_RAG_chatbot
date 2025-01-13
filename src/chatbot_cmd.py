@@ -9,7 +9,7 @@ import os
 
 from dotenv import load_dotenv
 
-from chatbots import LlmWithRagKosAndExternalInterpreter, LlmWithKoCodeTools
+from chatbots import LlmWithKoCodeTools, LlmWithRagKosAndExternalInterpreter
 
 # Load environment variables
 load_dotenv()
@@ -20,21 +20,32 @@ knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
 
 parser = argparse.ArgumentParser(description="Command-line interface for chatbot.")
-parser.add_argument("--chatbot_architecture", "-a", default="LlmWithKoCodeTools", type=str, choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"), help="Which chatbot architecture to use.")
+parser.add_argument(
+    "--chatbot_architecture",
+    "-a",
+    default="LlmWithKoCodeTools",
+    type=str,
+    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"),
+    help="Which chatbot architecture to use.",
+)
 args = parser.parse_args()
 
 class_mapping = {
     "LlmWithRagKosAndExternalInterpreter": LlmWithRagKosAndExternalInterpreter,
-    "LlmWithKoCodeTools": LlmWithKoCodeTools
+    "LlmWithKoCodeTools": LlmWithKoCodeTools,
 }
 
+
 def main():
-    chatbot = class_mapping[args.chatbot_architecture](OPENAI_API_KEY, model_name, model_seed, knowledge_base)
+    chatbot = class_mapping[args.chatbot_architecture](
+        OPENAI_API_KEY, model_name, model_seed, knowledge_base
+    )
 
     while True:
         text = input("Enter your query: --> ")
         response = chatbot.invoke(text)
         print(response)
+
 
 if __name__ == "__main__":
     main()

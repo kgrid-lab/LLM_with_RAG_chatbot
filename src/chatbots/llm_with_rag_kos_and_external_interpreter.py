@@ -4,8 +4,6 @@ import os
 import re
 from collections import deque
 
-from . import Chatbot
-
 import openai
 import requests
 from langchain.prompts import ChatPromptTemplate
@@ -16,9 +14,12 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 
+from . import Chatbot
+
 ENC = "utf-8"
 
 logger = logging.getLogger(__name__)
+
 
 def get_full_context(history, current_query):
     """
@@ -28,6 +29,7 @@ def get_full_context(history, current_query):
     history_text = "\n".join([f"Clinician: {q}\nYou: {a}" for q, a in history])
     full_context = f"{history_text}\nClinician: {current_query}\nYou:"
     return full_context
+
 
 def extract_code(response: str) -> str:
     """
@@ -43,6 +45,7 @@ def extract_code(response: str) -> str:
     else:
         return ""
 
+
 class LlmWithRagKosAndExternalInterpreter(Chatbot):
     """
     Through RAG, the main LLM of this Chatbot has access to a knowledge_base of
@@ -56,7 +59,9 @@ class LlmWithRagKosAndExternalInterpreter(Chatbot):
     response from the 2nd LLM and relays it to the user.
     """
 
-    def __init__(self, openai_api_key: str, model_name: str, model_seed: int, knowledge_base: str):
+    def __init__(
+        self, openai_api_key: str, model_name: str, model_seed: int, knowledge_base: str
+    ):
         """
         Constructor
         Parameters:
@@ -65,17 +70,24 @@ class LlmWithRagKosAndExternalInterpreter(Chatbot):
         - model_seed: Specify seed for reproducibility. Recommend storing in .env.
         - knowledge_base: Directory containing Knowledge Object (KO) JSON metadata files. Recommend storing in .env.
         """
-            
+
         # Setup OpenAI API client
         openai.api_key = openai_api_key
 
         # Initialize the language model
-        model = ChatOpenAI(openai_api_key=openai_api_key, model=model_name, temperature=0, seed=model_seed)
+        model = ChatOpenAI(
+            openai_api_key=openai_api_key,
+            model=model_name,
+            temperature=0,
+            seed=model_seed,
+        )
 
         # Initialize embeddings and vector store
         embeddings = OpenAIEmbeddings()
         splits = []
-        file_paths = (file.path for file in os.scandir(knowledge_base) if file.is_file())
+        file_paths = (
+            file.path for file in os.scandir(knowledge_base) if file.is_file()
+        )
         for file_path in file_paths:
             loader = TextLoader(file_path, encoding=ENC)
             ko = loader.load()
@@ -114,7 +126,10 @@ class LlmWithRagKosAndExternalInterpreter(Chatbot):
         prompt = ChatPromptTemplate.from_template(template)
         parser = StrOutputParser()
         self._chain = (
-            {"info": vectorstore2.as_retriever(search_kwargs={"k": 20}), "question": RunnablePassthrough()}
+            {
+                "info": vectorstore2.as_retriever(search_kwargs={"k": 20}),
+                "question": RunnablePassthrough(),
+            }
             | prompt
             | model
             | parser
@@ -158,10 +173,16 @@ class LlmWithRagKosAndExternalInterpreter(Chatbot):
             return "Code execution failed."
 
     def process(self, text, conversation_history):
-        logger.info("Received input:\n%s\nWith history:\n%s\n", text, "\n".join(("USR> {}\nBOT> {}".format(h[0], h[1]) for h in conversation_history)))
+        logger.info(
+            "Received input:\n%s\nWith history:\n%s\n",
+            text,
+            "\n".join(
+                ("USR> {}\nBOT> {}".format(h[0], h[1]) for h in conversation_history)
+            ),
+        )
         full_context = get_full_context(conversation_history, text)
         response = self._chain.invoke(full_context)
-        
+
         code = extract_code(response)
 
         if code:
@@ -172,7 +193,7 @@ class LlmWithRagKosAndExternalInterpreter(Chatbot):
         else:
             logger.info("No code\n")
             return response
-        
+
     def get_architecture(self) -> str:
         return "LLM with RAG KOs and external evaluator"
 

@@ -2,10 +2,9 @@ import json
 import logging
 import os
 
-from dotenv import load_dotenv
 import openai
 
-from . import Chatbot
+import KO.clinical_calculators.code.nihss as nihss
 
 # Import KO Python code functions so they can be called directly.
 from KO.clinical_calculators.code.ascvd_2013 import ascvd_2013
@@ -17,26 +16,30 @@ from KO.clinical_calculators.code.cockcroft_gault_cr_cl import cockcroft_gault_c
 from KO.clinical_calculators.code.corr_ca_alb import corr_ca_alb
 from KO.clinical_calculators.code.mdrd_gfr import mdrd_gfr
 from KO.clinical_calculators.code.mean_arterial_pressure import mean_arterial_pressure
-import KO.clinical_calculators.code.nihss as nihss
 from KO.clinical_calculators.code.wells import wells
+
+from . import Chatbot
 
 ENC = "utf-8"
 
-def nihss_adapter(consciousness: str,
-          month_and_age_questions: str,
-          blink_eyes_and_squeeze_hands: str,
-          horizontal_extraocular_movements: str,
-          visual_fields: str,
-          facial_palsy: str,
-          left_arm_motor_drift: str,
-          right_arm_motor_drift: str,
-          left_leg_motor_drift: str,
-          right_leg_motor_drift: str,
-          limb_ataxia: str,
-          sensation: str,
-          language: str,
-          dysarthria: str,
-          inattention: str) -> int:
+
+def nihss_adapter(
+    consciousness: str,
+    month_and_age_questions: str,
+    blink_eyes_and_squeeze_hands: str,
+    horizontal_extraocular_movements: str,
+    visual_fields: str,
+    facial_palsy: str,
+    left_arm_motor_drift: str,
+    right_arm_motor_drift: str,
+    left_leg_motor_drift: str,
+    right_leg_motor_drift: str,
+    limb_ataxia: str,
+    sensation: str,
+    language: str,
+    dysarthria: str,
+    inattention: str,
+) -> int:
     return nihss.nihss(
         nihss.Consciousness[consciousness],
         nihss.MonthAndAgeQuestions[month_and_age_questions],
@@ -52,8 +55,9 @@ def nihss_adapter(consciousness: str,
         nihss.Sensation[sensation],
         nihss.LanguageAphasia[language],
         nihss.Dysarthria[dysarthria],
-        nihss.ExtinctionInattention[inattention]
+        nihss.ExtinctionInattention[inattention],
     )
+
 
 CODE_MAP = {
     "ascvd-2013": ascvd_2013,
@@ -66,44 +70,49 @@ CODE_MAP = {
     "mdrd-gfr": mdrd_gfr,
     "mean-arterial-pressure": mean_arterial_pressure,
     "nihss": nihss_adapter,
-    "wells": wells
+    "wells": wells,
 }
+
 
 def convert_ko_to_tool_metadata(ko_metadata):
     return {
         "type": "function",
         "function": {
             "name": ko_metadata["@id"],
-            "description": "{}: {}".format(ko_metadata["dc:title"], ko_metadata["dc:description"]),
+            "description": "{}: {}".format(
+                ko_metadata["dc:title"], ko_metadata["dc:description"]
+            ),
             "parameters": {
                 "type": "object",
                 "properties": ko_metadata["koio:hasKnowledge"]["parameters"],
-                "required": ko_metadata["koio:hasKnowledge"]["requiredParameters"]
-            }
-        }
+                "required": ko_metadata["koio:hasKnowledge"]["requiredParameters"],
+            },
+        },
     }
 
+
 logger = logging.getLogger(__name__)
-    
+
+
 def get_latest_response(client, thread_id, run_id) -> str:
     """
     Utility function to get the most recent response from an OpenAI assistant.
     """
     messages = client.beta.threads.messages.list(
-        thread_id=thread_id,
-        limit=1,
-        order="desc",
-        run_id=run_id
-        )
+        thread_id=thread_id, limit=1, order="desc", run_id=run_id
+    )
     return messages.data[0].content[0].text.value
-    
+
+
 class LlmWithKoCodeTools(Chatbot):
     """
     This Chatbot consists of an LLM with each KO Python implementation as a
     registered tool.
     """
 
-    def __init__(self, openai_api_key: str, model_name: str, model_seed: int, knowledge_base: str):
+    def __init__(
+        self, openai_api_key: str, model_name: str, model_seed: int, knowledge_base: str
+    ):
         """
         Constructor
         Parameters:
@@ -121,15 +130,17 @@ class LlmWithKoCodeTools(Chatbot):
                     ko_metadata_list.append(json.load(f))
 
         # Process KO metadata into tool metadata in the format required by the OpenAI Assistants API.
-        tool_metadata_list = [convert_ko_to_tool_metadata(ko_metadata) for ko_metadata in ko_metadata_list]
+        tool_metadata_list = [
+            convert_ko_to_tool_metadata(ko_metadata) for ko_metadata in ko_metadata_list
+        ]
 
         # Initialize OpenAI client.
         self._client = openai.OpenAI(api_key=openai_api_key)
 
         # Initialize an OpenAI assistant.
         self._assistant = self._client.beta.assistants.create(
-        name="Clinical Calculator",
-        instructions="""
+            name="Clinical Calculator",
+            instructions="""
         You are an assistant helping the clinician user perform clinicial calculations.
         Follow these steps:
         Step 1: Read the user's question and identify which calculation they are requesting you to perform, if any.
@@ -141,8 +152,8 @@ class LlmWithKoCodeTools(Chatbot):
         Step 3: Once values have been obtained for all required parameters, call the function tool for the requested calculation with the gathered parameter values.
         Step 4: Enclose the result of calling the function tool in asterisks and communicate it to the user. (e.g. The patient's creatinine clearance is *75* mL/min.)
         """,
-        tools=tool_metadata_list,
-        model=model_name
+            tools=tool_metadata_list,
+            model=model_name,
         )
 
         # Create a thread, which represents a conversation between
@@ -152,22 +163,19 @@ class LlmWithKoCodeTools(Chatbot):
     def invoke(self, query: str) -> str:
         # Add a message to the thread containing the clinician's query.
         self._client.beta.threads.messages.create(
-        thread_id=self._thread.id,
-        role="user",
-        content=query
+            thread_id=self._thread.id, role="user", content=query
         )
 
         # Asking the LLM to respond to the query is an asynchronous task,
         # so we simply wait until it is done (i.e. create_and_poll).
         run = self._client.beta.threads.runs.create_and_poll(
-        thread_id=self._thread.id,
-        assistant_id=self._assistant.id
+            thread_id=self._thread.id, assistant_id=self._assistant.id
         )
 
         # If the LLM finishes without needing to call a tool, return the response.
         # If the LLM requires a tool call, call the python function and feed the LLM
         # the result.
-        if run.status == "completed": 
+        if run.status == "completed":
             return get_latest_response(self._client, self._thread.id, run.id)
         elif run.status == "requires_action":
             # Define the list to store tool outputs
@@ -179,27 +187,39 @@ class LlmWithKoCodeTools(Chatbot):
             # from LLM-provided information.
             for tool in run.required_action.submit_tool_outputs.tool_calls:
                 params = json.loads(tool.function.arguments)
-                tool_outputs.append({
-                    "tool_call_id": tool.id,
-                    "output": str(CODE_MAP[tool.function.name](**params))
-                })
+                tool_outputs.append(
+                    {
+                        "tool_call_id": tool.id,
+                        "output": str(CODE_MAP[tool.function.name](**params)),
+                    }
+                )
 
             # Submit all tool outputs at once after collecting them in a list
             if tool_outputs:
-                run_w_tool_outputs = self._client.beta.threads.runs.submit_tool_outputs_and_poll(
-                    thread_id=self._thread.id,
-                    run_id=run.id,
-                    tool_outputs=tool_outputs
+                run_w_tool_outputs = (
+                    self._client.beta.threads.runs.submit_tool_outputs_and_poll(
+                        thread_id=self._thread.id,
+                        run_id=run.id,
+                        tool_outputs=tool_outputs,
+                    )
                 )
 
-                if run_w_tool_outputs.status == 'completed':
-                    return get_latest_response(self._client, self._thread.id, run_w_tool_outputs.id)
+                if run_w_tool_outputs.status == "completed":
+                    return get_latest_response(
+                        self._client, self._thread.id, run_w_tool_outputs.id
+                    )
                 else:
-                    logger.error("Run with tool outputs failed on {} with status {}\n".format(tool_outputs, run_w_tool_outputs.status))
+                    logger.error(
+                        "Run with tool outputs failed on {} with status {}\n".format(
+                            tool_outputs, run_w_tool_outputs.status
+                        )
+                    )
                     return ""
             else:
                 logger.error("No tool calls!\n")
                 return ""
         else:
-            logger.error("Run failed on query {} with status {}\n".format(query, run.status))
+            logger.error(
+                "Run failed on query {} with status {}\n".format(query, run.status)
+            )
             return ""

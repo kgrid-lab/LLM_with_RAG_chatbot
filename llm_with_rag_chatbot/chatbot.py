@@ -12,10 +12,12 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Define format for logs
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", datefmt='%Y-%m-%d %H:%M:%S')
+formatter = logging.Formatter(
+    "%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+)
 
 # File handler
-file_handler = RotatingFileHandler('chatbot_logs.log', maxBytes=10000, backupCount=5)
+file_handler = RotatingFileHandler("chatbot_logs.log", maxBytes=10000, backupCount=5)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 

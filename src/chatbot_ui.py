@@ -6,25 +6,34 @@ Point your browser to http://localhost:5000
 """
 
 import argparse
+import logging
 import os
 import threading
 import uuid
-import logging
 from logging.handlers import RotatingFileHandler
 
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 from flask_caching import Cache
 
-from chatbots import LlmWithRagKosAndExternalInterpreter, LlmWithKoCodeTools
+from chatbots import LlmWithKoCodeTools, LlmWithRagKosAndExternalInterpreter
 
-parser = argparse.ArgumentParser(description="Web UI for chatbot. Point your browser to http://localhost:5000")
-parser.add_argument("--chatbot_architecture", "-a", default="LlmWithKoCodeTools", type=str, choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"), help="Which chatbot architecture to use.")
+parser = argparse.ArgumentParser(
+    description="Web UI for chatbot. Point your browser to http://localhost:5000"
+)
+parser.add_argument(
+    "--chatbot_architecture",
+    "-a",
+    default="LlmWithKoCodeTools",
+    type=str,
+    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"),
+    help="Which chatbot architecture to use.",
+)
 args = parser.parse_args()
 
 class_mapping = {
     "LlmWithRagKosAndExternalInterpreter": LlmWithRagKosAndExternalInterpreter,
-    "LlmWithKoCodeTools": LlmWithKoCodeTools
+    "LlmWithKoCodeTools": LlmWithKoCodeTools,
 }
 
 # Configure logging to include date and time
@@ -32,10 +41,12 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # Define format for logs
-formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s", datefmt='%Y-%m-%d %H:%M:%S')
+formatter = logging.Formatter(
+    "%(asctime)s - %(levelname)s - %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
+)
 
 # File handler
-file_handler = RotatingFileHandler('chatbot_logs.log', maxBytes=10000, backupCount=5)
+file_handler = RotatingFileHandler("chatbot_logs.log", maxBytes=10000, backupCount=5)
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 
@@ -53,7 +64,10 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
-chatbot = class_mapping[args.chatbot_architecture](OPENAI_API_KEY, model_name, model_seed, knowledge_base)
+chatbot = class_mapping[args.chatbot_architecture](
+    OPENAI_API_KEY, model_name, model_seed, knowledge_base
+)
+
 
 @app.route("/")
 def home():
@@ -74,9 +88,7 @@ def get_response():
     user_question = data["question"]
 
     task_id = str(uuid.uuid4())
-    thread = threading.Thread(
-        target=background_task, args=(task_id, user_question)
-    )
+    thread = threading.Thread(target=background_task, args=(task_id, user_question))
     thread.start()
 
     return jsonify(task_id=task_id)
