@@ -314,7 +314,8 @@
         "rubric": {
             "standard": "To calculate Wells' Criteria for Paul, please share whether Paul has clinical signs and symptoms of DVT, whether pulmonary embolism is the most likely diagnosis, whether he has been immbilized for 3 days or undergone surgery in the past 4 weeks, whether he has been previously been objectively diagnosed with a DVT or PE, and whether he is exhibiting hemoptysis.",
             "keywords": {
-                "containsAll": ["DVT", "diagnosis", "surgery", "objective", "hemoptysis"]
+                "containsAll": ["DVT", "diagnosis", "surgery", "hemoptysis"],
+                "containsAny": ["previous", "prior", "past", "before", "objective"]
             }
         },
         "notes": "The chatbot should ask for the missing information."
