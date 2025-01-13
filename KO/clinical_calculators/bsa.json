@@ -17,6 +17,17 @@
         "Knowledge",
         "Function"
       ],
+      "parameters": {
+        "height": {
+          "type": "number",
+          "description": "The patient's height in centimeters."
+        },
+        "weight": {
+          "type": "number",
+          "description": "The patient's weight in kilograms."
+        }
+      },
+      "requiredParameters": ["height", "weight"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/bsa.py"
     }
   }

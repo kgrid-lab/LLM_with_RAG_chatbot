@@ -17,6 +17,7 @@ langchain-community = "^0.3.0"
 langchain-openai = "^0.2.0"
 docarray = "^0.40.0"
 flask-caching = "^2.3.0"
+rouge = "^1.0.1"
 
 
 [build-system]

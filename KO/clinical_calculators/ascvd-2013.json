@@ -21,6 +21,45 @@
         "Knowledge",
         "Function"
       ],
+      "parameters": {
+        "age": {
+          "type": "integer",
+          "description": "The patient's age in years. This calculation is only valid for ages 40-75."
+        },
+        "dm": {
+          "type": "boolean",
+          "description": "True if the patient has diabetes. False otherwise."
+        },
+        "sex": {
+          "type": "string",
+          "description": "The patient's sex, either male or female."
+        },
+        "smoker": {
+          "type": "boolean",
+          "description": "True if the patient smokes."
+        },
+        "total_cholesterol": {
+          "type": "integer",
+          "description": "The patient's total serum cholesterol in miligrams per deciliter."
+        },
+        "hdl": {
+          "type": "integer",
+          "description": "The patient's serum high-density lipoprotein cholesterol in miligrams per decileter."
+        },
+        "sbp": {
+          "type": "integer",
+          "description": "The patient's systolic blood pressure in mm Hg."
+        },
+        "htn_tx": {
+          "type": "boolean",
+          "description": "True if the patient is being treated for hypertension. False otherwise."
+        },
+        "race": {
+          "type": "string",
+          "description": "The patient's race, either white or african american."
+        }
+      },
+      "requiredParameters": ["age", "dm", "sex", "smoker", "total_cholesterol", "hdl", "sbp", "htn_tx", "race"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ascvd_2013.py"
     }
   }

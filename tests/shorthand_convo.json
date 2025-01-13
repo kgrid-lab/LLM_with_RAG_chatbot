@@ -1,0 +1,502 @@
+[
+    {
+        "query": "Cr clerance for 60yo F weighing 80 kg w SCr 0.8?",
+        "rubric": {
+            "standard": "The patient's creatinine clearance using the Cockcroft-Gault formula is *94* mL/min.",
+            "keywords": {
+                "containsAll": ["cockcroft", "94"]
+            }
+        },
+        "notes": "This is a simple straightforward query, but note that there is no mention of Cockcroft-Gault in the query. Ideally, the chatbot will mention that it used the Cockcroft-Gault formula."
+    },
+    {
+        "query": "Cr clearance for 72yo M w SCr 0.9?",
+        "rubric": {
+            "standard": "To calculate the patient's creatinine clearance using the Cockcroft-Gault formula, please provide his weight.",
+            "keywords": {
+                "containsAll": ["cockcroft", "weight"]
+            }
+        },
+        "notes": "Weight is missing information. Chatbot should ask for it. Also, the chatbot should understand that man is the same sex as male."
+    },
+    {
+        "query": "Wt 65 kg",
+        "rubric": {
+            "standard": "The patient's creatinine clearance is *68* mL/min.",
+            "keywords": {
+                "containsAll": ["68"]
+            }
+        },
+        "notes": "Calculation should occur once missing information is provided."
+    },
+    {
+        "query": "Cr clearance for 55yo 180lb AA F?",
+        "rubric": {
+            "standard": "To calculate the patient's creatinine clearance using the Cockcroft-Gault formula, please provide her serum creatinine level in mg/dL.",
+            "keywords": {
+                "containsAll": ["cockcroft", "creatinine"]
+            }
+        },
+        "notes": "Race is extraneous information for Cockcroft-Gault and the chatbot should not be confused by it. Also, the weight is specified in pounds and the chatbot should convert to kg."
+    },
+    {
+        "query": "0.9",
+        "rubric": {
+            "standard": "The patient's creatinine clearance is *91* mL/min.",
+            "keywords": {
+                "containsAll": ["91"]
+            }
+        },
+        "notes": "Calculation should occur once missing information is provided."
+    },
+    {
+        "query": "GFR for this pt using MDRD?",
+        "rubric": {
+            "standard": "Carol's glomerular filtration rate is *78.8* mL/min/1.73m^2.",
+            "keywords": {
+                "containsAny": ["78.79", "78.8", "79"]
+            }
+        },
+        "notes": "The chatbot should be able to apply existing information to new contexts. Race was not relevant for Cockcroft-Gault, but it is relevant for MDRD. The chatbot should remember it. The chatbot should also understand that African-American implies Black."
+    },
+    {
+        "query": "MDRD GFR for 62yo Asian-American M w SCr 0.85?",
+        "rubric": {
+            "standard": "The patient's glomerular filtration rate *91.3* mL/min/1.73m^2.",
+            "keywords": {
+                "containsAll": ["91"]
+            }
+        },
+        "notes": "A simple straightforward query. The chatbot should understand that Asian-American race does not qualify as Black and that 'man' means 'male.'"
+    },
+    {
+        "query": "MDRD GFR for 150 lb F w SCr 0.85?",
+        "rubric": {
+            "standard": "To calculate the patient's glomerular filtration rate, please provide her sex and age, and optionally, whether her race is Black.",
+            "keywords": {
+                "containsAll": ["sex", "age", "optional", "black"]
+            }
+        },
+        "notes": "The chatbot should ignore the extraneous information regarding the patient's weight and ask for the missing information regarding her sex and age. The chatbot should not asume that 'her' implies a female sex. The chatbot should also recognize that it is optional to specify whether the patient is black."
+    },
+    {
+        "query": "58yo F",
+        "rubric": {
+            "standard": "The MDRD GFR Equation optionally includes information about the patient's race, specifically whether they are black. Would you like to provide this optional information?",
+            "keywords": {
+                "containsAll": ["optional", "black"]
+            }
+        },
+        "notes": "The chatbot should recognize that the only remaining parameter not yet provided, whether the patient's race is black, is optional."
+    },
+    {
+        "query": "No race",
+        "rubric": {
+            "standard": "Emily's glomerular filtration rate is *68.7* mL/min/1.73m^2.",
+            "keywords": {
+                "containsAny": ["69", "68.7", "68.69"]
+            }
+        },
+        "notes": "The chatbot should follow the user's request to proceed without the optional race information."
+    },
+    {
+        "query": "GFR for 74yo M w SCr 0.7?",
+        "rubric": {
+            "standard": "The patient's glomerular filtration rate can be calculated using either the MDRD GFR Equation or the 2021 CKD-EPI Equation. Please specify which methodology to use.",
+            "keywords": {
+                "containsAll": ["MDRD", "CKD-EPI"]
+            }
+        },
+        "notes": "It is ambiguous whether the user wants to use the MDRD GFR or 2021 CKD-EPI methodology. The chatbot should ask the user which methodology to use before proceeding with the calculation."
+    },
+    {
+        "query": "Use CKD-EPI",
+        "rubric": {
+            "standard": "The 2021 CKD-EPI Equations optionally allow specification of the patient's serum cystatin-C level. Would you like to provide the patient's serum cystatin-C level?",
+            "keywords": {
+                "containsAll": ["optional", "cystatin-c"]
+            }
+        },
+        "notes": "Now that the 2021 CKD-EPI methodology has been specified, the chatbot should assess whether all the required information has been provided. At that point, it should be aware that the optional serum cystatin-C level has not been provided."
+    },
+    {
+        "query": "No cystatin-C",
+        "rubric": {
+            "standard": "Using the 2021 CKD-EPI Equation, the patient's glomerular filtration rate is *97* mL/min/1.73m^2.",
+            "keywords": {
+                "containsAny": ["96.69", "96.7", "97"]
+            }
+        },
+        "notes": "The chatbot should proceed without cystatin-C per the user's request."
+    },
+    {
+        "query": "CKD-EPI GFR for 74yo F w SCr 0.7?",
+        "rubric": {
+            "standard": "The 2021 CKD-EPI Equations optionally allow specification of the patient's serum cystatin-C level. Would you like to provide the patient's serum cystatin-C level?",
+            "keywords": {
+                "containsAll": ["optional", "cystatin-c"]
+            }
+        },
+        "notes": "The chatbot should recognize that the only remaining parameter not yet provided, the cystatin-C, is optional."
+    },
+    {
+        "query": "cystatin-C is 0.62",
+        "rubric": {
+            "standard": "Using the 2021 CKD-EPI Creatinine-Cystatin C Equation, Gloria's glomerular filtration rate is *106* mL/min/1.73m^2.",
+            "keywords": {
+                "containsAny": ["105.71", "105.7", "106"]
+            }
+        },
+        "notes": "The chatbot should accept the optional cystatin-C parameter and perform the calculation."
+    },
+    {
+        "query": "MAP for pt w BP 120/80?",
+        "rubric": {
+            "standard": "The patient's mean arterial pressure is *93* mm Hg.",
+            "keywords": {
+                "containsAny": ["93.3", "93"]
+            }
+        },
+        "notes": "Simple straightforward query."
+    },
+    {
+        "query": "MAP for pt w SBP 110?",
+        "rubric": {
+            "standard": "To calculate the patient's mean artieral pressure, please provide her diastolic blood pressure.",
+            "keywords": {
+                "containsAny": ["diastolic"]
+            }
+        },
+        "notes": "The chatbot should identify that diastolic blood pressure is missing information and ask for it."
+    },
+    {
+        "query": "DBP 71",
+        "rubric": {
+            "standard": "The patient's mean arterial pressure is *84* mm Hg.",
+            "keywords": {
+                "containsAny": ["84"]
+            }
+        },
+        "notes": "The chatbot should identify that diastolic blood pressure is missing information and ask for it."
+    },
+    {
+        "query": "Pt BP 98/57. MAP?",
+        "rubric": {
+            "standard": "James' mean arterial pressure is *71* mm Hg.",
+            "keywords": {
+                "containsAny": ["70.67", "70.7", "71"]
+            }
+        },
+        "notes": "Blood pressure is often reported as systolic/diastolic without units. The chatbot should handle this."
+    },
+    {
+        "query": "Karen is 58yo F w BP 145/91. What is her MAP?",
+        "rubric": {
+            "standard": "Karen's mean arterial pressure is *109* mm Hg.",
+            "keywords": {
+                "containsAll": ["109"]
+            }
+        },
+        "notes": "The chatbot should ignore extraneous information about the patient's age and sex."
+    },
+    {
+        "query": "Karen has afib. What is her stroke risk?",
+        "rubric": {
+            "standard": "Since Karen has atrial fibrillation, her stroke risk can be estimated by calculating the CHA2DS2-VASc score.",
+            "keywords": {
+                "containsAny": ["CHA2DS2-VASc", "CHADS-VASc"]
+            }
+        },
+        "notes": "The chatbot should identify the CHA2DS2-VASc score as a method of estimating stroke risk in patients with atrial fibrillation."
+    },
+    {
+        "query": "Calculate Karen's CHA2DS2-VASc score.",
+        "rubric": {
+            "standard": "To calculate Karen's CHA2DS2-VASc score, please provide some elements of her medical history, including whether she has heart failure, whether she has hypertension, whether she has diabetes, whether she has had a stroke or TIA, and whether she has a history of vascular disease.",
+            "keywords": {
+                "containsAll": ["heart failure", "hypertension", "diabetes", "stroke", "vascular"]
+            }
+        },
+        "notes": "The chatbot should carry over the patient's age and sex from the previous query and ask for the remaining information needed for CHA2DS2-VASc calculation."
+    },
+    {
+        "query": "Karen has no h/o CHR or CKD. Had TIA 3y ago.",
+        "rubric": {
+            "standard": "To calculate the Karen's CHA2DS2-VASc score, some more elements of her medical history are needed. These include whether she has a history of hypertension, diabetes, or vascular disease.",
+            "keywords": {
+                "containsAll": ["hypertension", "diabetes", "vascular"]
+            }
+        },
+        "notes": "The chatbot should ignore kidney disease as extraneous information and ask for the patient's history of hypertension, diabetes, and vascular disease that have not yet been provided."
+    },
+    {
+        "query": "Karen has diabetes, HTN, & asthma, but no h/o vascular disease.",
+        "rubric": {
+            "standard": "Karen's CHA2DS2-VASc score is *5*.",
+            "keywords": {
+                "containsAll": ["5"]
+            }
+        },
+        "notes": "The chatbot should recognize that all necessary information as been provided and perform the calculation. It should ignore asthma as extraneous information."
+    },
+    {
+        "query": "CHA2DS2-VASc score for 82yo M w PMH of afib & HTN, and no other PMH?",
+        "rubric": {
+            "standard": "The patient's CHA2DS2-VASc score is *3*.",
+            "keywords": {
+                "containsAll": ["3"]
+            }
+        },
+        "notes": "A simple straightforward query."
+    },
+    {
+        "query": "Mary has Ca 8.6 and albumin 2.8. What is her corrected Ca?",
+        "rubric": {
+            "standard": "Would you like to specify a normal serum albumin level or use the default of 4 g/dL?",
+            "keywords": {
+                "containsAll": ["normal", "albumin"]
+            }
+        },
+        "notes": "The chatbot should understand that the normal serum albumin level is an optional parameter and should prompt the user to either provide it or proceed without it."
+    },
+    {
+        "query": "Use nl albumin 4.2",
+        "rubric": {
+            "standard": "Mary's corrected serum calcium level is *9.7* mg/dL.",
+            "keywords": {
+                "containsAll": ["9.7"]
+            }
+        },
+        "notes": "The chatbot should proceed with the calculation now that it has all the necessary information."
+    },
+    {
+        "query": "Nick: Ca 7.7, albumin 2.9. What is his corrected Ca using same nl albumin as before?",
+        "rubric": {
+            "standard": "Nick's corrected serum calcium level is *8.7* mg/dL.",
+            "keywords": {
+                "containsAll": ["8.7"]
+            }
+        },
+        "notes": "The chatbot should remember the normal serum albumin of 4.2 g/dL that has been provided earlier."
+    },
+    {
+        "query": "Another pt has albumin 2.5. Corrected Ca for this other pt using normal albumin as 2.5?",
+        "rubric": {
+            "standard": "To calculate the patient's corrected serum calcium level, please provide her measured serum calcium level.",
+            "keywords": {
+                "containsAll": ["calcium"]
+            }
+        },
+        "notes": "The chatbot should understand that the required parameter of the the patient's calcium level has not yet been provided."
+    },
+    {
+        "query": "Ca 10.2",
+        "rubric": {
+            "standard": "The patient's corrected serum calcium level is *10.2* mg/dL.",
+            "keywords": {
+                "containsAll": ["10.2"]
+            }
+        },
+        "notes": "The chatbot should proceed with the calculation now that all required information has been provided."
+    },
+    {
+        "query": "Paul is 62yo M currently treated for colon cancer presenting to ED w T 38C, HR 104, BP 95/62. What is his risk of PE?",
+        "rubric": {
+            "standard": "Paul's risk of having a pulmonary embolism can be estimated by calculating Wells' Criteria.",
+            "keywords": {
+                "containsAll": ["Wells"]
+            }
+        },
+        "notes": "The chatbot should recall that Wells' Criteria can be used to estimate the risk of PE in adult patients in the ED."
+    },
+    {
+        "query": "Calculate Wells' Criteria",
+        "rubric": {
+            "standard": "To calculate Wells' Criteria for Paul, please share whether Paul has clinical signs and symptoms of DVT, whether pulmonary embolism is the most likely diagnosis, whether he has been immbilized for 3 days or undergone surgery in the past 4 weeks, whether he has been previously been objectively diagnosed with a DVT or PE, and whether he is exhibiting hemoptysis.",
+            "keywords": {
+                "containsAll": ["DVT", "diagnosis", "surgery", "objective", "hemoptysis"]
+            }
+        },
+        "notes": "The chatbot should ask for the missing information."
+    },
+    {
+        "query": "Pt has no sx of DVT. PE is most likely dx. Underwent colon adenocarcinoma resection 8w ago. No prior dx of DVT/PE.",
+        "rubric": {
+            "standard": "Is Paul having hemoptysis?",
+            "keywords": {
+                "containsAll": ["hemoptysis"]
+            }
+        },
+        "notes": "The chatbot should understand that the surgery specified in the query was not in the relevant timeframe of the past 4 weeks. It should also be aware that the presence of hemoptysis has not yet been specified."
+    },
+    {
+        "query": "No hemoptysis",
+        "rubric": {
+            "standard": "Paul's Wells' Criteria score is *5.5* points.",
+            "keywords": {
+                "containsAll": ["5.5"]
+            }
+        },
+        "notes": "Now that all the information has been provided, the chatbot should have no problem calculating the Wells' Criteria."
+    },
+    {
+        "query": "Calculate Wells' criteria 87yo F w PMH PE 2y ago & no h/o immobilization, surgery, or malignancy, presenting to ED w new-onset dyspnea, cough, hemoptysis, & erythematous edematous right leg. Vitals: HR 112, BP 88/52. PE is most likely dx.",
+        "rubric": {
+            "standard": "The patient's Wells' Criteria score is *10* points.",
+            "keywords": {
+                "containsAll": ["10"]
+            }
+        },
+        "notes": "The chatbot has all the necessary information to calculate the Wells' Criteria, but it must ignore extraneous information. It must also recognize that a red swollen leg is a symptom of DVT."
+    },
+    {
+        "query": "10y ASCVD risk for 68yo White M smoker w diabetes, total cholesterol 220, HDL 15, BP 145/92, currently not treated for HTN.",
+        "rubric": {
+            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *65.8%*.",
+            "keywords": {
+                "containsAll": ["65.8"]
+            }
+        },
+        "notes": "Simple ASCVD query with extraneous information of diastolic blood pressure."
+    },
+    {
+        "query": "10y ASCVD risk for 53yo AA F w total cholesterol 170 & HDL 35?",
+        "rubric": {
+            "standard": "The patient's risk of atherosclerotic cardiovascular disease can be estimated using the ASCVD 2013 Risk Calculator from AHA/ACC. To perform this calculation, please share whether she has diabetes, whether she smokes, her systolic blood pressure, and whether she is being treated for hypertension.",
+            "keywords": {
+                "containsAll": ["diabetes", "smok", "pressure", "treat"]
+            }
+        },
+        "notes": "Chatbot should identify and ask for missing information."
+    },
+    {
+        "query": "Non-smoker. No h/o diabetes. SBP 118. No tx for HTN.",
+        "rubric": {
+            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *2.8%*.",
+            "keywords": {
+                "containsAll": ["2.8"]
+            }
+        },
+        "notes": "Chatbot should perform computation now that all required information has been provided."
+    },
+    {
+        "query": "10y ASCVD risk for 44yo M non-smoker wo diabetes w total cholesterol 151 & HDL 57 mg/dL and BP 109/62, never treated for HTN?",
+        "rubric": {
+            "standard": "The ASCVD 2013 Risk Calculator from AHA/ACC requires the patient's race. What is the patient's race?",
+            "keywords": {
+                "containsAll": ["race"]
+            }
+        },
+        "notes": "Unlike other calculators, ASCVD requires race."
+    },
+    {
+        "query": "Pt is White.",
+        "rubric": {
+            "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *0.7%*.",
+            "keywords": {
+                "containsAll": ["0.7"]
+            }
+        },
+        "notes": "Chatbot should perform calculation now that all required information has been provided."
+    },
+    {
+        "query": "NIHSS for 67yo F in ED w suspected stroke?",
+        "rubric": {
+            "standard": "To calculate the patient's NIH Stroke Score (NIHSS), please specify her level of consciousness, correctness of answers to questions about month and age, ability to follow commands to blink eyes and squeeze hands, ability to perform horizontal extraocular eye movements, integrity of visual fields, presence of facial palsy, presence of left arm, right arm, left leg, and right leg motor drift, presence of limb ataxia, language function, presence of dysarthria, and presence of inattention or extinction.",
+            "keywords": {
+                "containsAll": ["conscious", "month", "age", "blink", "squeeze", "horizontal", "vis", "drift", "ataxia", "sens", "language", "dysarthria", "inattention"]
+            }
+        },
+        "notes": "None of the required information for NIHSS has been provided. The chatbot must ask for all of it."
+    },
+    {
+        "query": "Arouses to minor stimulation. Cannot answer age or month. Blinks eyes, can't squeeze hands.",
+        "rubric": {
+            "standard": "To calculate the patient's NIH Stroke Score (NIHSS), please specify her ability to perform horizontal extraocular eye movements, integrity of visual fields, presence of facial palsy, presence of left arm, right arm, left leg, and right leg motor drift, presence of limb ataxia, sensory function, language function, presence of dysarthria, and presence of inattention or extinction.",
+            "keywords": {
+                "containsAll": ["horizontal", "vis", "drift", "ataxia", "sens", "language", "dysarthria", "inattention"]
+            }
+        },
+        "notes": "The chatbot must ask for the remaining information."
+    },
+    {
+        "query": "Horizontal EOM, VF intact. Unilateral complete facial paralysis. L arm: no movement. R arm: no drift for 10s. L leg: some motor drift but doesn't hit bed. R leg: some motor drift but doesn't hit bed. No limb ataxia. Mild-moderate sensory loss (can still sense being touched).",
+        "rubric": {
+            "standard": "To calculate the patient's NIH Stroke Score (NIHSS), please specify her language function, presence of dysarthria, and presence of inattention or extinction.",
+            "keywords": {
+                "containsAll": ["language", "dysarthria", "inattention"]
+            }
+        },
+        "notes": "Some more information has been provided, but it is not complete."
+    },
+    {
+        "query": "Severe aphasia. No dysarthria. Extinction to bilateral simultaneous stimulation.",
+        "rubric": {
+            "standard": "The patient's NIH Stroke Score (NIHSS) is *17*.",
+            "keywords": {
+                "containsAll": ["17"]
+            }
+        },
+        "notes": "All the information to calculate NIHSS has finally been provided."
+    },
+    {
+        "query": "Zachary is 72yo M in ED w a suspected stroke. Moves in response to pain. Can't answer month or age. Can't follow commands to blink eyes or squeeze hands. Forced gaze palsy that cannot be overcome. Bilaterally blind. Normal facial symmetry. No movement of any limbs. Doesn't understand commands to test ataxia. Unresponsive when testing sensation and language. Mute. Extinction to more than one modality.",
+        "rubric": {
+            "standard": "Zachary's NIH Stroke Score (NIHSS) is *36*",
+            "keywords": {
+                "containsAll": ["36"]
+            }
+        },
+        "notes": "NIHSS query containing all required information."
+    },
+    {
+        "query": "Ashley is 79yo F weighing 55 kg and 173 cm tall. What is her BMI?",
+        "rubric": {
+            "standard": "Ashley's Body Mass Index (BMI) is *18.4* kg/m^2.",
+            "keywords": {
+                "containsAny": ["18.38", "18.4"]
+            }
+        },
+        "notes": "Simple query for BMI with extraneous information of age."
+    },
+    {
+        "query": "Ashley's BSA?",
+        "rubric": {
+            "standard": "Ashley's body surface area is *1.63* m^2.",
+            "keywords": {
+                "containsAny": ["1.626", "1.63"]
+            }
+        },
+        "notes": "Chatbot should carry over information from previous query."
+    },
+    {
+        "query": "BMI of pt 75 in. tall and weighing 193 lbs?",
+        "rubric": {
+            "standard": "The patient's Body Mass Index is *24.1* kg/m^2.",
+            "keywords": {
+                "containsAll": ["24.1"]
+            }
+        },
+        "notes": "Chatbot should convert units automatically."
+    },
+    {
+        "query": "This pt's BSA?",
+        "rubric": {
+            "standard": "This patient's body surface area is *2.15* m^2.",
+            "keywords": {
+                "containsAny": ["2.15", "2.2"]
+            }
+        },
+        "notes": "Chatbot should carry over information from previous query."
+    },
+    {
+        "query": "BMI of pt 5 ft. 9 in. tall and weighing 137 lbs?",
+        "rubric": {
+            "standard": "The patient's Body Mass Index is *20.2* kg/m^2.",
+            "keywords": {
+                "containsAll": ["20.2"]
+            }
+        },
+        "notes": "Chatbot should be able to understand height specified as feet plus inches."
+    }
+]

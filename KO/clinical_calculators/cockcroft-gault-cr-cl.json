@@ -1,0 +1,42 @@
+{
+    "@context": "https://kgrid.org/koio/2.0/context",
+    "@id": "cockcroft-gault-cr-cl",
+    "koio:kgrid": "2",
+    "@type": "koio:KnowledgeObject",
+    "dc:title": "Cockcroft-Gault Creatinine Clearance",
+    "dc:identifier": "ark:cgcc",
+    "version": "v1.0",
+    "dc:description": "Estimates creatinine clearance in adults using the Cockcroft-Gault model.",
+    "koio:contributors": "Kgrid Team",
+    "koio:keywords": [
+      "creatinine clearance",
+      "renal function"
+    ],
+    "koio:hasKnowledge": {
+      "@id": "knowledge",
+      "@type": [
+        "Knowledge",
+        "Function"
+      ],
+      "parameters": {
+        "sex": {
+          "type": "string",
+          "description": "Sex of the patient, male or female."
+        },
+        "age": {
+          "type": "integer",
+          "description": "Age of the patient in years."
+        },
+        "weight": {
+          "type": "number",
+          "description": "Weight of the patient in kilograms."
+        },
+        "creatinine": {
+          "type": "number",
+          "description": "Serum creatinine concentration for the patient, in milligrams per deciliter."
+        }
+      },
+      "requiredParameters": ["sex", "age", "weight", "creatinine"],
+      "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/cockcroft_gault_cr_cl.py"
+    }
+  }

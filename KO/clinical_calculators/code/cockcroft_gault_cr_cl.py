@@ -1,4 +1,4 @@
-def cockroft_gault_cr_cl(sex: str, age: int, weight: float, creatinine: float) -> float:
+def cockcroft_gault_cr_cl(sex: str, age: int, weight: float, creatinine: float) -> float:
     """
     Parameters:
     - sex (str): Sex of the patient, male or female.

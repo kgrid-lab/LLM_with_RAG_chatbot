@@ -1,6 +1,12 @@
-# Intelligent Chatbot for Biomedical Knowledge Retrieval and Execution, Using Retrieval-Augmented Generation with LLMs
+# Integrating LLMs with CBK for Clinical Decision Support
+We have implemented a conversational chatbot that clinicians can use to perform calculations. By integrating with Computational Biomedical Knowledge (CBK), ensure computations rely on curated, evidence-based rules, thereby avoiding hallucinations and nondeterminism, which unaided LLMs may be prone to. We implemented this chatbot in two different ways, for purposes of comparison:
+
+## Intelligent Chatbot for Biomedical Knowledge Retrieval and Execution, Using Retrieval-Augmented Generation with LLMs
 We implemented a pipeline in a prototype chatbot that leverages LLMs for natural language understanding and retrieval-augmented generation, using biomedical knowledge objects as contexts to answer biomedical questions with expert knowledge. To execute knowledge representations (code) attached to each knowledge object, we integrated an OpenAI Assistant API with a code_interpreter tool into our pipeline. This implementation is more reliable compared to other approaches that do not use a code_interpreter tool, examples of which are available in the archive folder of this repository. Here is an example output for this prototype chatbot:
 ![example](images/example1.png)
+
+## LLM with Computational Biomedical Knowledge Object (KO) implementations registered as tools
+In this alternative architecture, the LLM is aware of the KO implementations available to it, and invokes them when it deems it necessary. The main advantage of this approach is that all KO implementation code is guaranteed to be executed exactly as written in the local native Python environment. Additionally, execution is faster and cheaper.
 
 ## Environment setup
 Make sure poetry is installed
@@ -21,19 +27,32 @@ Create a .env file in the root of the project and store the following values in 
 ```
 KNOWLEDGE_BASE="KO/"
 MODEL="gpt-4o"
+EVAL_MODEL="gpt-4o"
 MODEL_SEED=1762259501
 OPENAI_API_KEY="YOUR_OPENAI_API_KEY"
 ```
-- The KNOWLEDGE_BASE points to the location of knowledge object context files.
-- MODEL defines the version of the GPT to be used. We recomment use of gpt-4o or newer versions.
-- Get your own API key at [OpenAI's API keys section](https://platform.openai.com/api-keys) and set OPENAI_API_KEY with its value. 
+- The KNOWLEDGE_BASE points to the location of knowledge object context files. Currently "KO" and "KO/clinical_calculators" are supported.
+- MODEL defines which OpenAI language model to use. We recommend "gpt-4o" if using an LLM or "gpt-4o-mini" if using an SLM. We currently do not support other vendors.
+- EVAL_MODEL defines which OpenAI language model to use for evaluation of language model output.
+- MODEL_SEED provides a numerical seed to the OpenAI language model specified by MODEL. Specifying MODEL_SEED is optional. It only affects MODEL, not EVAL_MODEL.
+- Get your own API key at [OpenAI's API keys section](https://platform.openai.com/api-keys) and set OPENAI_API_KEY with its value.
+
 ## Run the app 
-Once the environment is set up you can run this app to be useed from command line using
+Once the environment is set up you can run this app from the command line using
 ```
-python llm_with_rag_chatbot/openai_chatbot_with_assistant_api.py 
+python src/chatbot_cmd.py 
 ```
 
-To run this app locally to access web interface use 
+To run this app in a web interface, use 
 ```
-python llm_with_rag_chatbot/chatbot.py
+python src/chatbot_ui.py
 ``` 
+and point your browser to http://localhost:5000
+
+## Testing
+To test the performance of the chatbot, use the test_chatbot_conversation.py script. Example:
+python tests/test_chatbot_conversation.py -a LlmWithKoCodeTools -c tests/comprehensive_convo.json
+The results will be stored in a log file.
+
+## Previous Version
+A working copy of the previous version of the chatbot is in llm_with_rag_chatbot. Consult the [README within that folder](/llm_with_rag_chatbot/README.md) for instructions to operate it.

@@ -6,7 +6,7 @@
     "dc:title": "NIH Stroke Scale",
     "dc:identifier": "ark:nihss",
     "version": "v1.0",
-    "dc:description": "The NIH Stroke Scale uses the patient's presenting symptoms and signs to quantify the severity of a suspected stroke.",
+    "dc:description": "Uses the patient's presenting symptoms and signs to quantify the severity of a suspected stroke.",
     "koio:contributors": "Kgrid Team",
     "koio:keywords": [
       "stroke",
@@ -20,6 +20,197 @@
       "@type": [
         "Knowledge",
         "Function"
+      ],
+      "parameters": {
+        "consciousness": {
+          "type": "string",
+          "enum": [
+            "ALERT_KEENLY_RESPONSIVE",
+            "AROUSES_TO_MINOR_STIMULATION",
+            "REQUIRES_REPEATED_STIMULATION_TO_AROUSE",
+            "MOVEMENTS_TO_PAIN",
+            "POSTURES_OR_UNRESPONSIVE"
+          ],
+          "description": "The patient's response to being asked for their age and the month of the year."
+        },
+        "month_and_age_questions": {
+          "type": "string",
+          "enum": [
+            "BOTH_QUESTIONS_RIGHT",
+            "ONE_QUESTION_RIGHT",
+            "ZERO_QUESTIONS_RIGHT",
+            "DYSARTHRIC_INTUBATED_TRAUMA_OR_LANGUAGE_BARRIER",
+            "APHASIC"
+          ],
+          "description": "The patient's response to being asked for their age and the month of the year."
+        },
+        "blink_eyes_and_squeeze_hands": {
+          "type": "string",
+          "enum": [
+            "PERFORMS_BOTH_TASKS",
+            "PERFORMS_ONE_TASK",
+            "PERFORMS_ZERO_TASKS"
+          ],
+          "description": "The patient's response to being asked to blink their eyes and squeeze the examiner's hand. Can be pantomimed if patient does not understand."
+        },
+        "horizontal_extraocular_movements": {
+          "type": "string",
+          "enum": [
+            "NORMAL",
+            "PARTIAL_GAZE_PALSY_CAN_BE_OVERCOME",
+            "PARTIAL_GAZE_PALSY_CORRECTS_WITH_OCULOCEPHALIC_REFLEX",
+            "FORCED_GAZE_PALSY_CANNOT_BE_OVERCOME"
+          ],
+          "description": "The patient's ability to perform horizontal extraocular movements. (i.e. look left and right with both eyes)"
+        },
+        "visual_fields": {
+          "type": "string",
+          "enum": [
+            "NO_VISUAL_LOSS",
+            "PARTIAL_HEMIANOPIA",
+            "COMPLETE_HEMIANOPIA",
+            "PATIENT_IS_BILATERALLY_BLIND",
+            "BILATERAL_HEMIANOPIA"
+          ],
+          "description": "The integrity of the patient's visual fields."
+        },
+        "facial_palsy": {
+          "type": "string",
+          "enum": [
+            "NORMAL_SYMMETRY",
+            "MINOR_PARALYSIS",
+            "PARTIAL_PARALYSIS",
+            "UNILATERAL_COMPLETE_PARALYSIS",
+            "BILATERAL_COMPLETE_PARALYSIS"
+          ],
+          "description": "The ability of the patient to engage their facial muscles."
+        },
+        "left_arm_motor_drift": {
+          "type": "string",
+          "enum": [
+            "NO_DRIFT_FOR_10_SECONDS",
+            "DRIFTS_BUT_DOES_NOT_HIT_BED",
+            "DRIFTS_HITS_BED",
+            "SOME_EFFORT_AGAINST_GRAVITY",
+            "NO_EFFORT_AGAINST_GRAVITY",
+            "NO_MOVEMENT",
+            "AMPUTATION_JOINT_FUSION"
+          ],
+          "description": "The patient's ability to overcome gravity with their left arm and hold a position without drifting."
+        },
+        "right_arm_motor_drift": {
+          "type": "string",
+          "enum": [
+            "NO_DRIFT_FOR_10_SECONDS",
+            "DRIFTS_BUT_DOES_NOT_HIT_BED",
+            "DRIFTS_HITS_BED",
+            "SOME_EFFORT_AGAINST_GRAVITY",
+            "NO_EFFORT_AGAINST_GRAVITY",
+            "NO_MOVEMENT",
+            "AMPUTATION_JOINT_FUSION"
+          ],
+          "description": "The patient's ability to overcome gravity with their right arm and hold a position without drifting."
+        },
+        "left_leg_motor_drift": {
+          "type": "string",
+          "enum": [
+            "NO_DRIFT_FOR_5_SECONDS",
+            "DRIFTS_BUT_DOES_NOT_HIT_BED",
+            "DRIFTS_HITS_BED",
+            "SOME_EFFORT_AGAINST_GRAVITY",
+            "NO_EFFORT_AGAINST_GRAVITY",
+            "NO_MOVEMENT",
+            "AMPUTATION_JOINT_FUSION"
+          ],
+          "description": "The patient's ability to overcome gravity with their left leg and hold a position without drifting."
+        },
+        "right_leg_motor_drift": {
+          "type": "string",
+          "enum": [
+            "NO_DRIFT_FOR_5_SECONDS",
+            "DRIFTS_BUT_DOES_NOT_HIT_BED",
+            "DRIFTS_HITS_BED",
+            "SOME_EFFORT_AGAINST_GRAVITY",
+            "NO_EFFORT_AGAINST_GRAVITY",
+            "NO_MOVEMENT",
+            "AMPUTATION_JOINT_FUSION"
+          ],
+          "description": "The patient's ability to overcome gravity with their right leg and hold a position without drifting."
+        },
+        "limb_ataxia": {
+          "type": "string",
+          "enum": [
+            "NO_ATAXIA",
+            "ATAXIA_IN_1_LIMB",
+            "ATAXIA_IN_2_LIMBS",
+            "DOES_NOT_UNDERSTAND",
+            "PARALYZED",
+            "AMPUTATION_JOINT_FUSION"
+          ],
+          "description": "The patient's ability to coordinate their limbs."
+        },
+        "sensation": {
+          "type": "string",
+          "enum": [
+            "NORMAL_NO_SENSORY_LOSS",
+            "MILD_MODERATE_LOSS_LESS_SHARP_MORE_DULL",
+            "MILD_MODERATE_LOSS_CAN_SENSE_BEING_TOUCHED",
+            "COMPLETE_LOSS_CANNOT_SENSE_BEING_TOUCHED_AT_ALL",
+            "NO_RESPONSE_AND_QUADRIPLEGIC",
+            "COMA_UNRESPONSIVE"
+          ],
+          "description": "The patients's ability to sense touch."
+        },
+        "language": {
+          "type": "string",
+          "enum": [
+            "NORMAL_NO_APHASIA",
+            "MILD_MODERATE_APHASIA_SOME_OBVIOUS_CHAGNES_WITHOUT_SIGNIFICANT_LIMITATION",
+            "SEVERE_APHASIA_FRAGMENTARY_EXPRESSION_INFERENCE_NEEDED_CANNOT_IDENTIFY_MATERIALS",
+            "MUTE_GLOBAL_APHASIA_NO_USABLE_SPEECH_AUDITORY_COMPREHENSION",
+            "COMA_UNRESPONSIVE"
+          ],
+          "description": "The patient's ability to understand and construct language or lack thereof (i.e. aphasia)."
+        },
+        "dysarthria": {
+          "type": "string",
+          "enum": [
+            "NORMAL",
+            "MILD_MODERATE_DYSARTHRIA_SLURRING_BUT_CAN_BE_UNDERSTOOD",
+            "SEVERE_DYSARTHRIA_UNINTELLIGIBLE_SLURRING_OR_OUT_OF_PROPORTION_TO_DYSPHAGIA",
+            "MUTE_ANARTHRIC",
+            "INTUBATED_UNABLE_TO_TEST"
+          ],
+          "description": "The patient's ability to produce the sounds of language or lack thereof (i.e. dysarthria)."
+        },
+        "inattention": {
+          "type": "string",
+          "enum": [
+            "NO_ABNORMALITY",
+            "VISUAL_TACTILE_AUDITORY_SPATIAL_PERSONAL_INATTENTION",
+            "EXTINCTION_TO_BILATERAL_SIMULTANEOUS_STIMULATION",
+            "PROFOUND_HEMI_INATTENTION",
+            "EXTINCTION_TO_GREATER_THAN_1_MODALITY"
+          ],
+          "description": "The patient's ability to maintain attention or lack thereof."
+        }
+      },
+      "requiredParameters": [
+        "consciousness",
+        "month_and_age_questions",
+        "blink_eyes_and_squeeze_hands",
+        "horizontal_extraocular_movements",
+        "visual_fields",
+        "facial_palsy",
+        "left_arm_motor_drift",
+        "right_arm_motor_drift",
+        "left_leg_motor_drift",
+        "right_leg_motor_drift",
+        "limb_ataxia",
+        "sensation",
+        "language",
+        "dysarthria",
+        "inattention"
       ],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/nihss.py"
     }
