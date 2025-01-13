@@ -3,11 +3,12 @@ Contains Evaluator classes which are used to evaluate chatbot responses accordin
 Each Evaluator class performs the evaluation using a different method.
 """
 
-from dotenv import load_dotenv
-
+import evaluate
 from langchain_core.prompts import PromptTemplate
 from langchain_openai.chat_models import ChatOpenAI
-from rouge import Rouge
+
+bleu_metric = evaluate.load("bleu")
+rouge_metric = evaluate.load("rouge")
 
 class Evaluator:
     """
@@ -70,16 +71,44 @@ class KeywordEvaluator(Evaluator):
     def get_name(self) -> str:
         return "Keyword"
 
-class RougelEvaluator(Evaluator):
+class BleuEvaluator(Evaluator):
     """
-    Evaluates each response by computing the ROUGE-L score between it and the standard.
+    Evaluates each chatbot response by computing the BLEU
+    (Bilingual Evaluation Understudy) score, with order 4,
+    between it and the standard.
     """
     def score(self, response: str, exchange: dict) -> float:
-        rouge = Rouge(metrics=["rouge-l"], stats=["f"])
-        return rouge.get_scores(response, exchange["rubric"]["standard"])[0]["rouge-l"]["f"]
-    
+        return bleu_metric.compute(predictions=[response], references=[exchange["rubric"]["standard"]])["bleu"]
+
     def get_name(self) -> str:
-        return "ROUGE-L"
+        return "BLEU"
+
+class RougeEvaluator(Evaluator):
+    """
+    Evaluates each response by computing the one of the ROUGE
+    (Recall-Oriented Understudy for Gisting Evaluation) scores
+    between it and the standard.
+    """
+    def rouge_type(self) -> str:
+        pass
+
+    def score(self, response: str, exchange: dict) -> float:
+        return rouge_metric.compute(predictions=[response], references=[exchange["rubric"]["standard"]], rouge_types=[self.get_name()])[self.get_name()]
+
+class Rouge1Evaluator(RougeEvaluator):
+    """ROUGE-1 (ROUGE with n-grams of length 1)"""
+    def get_name(self) -> str:
+        return "rouge1"
+
+class Rouge2Evaluator(RougeEvaluator):
+    """ROUGE-2 (ROUGE with n-grams of length 2)"""
+    def get_name(self) -> str:
+        return "rouge2"
+
+class RougeLEvaluator(RougeEvaluator):
+    """ROUGE-L (ROUGE using longest common subsequence)"""
+    def get_name(self) -> str:
+        return "rougeL"
 
 class LlmEvaluator(Evaluator):
     """

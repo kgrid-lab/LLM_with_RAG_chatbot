@@ -25,7 +25,7 @@ import os
 
 from dotenv import load_dotenv
 
-from evaluators import KeywordEvaluator, RougelEvaluator, LlmEvaluator
+from evaluators import KeywordEvaluator, BleuEvaluator, Rouge1Evaluator, Rouge2Evaluator, RougeLEvaluator, LlmEvaluator
 from src.chatbots import LlmWithRagKosAndExternalInterpreter, LlmWithKoCodeTools
 
 TIME_FMT = "%Y-%m-%d-%H%M.%S.%f"
@@ -65,7 +65,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(filename=args.output_log, filemode="w", level=logging.getLevelNamesMapping()[args.log_level], encoding=ENC)
 
 # Initialize Evaluator objects to keep track of correctness.
-evaluators = (KeywordEvaluator(), RougelEvaluator(), LlmEvaluator(os.getenv("OPENAI_API_KEY"), os.getenv("EVAL_MODEL")))
+evaluators = (KeywordEvaluator(), BleuEvaluator(), Rouge1Evaluator(), Rouge2Evaluator(), RougeLEvaluator(), LlmEvaluator(os.getenv("OPENAI_API_KEY"), os.getenv("EVAL_MODEL")))
 
 # Initialize chatbot.
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
