@@ -21,6 +21,7 @@
       "parameters": {
         "sex": {
           "type": "string",
+          "enum": ["male", "female"],
           "description": "Sex of the patient, male or female."
         },
         "age": {

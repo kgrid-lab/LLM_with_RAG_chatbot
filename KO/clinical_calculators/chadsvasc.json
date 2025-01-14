@@ -25,6 +25,7 @@
         },
         "sex": {
           "type": "string",
+          "enum": ["male", "female"],
           "description": "The patient's sex, male or female."
         },
         "chf": {
