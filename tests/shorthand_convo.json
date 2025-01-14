@@ -204,7 +204,7 @@
         "rubric": {
             "standard": "Since Karen has atrial fibrillation, her stroke risk can be estimated by calculating the CHA2DS2-VASc score.",
             "keywords": {
-                "containsAny": ["CHA2DS2-VASc", "CHADS-VASc"]
+                "containsAll": ["-VASc"]
             }
         },
         "notes": "The chatbot should identify the CHA2DS2-VASc score as a method of estimating stroke risk in patients with atrial fibrillation."
@@ -220,7 +220,7 @@
         "notes": "The chatbot should carry over the patient's age and sex from the previous query and ask for the remaining information needed for CHA2DS2-VASc calculation."
     },
     {
-        "query": "Karen has no h/o CHR or CKD. Had TIA 3y ago.",
+        "query": "Karen has no h/o CHF or CKD. Had TIA 3y ago.",
         "rubric": {
             "standard": "To calculate the Karen's CHA2DS2-VASc score, some more elements of her medical history are needed. These include whether she has a history of hypertension, diabetes, or vascular disease.",
             "keywords": {

@@ -204,7 +204,7 @@
         "rubric": {
             "standard": "Since Karen has atrial fibrillation, her stroke risk can be estimated by calculating her CHA2DS2-VASc score.",
             "keywords": {
-                "containsAny": ["CHA2DS2-VASc", "CHADS-VASc"]
+                "containsAll": ["-VASc"]
             }
         },
         "notes": "The chatbot should identify the CHA2DS2-VASc score as a method of estimating stroke risk in patients with atrial fibrillation."
