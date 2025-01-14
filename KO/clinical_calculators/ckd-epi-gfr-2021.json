@@ -33,11 +33,10 @@
           "description": "Serum creatinine concentration for the patient, in milligrams per deciliter."
         },
         "cystatinc": {
-          "type": "number",
+          "type": ["number", "null"],
           "description": "[optional] Serum cystatin-c concentration for the patient, in milligrams per liter."
         }
       },
-      "requiredParameters": ["sex", "age", "creatinine"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ckd_epi_gfr_2021.py"
     }
   }

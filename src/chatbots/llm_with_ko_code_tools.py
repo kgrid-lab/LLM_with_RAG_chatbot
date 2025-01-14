@@ -75,6 +75,7 @@ CODE_MAP = {
 
 
 def convert_ko_to_tool_metadata(ko_metadata):
+    params = ko_metadata["koio:hasKnowledge"]["parameters"]
     return {
         "type": "function",
         "function": {
@@ -82,10 +83,12 @@ def convert_ko_to_tool_metadata(ko_metadata):
             "description": "{}: {}".format(
                 ko_metadata["dc:title"], ko_metadata["dc:description"]
             ),
+            "strict": True,
             "parameters": {
                 "type": "object",
-                "properties": ko_metadata["koio:hasKnowledge"]["parameters"],
-                "required": ko_metadata["koio:hasKnowledge"]["requiredParameters"],
+                "properties": params,
+                "required": list(params.keys()),
+                "additionalProperties": False,
             },
         },
     }

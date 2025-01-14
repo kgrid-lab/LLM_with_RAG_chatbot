@@ -60,7 +60,6 @@
           "description": "The patient's race, either white or african american."
         }
       },
-      "requiredParameters": ["age", "dm", "sex", "smoker", "total_cholesterol", "hdl", "sbp", "htn_tx", "race"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ascvd_2013.py"
     }
   }
