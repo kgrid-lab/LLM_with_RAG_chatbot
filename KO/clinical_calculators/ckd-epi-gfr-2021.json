@@ -34,7 +34,7 @@
         },
         "cystatinc": {
           "type": ["number", "null"],
-          "description": "[optional] Serum cystatin-c concentration for the patient, in milligrams per liter."
+          "description": "Serum cystatin-c concentration for the patient, in milligrams per liter."
         }
       },
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ckd_epi_gfr_2021.py"

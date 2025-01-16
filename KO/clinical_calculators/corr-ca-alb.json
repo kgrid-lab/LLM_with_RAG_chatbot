@@ -31,7 +31,7 @@
         },
         "nl_alb": {
           "type": ["number", "null"],
-          "description": "The normal serum albumin level. Optional. The default is 4 mg/dL."
+          "description": "The normal serum albumin level to use as a reference in the calculation."
         }
       },
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/corr_ca_alb.py"
