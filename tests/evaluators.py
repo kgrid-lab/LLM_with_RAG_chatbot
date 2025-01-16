@@ -61,7 +61,7 @@ class KeywordEvaluator(Evaluator):
             if rule == "containsAll":
                 if not all(term.casefold() in response.casefold() for term in keywords[rule]):
                     return 0.0
-            elif rule == "containsAny":
+            elif rule.startswith("containsAny"):
                 if not any(term.casefold() in response.casefold() for term in keywords[rule]):
                     return 0.0
             else:

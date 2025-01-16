@@ -180,7 +180,7 @@
         "notes": "Chatbot should understand the relationships between different calculators."
     },
     {
-        "query": "Which two calculations produce a disease risk prediction score rather than a direct probability?",
+        "query": "Which two calculations predict disease risk with a score rather than a probability?",
         "rubric": {
             "standard": "CHA2DS2-VASc Score and Wells' Criteria",
             "keywords": {

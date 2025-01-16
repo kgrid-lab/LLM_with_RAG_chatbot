@@ -74,7 +74,8 @@
         "rubric": {
             "standard": "To calculate Emily's glomerular filtration rate, please provide her sex and age, and optionally, whether her race is Black.",
             "keywords": {
-                "containsAll": ["sex", "age", "optional", "black"]
+                "containsAll": ["sex", "age", "black"],
+                "containsAny": ["option", "like", "prefer", "without"]
             }
         },
         "notes": "The chatbot should ignore the extraneous information regarding the patient's weight and ask for the missing information regarding her sex and age. The chatbot should not asume that 'her' implies a female sex. The chatbot should also recognize that it is optional to specify whether the patient is black."
@@ -84,7 +85,8 @@
         "rubric": {
             "standard": "The MDRD GFR Equation optionally includes information about the patient's race, specifically whether they are black. Would you like to provide this optional information?",
             "keywords": {
-                "containsAll": ["optional", "black"]
+                "containsAll": ["black"],
+                "containsAny": ["option", "like", "prefer", "without"]
             }
         },
         "notes": "The chatbot should recognize that the only remaining parameter not yet provided, whether the patient's race is black, is optional."
@@ -114,7 +116,8 @@
         "rubric": {
             "standard": "The 2021 CKD-EPI Equations optionally allow specification of the patient's serum cystatin-C level. Would you like to provide the patient's serum cystatin-C level?",
             "keywords": {
-                "containsAll": ["optional", "cystatin-c"]
+                "containsAll": ["cystatin-c"],
+                "containsAny": ["option", "like", "prefer", "without"]
             }
         },
         "notes": "Now that the 2021 CKD-EPI methodology has been specified, the chatbot should assess whether all the required information has been provided. At that point, it should be aware that the optional serum cystatin-C level has not been provided."
@@ -134,7 +137,8 @@
         "rubric": {
             "standard": "The 2021 CKD-EPI Equations optionally allow specification of the patient's serum cystatin-C level. Would you like to provide the patient's serum cystatin-C level?",
             "keywords": {
-                "containsAll": ["optional", "cystatin-c"]
+                "containsAll": ["cystatin-c"],
+                "containsAny": ["option", "like", "prefer", "without"]
             }
         },
         "notes": "The chatbot should recognize that the only remaining parameter not yet provided, the cystatin-C, is optional."
@@ -405,7 +409,8 @@
         "rubric": {
             "standard": "To calculate Wendy's NIH Stroke Score (NIHSS), please specify her level of consciousness, correctness of answers to questions about month and age, ability to follow commands to blink eyes and squeeze hands, ability to perform horizontal extraocular eye movements, integrity of visual fields, presence of facial palsy, presence of left arm, right arm, left leg, and right leg motor drift, presence of limb ataxia, language function, presence of dysarthria, and presence of inattention or extinction.",
             "keywords": {
-                "containsAll": ["conscious", "month", "age", "blink", "squeeze", "horizontal", "vis", "drift", "ataxia", "sens", "language", "dysarthria", "inattention"]
+                "containsAll": ["conscious", "month", "age", "blink", "squeez", "horizontal", "vis", "fac", "drift", "sens", "language", "dysarthria", "attention"],
+                "containsAny": ["ataxia", "coordinat"]
             }
         },
         "notes": "None of the required information for NIHSS has been provided. The chatbot must ask for all of it."
@@ -415,7 +420,9 @@
         "rubric": {
             "standard": "To calculate Wendy's NIH Stroke Score (NIHSS), please specify her ability to perform horizontal extraocular eye movements, integrity of visual fields, presence of facial palsy, presence of left arm, right arm, left leg, and right leg motor drift, presence of limb ataxia, sensory function, language function, presence of dysarthria, and presence of inattention or extinction.",
             "keywords": {
-                "containsAll": ["horizontal", "vis", "drift", "ataxia", "sens", "language", "dysarthria", "inattention"]
+                "containsAll": ["horizontal", "vis", "fac", "drift", "sens", "language", "dysarthria", "attention"],
+                "containsAny": ["ataxia", "coordinat"],
+                "containsAny2": ["drift", "hold", "resist"]
             }
         },
         "notes": "The chatbot must ask for the remaining information."
@@ -425,7 +432,7 @@
         "rubric": {
             "standard": "To calculate Wendy's NIH Stroke Score (NIHSS), please specify her language function, presence of dysarthria, and presence of inattention or extinction.",
             "keywords": {
-                "containsAll": ["language", "dysarthria", "inattention"]
+                "containsAll": ["language", "dysarthria", "attention"]
             }
         },
         "notes": "Some more information has been provided, but it is not complete."
