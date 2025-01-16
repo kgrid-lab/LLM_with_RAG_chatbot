@@ -161,6 +161,7 @@ Step 7: Enclose the result of calling the function tool in asterisks and communi
             """,
             tools=tool_metadata_list,
             model=model_name,
+            temperature=0,
         )
 
         # Create a thread, which represents a conversation between
