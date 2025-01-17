@@ -9,7 +9,7 @@ import os
 
 from dotenv import load_dotenv
 
-from chatbots import LlmWithKoCodeTools, LlmWithRagKosAndExternalInterpreter
+from chatbots import LlmWithKoCodeTools, LlmWithRagKosAndExternalInterpreter, LlmWithRagKosAndInternalExecution
 
 # Load environment variables
 load_dotenv()
@@ -23,9 +23,9 @@ parser = argparse.ArgumentParser(description="Command-line interface for chatbot
 parser.add_argument(
     "--chatbot_architecture",
     "-a",
-    default="LlmWithKoCodeTools",
+    default="LlmWithRagKosAndInternalExecution",
     type=str,
-    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"),
+    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools","LlmWithRagKosAndInternalExecution"),
     help="Which chatbot architecture to use.",
 )
 args = parser.parse_args()
@@ -33,6 +33,7 @@ args = parser.parse_args()
 class_mapping = {
     "LlmWithRagKosAndExternalInterpreter": LlmWithRagKosAndExternalInterpreter,
     "LlmWithKoCodeTools": LlmWithKoCodeTools,
+    "LlmWithRagKosAndInternalExecution": LlmWithRagKosAndInternalExecution,
 }
 
 
