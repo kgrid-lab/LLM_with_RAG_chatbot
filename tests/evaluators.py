@@ -3,9 +3,15 @@ Contains Evaluator classes which are used to evaluate chatbot responses accordin
 Each Evaluator class performs the evaluation using a different method.
 """
 
+import logging
+
 import evaluate
 from langchain_core.prompts import PromptTemplate
 from langchain_openai.chat_models import ChatOpenAI
+
+
+logger = logging.getLogger(__name__)
+
 
 bleu_metric = evaluate.load("bleu")
 rouge_metric = evaluate.load("rouge")
@@ -78,7 +84,11 @@ class BleuEvaluator(Evaluator):
     between it and the standard.
     """
     def score(self, response: str, exchange: dict) -> float:
-        return bleu_metric.compute(predictions=[response], references=[exchange["rubric"]["standard"]])["bleu"]
+        try:
+            return bleu_metric.compute(predictions=[response], references=[exchange["rubric"]["standard"]])["bleu"]
+        except ZeroDivisionError:
+            logger.error("BLEU attempted division by zero when evaluating response:\n{}\nAgainst standard:\n{}\n".format(response, exchange["rubric"]["standard"]))
+            return 0
 
     def get_name(self) -> str:
         return "BLEU"
