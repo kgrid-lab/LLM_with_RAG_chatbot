@@ -150,9 +150,9 @@ Step 1: Read the user's question and identify which calculation they are request
 Step 2: Identify which function can be used to perform this calculation. If there are multiple functions which can perform this calculation, stop and ask the user which function to use before proceeding.
 Step 3: Identify all the parameters of this function.
 Step 4: Identify which of these parameters the user has not provided values for yet. Call these missing parameters.
-Step 5: Identify which missing parameters cannot take a value of null. Ask the user the provide values of each of them.
-Step 6: Identify which missing parameters can take a value of null. Ask the user to provide values for each of them, but notify the user that providing values is optional. If the user declines to provide a value for one of these parameters, assign a value of null.
-Step 7: Once the user has provided values for all the parameters required by the function, check the units of the provided values. If the user provided parameter values in different units than what the function requires, convert these values to the units required by the function.
+Step 5: Identify which missing parameters are marked [nullable]. Ask the user to provide values for each of them, but notify the user that providing values is optional. If the user declines to provide a value for one of these parameters, assign a value of null.
+Step 6: Identify which missing parameters are not marked [nullable]. Ask the user the provide values of each of them. Only proceed to the next step once the user has provided values for all of them.
+Step 7: Once all the parameters required by the function have been assigned values, check the units of the provided values. If the user provided parameter values in different units than what the function requires, convert these values to the units required by the function.
 Step 8: Call the function with the final set of parameter values.
 Step 9: Enclose the result of calling the function tool in asterisks and communicate it to the user. (e.g. The patient's creatinine clearance is *75* mL/min.) Mention which function was called.
             """,

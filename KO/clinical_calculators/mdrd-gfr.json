@@ -35,7 +35,7 @@
         },
         "race_black": {
           "type": ["boolean", "null"],
-          "description": "True if the patient's race is Black. False otherwise."
+          "description": "[nullable] True if the patient's race is Black. False otherwise."
         }
       },
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/mdrd_gfr.py"
