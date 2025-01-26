@@ -26,7 +26,7 @@ import os
 from dotenv import load_dotenv
 
 from evaluators import KeywordEvaluator, BleuEvaluator, Rouge1Evaluator, Rouge2Evaluator, RougeLEvaluator, LlmEvaluator
-from src.chatbots import LlmWithRagKosAndExternalInterpreter, LlmWithKoCodeTools
+from src.chatbots import init_chatbot_from_str
 
 TIME_FMT = "%Y-%m-%d-%H%M.%S.%f"
 ENC = "utf-8"
@@ -50,7 +50,7 @@ load_dotenv()
 
 # Process command line arguments.
 parser = argparse.ArgumentParser()
-parser.add_argument("--chatbot_architecture", "-a", type=str, choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"), required=True, help="Which chatbot architecture to test.")
+parser.add_argument("--chatbot_architecture", "-a", type=str, choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm"), required=True, help="Which chatbot architecture to test.")
 parser.add_argument("--conversation", "-c", type=str, required=True, help="Text file containing prepared conversation.")
 parser.add_argument("--test_cases", "-t", nargs="+", type=int, help="If desired, specify which test cases to run. The first is #0. Default is to run all tests.")
 parser.add_argument("--output_log", "-o",
@@ -72,12 +72,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
-if args.chatbot_architecture == "LlmWithRagKosAndExternalInterpreter":
-    chatbot = LlmWithRagKosAndExternalInterpreter(OPENAI_API_KEY, model_name, model_seed, knowledge_base)
-elif args.chatbot_architecture == "LlmWithKoCodeTools":
-    chatbot = LlmWithKoCodeTools(OPENAI_API_KEY, model_name, model_seed, knowledge_base)
-else:
-    raise ValueError("Invalid chatbot architecture {}".format(args.chatbot_architecture))
+chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base)
 
 # Print model and architecture information.
 logger.info("Model and Architecture Information:\n")

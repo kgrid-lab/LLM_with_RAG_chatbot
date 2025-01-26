@@ -9,7 +9,7 @@ import os
 
 from dotenv import load_dotenv
 
-from chatbots import LlmWithKoCodeTools, LlmWithRagKosAndExternalInterpreter
+from chatbots import init_chatbot_from_str
 
 # Load environment variables
 load_dotenv()
@@ -25,21 +25,14 @@ parser.add_argument(
     "-a",
     default="LlmWithKoCodeTools",
     type=str,
-    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"),
+    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm"),
     help="Which chatbot architecture to use.",
 )
 args = parser.parse_args()
 
-class_mapping = {
-    "LlmWithRagKosAndExternalInterpreter": LlmWithRagKosAndExternalInterpreter,
-    "LlmWithKoCodeTools": LlmWithKoCodeTools,
-}
-
 
 def main():
-    chatbot = class_mapping[args.chatbot_architecture](
-        OPENAI_API_KEY, model_name, model_seed, knowledge_base
-    )
+    chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base)
 
     while True:
         text = input("Enter your query: --> ")
