@@ -2,5 +2,6 @@ from .chatbot import Chatbot
 from .llm_with_rag_kos_and_external_interpreter import LlmWithRagKosAndExternalInterpreter
 from .llm_with_rag_kos_and_internal_execution import LlmWithRagKosAndInternalExecution
 from .llm_with_ko_code_tools import LlmWithKoCodeTools
+from .llm_with_rag_metadata_with_embedded_code_chatbot import LlmWithRagMetadataWithEmbeddedCodeChatbot
 
-__all__ = ["Chatbot", "LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "LlmWithRagKosAndInternalExecution"]
+__all__ = ["Chatbot", "LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "LlmWithRagKosAndInternalExecution", "LlmWithRagMetadataWithEmbeddedCodeChatbot"]

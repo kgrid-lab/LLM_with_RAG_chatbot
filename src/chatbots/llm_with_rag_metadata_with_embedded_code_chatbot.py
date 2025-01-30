@@ -5,7 +5,6 @@ import re
 from collections import deque
 
 import openai
-import requests
 from langchain.prompts import ChatPromptTemplate
 from langchain_community.document_loaders import TextLoader
 from langchain_community.vectorstores import DocArrayInMemorySearch
@@ -14,7 +13,71 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_openai.chat_models import ChatOpenAI
 from langchain_openai.embeddings import OpenAIEmbeddings
 
+import KO.clinical_calculators.code.nihss as nihss
+
+from KO.clinical_calculators.code.ascvd_2013 import ascvd_2013
+from KO.clinical_calculators.code.bmi import bmi
+from KO.clinical_calculators.code.bsa import bsa
+# from KO.clinical_calculators.code.chadsvasc import chadsvasc
+# from KO.clinical_calculators.code.ckd_epi_gfr_2021 import ckd_epi_gfr_2021
+# from KO.clinical_calculators.code.cockcroft_gault_cr_cl import cockcroft_gault_cr_cl
+# from KO.clinical_calculators.code.corr_ca_alb import corr_ca_alb
+# from KO.clinical_calculators.code.mdrd_gfr import mdrd_gfr
+# from KO.clinical_calculators.code.mean_arterial_pressure import mean_arterial_pressure
+# from KO.clinical_calculators.code.wells import wells
 from . import Chatbot
+
+
+
+def nihss_adapter(
+    consciousness: str,
+    month_and_age_questions: str,
+    blink_eyes_and_squeeze_hands: str,
+    horizontal_extraocular_movements: str,
+    visual_fields: str,
+    facial_palsy: str,
+    left_arm_motor_drift: str,
+    right_arm_motor_drift: str,
+    left_leg_motor_drift: str,
+    right_leg_motor_drift: str,
+    limb_ataxia: str,
+    sensation: str,
+    language: str,
+    dysarthria: str,
+    inattention: str,
+) -> int:
+    return nihss.nihss(
+        nihss.Consciousness[consciousness],
+        nihss.MonthAndAgeQuestions[month_and_age_questions],
+        nihss.BlinkEyesAndSqueezeHands[blink_eyes_and_squeeze_hands],
+        nihss.HorizontalExtraocularMovements[horizontal_extraocular_movements],
+        nihss.VisualFields[visual_fields],
+        nihss.FacialPalsy[facial_palsy],
+        nihss.ArmMotorDrift[left_arm_motor_drift],
+        nihss.ArmMotorDrift[right_arm_motor_drift],
+        nihss.LegMotorDrift[left_leg_motor_drift],
+        nihss.LegMotorDrift[right_leg_motor_drift],
+        nihss.LimbAtaxia[limb_ataxia],
+        nihss.Sensation[sensation],
+        nihss.LanguageAphasia[language],
+        nihss.Dysarthria[dysarthria],
+        nihss.ExtinctionInattention[inattention],
+    )
+
+
+CODE_MAP = {
+    "ascvd-2013": ascvd_2013,
+    "bmi": bmi,
+    "bsa": bsa,
+    # "chadsvasc": chadsvasc,
+    # "ckd-epi-gfr-2021": ckd_epi_gfr_2021,
+    # "cockcroft-gault-cr-cl": cockcroft_gault_cr_cl,
+    # "corr-ca-alb": corr_ca_alb,
+    # "mdrd-gfr": mdrd_gfr,
+    # "mean-arterial-pressure": mean_arterial_pressure,
+    # "nihss": nihss_adapter,
+    # "wells": wells,
+}
 
 ENC = "utf-8"
 
@@ -31,32 +94,16 @@ def get_full_context(history, current_query):
     return full_context
 
 
-def extract_code(response: str) -> str:
-    """
-    Utility function to find and extract code from chatbot response.
-    If no code is found, returns the empty string.
-    """
-    if "```" in response:
-        search_result = re.search(r"```(.*?)```", response, re.DOTALL)
-        if search_result is not None:
-            return search_result.group(1)
-        else:
-            return ""
-    else:
-        return ""
-
-
-class LlmWithRagKosAndInternalExecution(Chatbot):
+class LlmWithRagMetadataWithEmbeddedCodeChatbot(Chatbot):
     """
     Through RAG, the main LLM of this Chatbot has access to a knowledge_base of
     Knowledge Object (KO) JSON metadata files. These KO metadata files describe
     the KOs and contain a hyperlink to a Python code file describing the precise
     calculation or formula referred to by the KO. When asked to perform a
     calculation, this Chatbot instructs the main LLM to fetch and return the
-    Python code for that calculation. This chatbot then executes the code 
+    input parameters and function name required for that calculation. This chatbot then executes the code 
     internally and engages the LLM again to prepare the final response.
     """
-
     def __init__(
         self, openai_api_key: str, model_name: str, model_seed: int, knowledge_base: str
     ):
@@ -90,15 +137,6 @@ class LlmWithRagKosAndInternalExecution(Chatbot):
             loader = TextLoader(file_path, encoding=ENC)
             ko = loader.load()
 
-            with open(file_path, "r", encoding=ENC) as file:
-                code_file = json.load(file)
-            link = code_file["koio:hasKnowledge"]["implementedBy"]
-            response = requests.get(link)
-            data = response.text
-            ko[0].page_content += (
-                "Here is the function to calculate the value for this knowledge object: \n "
-                + data
-            )
             splits.extend(ko)
         vectorstore2 = DocArrayInMemorySearch.from_documents(splits, embeddings)
 
@@ -109,13 +147,13 @@ class LlmWithRagKosAndInternalExecution(Chatbot):
         Instead, follow the steps below:
         Step 1: Read the clinician's question (labeled "Question:" below) and identify the calculation the clinician is requesting, if any.
         Step 2: Look at the information below (labeled "Information:") to find:
-                - The Python code implementing the logic of the calculation
-                - The parameters required by that code.
+                - The Python function implementing the logic of the calculation
+                - The parameters required by that function.
         Step 3: Gather values for all the required parameters.
                 - If the clinician has not provided values for all the required parameters, please ask them for the missing values.
                 - Some parameters are optional. If the clinician does not provide values for these optional parameters, please notify them that they are optional and confirm whether they want to proceed without them.
-                - Sometimes, the clinician might provide values in different units than what the code requires. In this case, please convert them to the units required by the code.
-        Step 4: Once you have values for all the required parameters, provide the code to execute, wrapping the function in ```function code ``` and the function call with input values (without assigning it to a variable) to execute it in ```line code ```
+                - Sometimes, the clinician might provide values in different units than what the function requires. In this case, please convert them to the units required by the function.
+        Step 4: Once you have values for all the required parameters, provide the input parameters in json format, wrapping it in ```input=\n[input value]\n``` and the function name in ```function=\n[function name]\n```. Replace the text in bracket with input value and function name.
 
         Question: {question}
 
@@ -147,34 +185,35 @@ class LlmWithRagKosAndInternalExecution(Chatbot):
         full_context = get_full_context(conversation_history, text)
         response = self._chain.invoke(full_context)
 
-        function = (
-            re.search(r"```function code\n(.*?)```", response, re.DOTALL).group(1)
-            if "```" in response
+        function_name = (
+            re.search(r"```function=\n(.*?)\n```", response, re.DOTALL).group(1)
+            if "```function" in response
             else ""
         )
-        if function:
-            call = re.search(r"```line code\n(.*?)```", response, re.DOTALL).group(1)
-            print("I am processing your request, this may take a few seconds...")
-            exec(function)
-            result = eval(call)
+        if function_name:
+            print("I am processing your request, this may take a few seconds ...")
+            input = re.search(r"```input=\n(.*?)\n```", response, re.DOTALL).group(1)
+            input_values = json.loads(input)
+            result = CODE_MAP[function_name](**input_values)
+            
             conversation_history.append(
-                (text, response.replace(function, ""))
+                (text, response)
             )
-            text = "I ran the code and the result is " +  str(result)+". pretend you ran the code and use this value to provide a short final response to the last question that required code execution. Do not include any code."
+            text = "I ran the function code and the result is " +  str(result)+". Pretend you ran the function to do the calculation and use this value to provide a short final response to the last question that required function code execution."
             full_context = get_full_context(conversation_history, text)
             return self._chain.invoke(full_context)
         else:
             return response
 
     def get_architecture(self) -> str:
-        return "LLM with RAG KOs and internal code execution"
+        return "LLM with RAG KOs and internal code execution with no code sent to LLM"
 
     def invoke(self, query: str) -> str:
         response = self.process(query, self._conversation_history)
 
-        code = extract_code(response)
+        
         self._conversation_history.append(
-            (query, response.replace(code, ""))
+            (query, response)
         )  # update history excluding code
 
         return response
