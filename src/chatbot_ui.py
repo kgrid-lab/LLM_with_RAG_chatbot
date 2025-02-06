@@ -26,7 +26,7 @@ parser.add_argument(
     "-a",
     default="LlmWithKoCodeTools",
     type=str,
-    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm"),
+    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm", "LlmWithKoRagMetadataAndCodeTools"),
     help="Which chatbot architecture to use.",
 )
 args = parser.parse_args()
@@ -59,7 +59,9 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
-chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base)
+embedding_model = os.getenv("EMBEDDING_MODEL")
+embedding_dimension = int(os.getenv("EMBEDDING_DIMENSION"))
+chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base, embedding_model, embedding_dimension)
 
 
 @app.route("/")

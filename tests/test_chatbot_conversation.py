@@ -50,7 +50,7 @@ load_dotenv()
 
 # Process command line arguments.
 parser = argparse.ArgumentParser()
-parser.add_argument("--chatbot_architecture", "-a", type=str, choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm"), required=True, help="Which chatbot architecture to test.")
+parser.add_argument("--chatbot_architecture", "-a", type=str, choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm", "LlmWithKoRagMetadataAndCodeTools"), required=True, help="Which chatbot architecture to test.")
 parser.add_argument("--conversation", "-c", type=str, required=True, help="Text file containing prepared conversation.")
 parser.add_argument("--test_cases", "-t", nargs="+", type=int, help="If desired, specify which test cases to run. The first is #0. Default is to run all tests.")
 parser.add_argument("--output_log", "-o",
@@ -72,7 +72,9 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
-chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base)
+embedding_model = os.getenv("EMBEDDING_MODEL")
+embedding_dimension = int(os.getenv("EMBEDDING_DIMENSION"))
+chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base, embedding_model, embedding_dimension)
 
 # Print model and architecture information.
 logger.info("Model and Architecture Information:\n")
