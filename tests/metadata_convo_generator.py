@@ -38,9 +38,7 @@ for ko_metadata in ko_metadata_list:
             "query": "What is the {} field of the {} Knowledge Object?".format(field, title),
             "rubric": {
                 "standard": value,
-                "keywords": {
-                    "containsAll": [value],
-                },
+                "keywords": [value],
             },
             "notes": "Chatbot should be able to retrieve specific fields from KOs.",
         })

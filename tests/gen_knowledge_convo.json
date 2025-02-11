@@ -3,9 +3,7 @@
         "query": "List all the calculations you can perform in alphabetical order without grouping them into categories.",
         "rubric": {
             "standard": "1. ASCVD (Atherosclerotic Cardiovascular Disease) 2013 Risk Calculator from AHA/ACC: Estimates the patient's risk of developing their first myocardial infarction or stroke in the next 10 years\\n2. Body Mass Index: Computed using the patient's height in meters and weight in kilograms. It can be used to estimate whether a patient is underweight or overweight. 18.5 - 25 is the normal range.\\n3. Body Surface Area: Estimates the patient's body surface area in square meters using the Mosteller formula, given the patient's height in centimeters and weight in kilograms.\\n4. CHA2DS2-VASc Score: A score that can be used to estimate the risk of stroke in a patient with atrial fibrillation. 0 is low-risk in males. 0 or 1 is low-risk in females. All other scores are higher risk.\\n5. 2021 CKD-EPI equation for Glomerular Filtration Rate (GFR): Steady-state estimate of glomerular filtration rate (GFR) using the 2021 CKD-EPI equations from NKF/ASN using either creatinine alone or both creatinine and cystatin-C.\\n6. Cockcroft-Gault Creatinine Clearance: Estimates creatinine clearance in adults using the Cockcroft-Gault model.\\n7. Corrected Calcium for Hypo- or Hyperalbuminemia: Corrects the patient's measured serum calcium level to account for their serum albumin level.\\n8. MDRD GFR: Estimates the patient's glomerular filtration rate (GFR) given their sex, age, serum creatinine, and race.\\n9. Mean Arterial Pressure: Estimates the patient's mean arterial pressure given their systolic and diastolic pressures.\\n10. NIH Stroke Scale: Uses the patient's presenting symptoms and signs to quantify the severity of a suspected stroke.\\n11. Wells' Criteria for Pulmonary Embolism: Given features of the patient's history and presenting symptoms and signs, computes a score that can be used to estimate the probability of a non-pregnant adult patient having a pulmonary embolism in the emergency department.",
-            "keywords": {
-                "containsAll": ["ASCVD", "Body Mass Index", "Body Surface Area", "CHA2DS2-VASc", "CKD-EPI", "Cockcroft", "albumin", "MDRD", "Mean Arterial Pressure", "NIH", "Wells"]
-            }
+            "keywords": ["ASCVD", "Body Mass Index", "Body Surface Area", "CHA2DS2-VASc", "CKD-EPI", "Cockcroft", "albumin", "MDRD", "Mean Arterial Pressure", "NIH", "Wells"]
         },
         "notes": "Chatbot should be fully aware of what it can do."
     },
@@ -13,9 +11,7 @@
         "query": "The ASCVD 2013 Risk Calculator estimates the patient's risk of developing ASCVD over what time frame?",
         "rubric": {
             "standard": "10 years",
-            "keywords": {
-                "containsAll": ["10"]
-            }
+            "keywords": [10, "y"]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -23,9 +19,7 @@
         "query": "What is the normal range of BMI?",
         "rubric": {
             "standard": "18.5-25 kg/m^2",
-            "keywords": {
-                "containsAll": ["18.5", "25"]
-            }
+            "keywords": [18.5, 25]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -33,9 +27,7 @@
         "query": "In which units is body surface area calculated in?",
         "rubric": {
             "standard": "square meters",
-            "keywords": {
-                "containsAny": ["square meter", "m^2"]
-            }
+            "keywords": [{"any": ["square meter", "m^2"]}]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -43,9 +35,7 @@
         "query": "The CHA2DS2-VASc score is used to estimate the risk of developing a stroke in patients with which disease?",
         "rubric": {
             "standard": "Atrial fibrillation",
-            "keywords": {
-                "containsAll": ["fib"]
-            }
+            "keywords": ["fib"]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -53,9 +43,7 @@
         "query": "The 2021 CKD-EPI equations estimate which quantity?",
         "rubric": {
             "standard": "Glomerular filtration rate",
-            "keywords": {
-                "containsAny": ["glom", "GFR"]
-            }
+            "keywords": [{"any": ["glom", "GFR"]}]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -63,9 +51,7 @@
         "query": "The Cockcroft-gault equation estimates which quantity?",
         "rubric": {
             "standard": "Creatinine clearance",
-            "keywords": {
-                "containsAll": ["creatinine", "clearance"]
-            }
+            "keywords": ["creatinine", "clearance"]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -73,9 +59,7 @@
         "query": "The patient's serum calcium level may need to be corrected if they have which conditions?",
         "rubric": {
             "standard": "Hyperalbuminemia or hypoalbuminema",
-            "keywords": {
-                "containsAll": ["albuminemia", "hyper", "hypo"]
-            }
+            "keywords": ["albuminemia", "hyper", "hypo"]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -83,9 +67,7 @@
         "query": "The MDRD equation estimates which quantity?",
         "rubric": {
             "standard": "Glomerular filtration rate",
-            "keywords": {
-                "containsAny": ["glom", "GFR"]
-            }
+            "keywords": [{"any": ["glom", "GFR"]}]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -93,9 +75,7 @@
         "query": "What is NIHSS used for?",
         "rubric": {
             "standard": "To quantify the severity of a suspected stroke",
-            "keywords": {
-                "containsAll": ["sever", "stroke"]
-            }
+            "keywords": ["sever", "stroke"]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -103,9 +83,7 @@
         "query": "The Wells' criteria may be used to estimate the risk of patients having which condition?",
         "rubric": {
             "standard": "Pulmonary embolism",
-            "keywords": {
-                "containsAny": ["embol", "PE"]
-            }
+            "keywords": [{"any": ["embol", "PE"]}]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -113,9 +91,7 @@
         "query": "The Wells' criteria may be used to estimate the risk of pulmonary embolism in patients in which setting?",
         "rubric": {
             "standard": "Emergency department",
-            "keywords": {
-                "containsAny": ["emergency", "ED", "ER"]
-            }
+            "keywords": [{"any": ["emergency", "ED", "ER"]}]
         },
         "notes": "Chatbot should know what calculators can be used for."
     },
@@ -123,9 +99,7 @@
         "query": "The ASCVD 2013 Risk Calculator is valid for patients in which age range?",
         "rubric": {
             "standard": "40-75 years",
-            "keywords": {
-                "containsAll": ["40", "75"]
-            }
+            "keywords": [40, 75]
         },
         "notes": "Chatbot should know what inputs are valid for calculators."
     },
@@ -133,9 +107,7 @@
         "query": "Which parameter is optional in the 2021 CKD-EPI equations?",
         "rubric": {
             "standard": "Cystatin-c",
-            "keywords": {
-                "containsAll": ["cystatin"]
-            }
+            "keywords": ["cystatin"]
         },
         "notes": "Chatbot should know what inputs are valid for calculators."
     },
@@ -143,9 +115,7 @@
         "query": "One input to the Wells' criteria is if the patient's heart rate is greater than which number?",
         "rubric": {
             "standard": "100 beats per minute",
-            "keywords": {
-                "containsAll": ["100"]
-            }
+            "keywords": [100]
         },
         "notes": "Chatbot should know what inputs are valid for calculators."
     },
@@ -153,9 +123,7 @@
         "query": "List all the parameters required to calculate NIHSS and include the options for each.",
         "rubric": {
             "standard": "1. **Consciousness**:\\n   - Options: \"ALERT_KEENLY_RESPONSIVE\", \"AROUSES_TO_MINOR_STIMULATION\", \"REQUIRES_REPEATED_STIMULATION_TO_AROUSE\", \"MOVEMENTS_TO_PAIN\", \"POSTURES_OR_UNRESPONSIVE\"\\n2. **Month and Age Questions**:\\n   - Options: \"BOTH_QUESTIONS_RIGHT\", \"ONE_QUESTION_RIGHT\", \"ZERO_QUESTIONS_RIGHT\", \"DYSARTHRIC_INTUBATED_TRAUMA_OR_LANGUAGE_BARRIER\", \"APHASIC\"\\n3. **Blink Eyes and Squeeze Hands**:\\n   - Options: \"PERFORMS_BOTH_TASKS\", \"PERFORMS_ONE_TASK\", \"PERFORMS_ZERO_TASKS\"\\n4. **Horizontal Extraocular Movements**:\\n   - Options: \"NORMAL\", \"PARTIAL_GAZE_PALSY_CAN_BE_OVERCOME\", \"PARTIAL_GAZE_PALSY_CORRECTS_WITH_OCULOCEPHALIC_REFLEX\", \"FORCED_GAZE_PALSY_CANNOT_BE_OVERCOME\"\\n5. **Visual Fields**:\\n   - Options: \"NO_VISUAL_LOSS\", \"PARTIAL_HEMIANOPIA\", \"COMPLETE_HEMIANOPIA\", \"PATIENT_IS_BILATERALLY_BLIND\", \"BILATERAL_HEMIANOPIA\"\\n6. **Facial Palsy**:\\n   - Options: \"NORMAL_SYMMETRY\", \"MINOR_PARALYSIS\", \"PARTIAL_PARALYSIS\", \"UNILATERAL_COMPLETE_PARALYSIS\", \"BILATERAL_COMPLETE_PARALYSIS\"\\n7. **Left Arm Motor Drift**:\\n   - Options: \"NO_DRIFT_FOR_10_SECONDS\", \"DRIFTS_BUT_DOES_NOT_HIT_BED\", \"DRIFTS_HITS_BED\", \"SOME_EFFORT_AGAINST_GRAVITY\", \"NO_EFFORT_AGAINST_GRAVITY\", \"NO_MOVEMENT\", \"AMPUTATION_JOINT_FUSION\"\\n8. **Right Arm Motor Drift**:\\n   - Options: \"NO_DRIFT_FOR_10_SECONDS\", \"DRIFTS_BUT_DOES_NOT_HIT_BED\", \"DRIFTS_HITS_BED\", \"SOME_EFFORT_AGAINST_GRAVITY\", \"NO_EFFORT_AGAINST_GRAVITY\", \"NO_MOVEMENT\", \"AMPUTATION_JOINT_FUSION\"\\n9. **Left Leg Motor Drift**:\\n   - Options: \"NO_DRIFT_FOR_5_SECONDS\", \"DRIFTS_BUT_DOES_NOT_HIT_BED\", \"DRIFTS_HITS_BED\", \"SOME_EFFORT_AGAINST_GRAVITY\", \"NO_EFFORT_AGAINST_GRAVITY\", \"NO_MOVEMENT\", \"AMPUTATION_JOINT_FUSION\"\\n10. **Right Leg Motor Drift**:\\n    - Options: \"NO_DRIFT_FOR_5_SECONDS\", \"DRIFTS_BUT_DOES_NOT_HIT_BED\", \"DRIFTS_HITS_BED\", \"SOME_EFFORT_AGAINST_GRAVITY\", \"NO_EFFORT_AGAINST_GRAVITY\", \"NO_MOVEMENT\", \"AMPUTATION_JOINT_FUSION\"\\n11. **Limb Ataxia**:\\n    - Options: \"NO_ATAXIA\", \"ATAXIA_IN_1_LIMB\", \"ATAXIA_IN_2_LIMBS\", \"DOES_NOT_UNDERSTAND\", \"PARALYZED\", \"AMPUTATION_JOINT_FUSION\"\\n12. **Sensation**:\\n    - Options: \"NORMAL_NO_SENSORY_LOSS\", \"MILD_MODERATE_LOSS_LESS_SHARP_MORE_DULL\", \"MILD_MODERATE_LOSS_CAN_SENSE_BEING_TOUCHED\", \"COMPLETE_LOSS_CANNOT_SENSE_BEING_TOUCHED_AT_ALL\", \"NO_RESPONSE_AND_QUADRIPLEGIC\", \"COMA_UNRESPONSIVE\"\\n13. **Language**:\\n    - Options: \"NORMAL_NO_APHASIA\", \"MILD_MODERATE_APHASIA_SOME_OBVIOUS_CHANGES_WITHOUT_SIGNIFICANT_LIMITATION\", \"SEVERE_APHASIA_FRAGMENTARY_EXPRESSION_INFERENCE_NEEDED_CANNOT_IDENTIFY_MATERIALS\", \"MUTE_GLOBAL_APHASIA_NO_USABLE_SPEECH_AUDITORY_COMPREHENSION\", \"COMA_UNRESPONSIVE\"\\n14. **Dysarthria**:\\n    - Options: \"NORMAL\", \"MILD_MODERATE_DYSARTHRIA_SLURRING_BUT_CAN_BE_UNDERSTOOD\", \"SEVERE_DYSARTHRIA_UNINTELLIGIBLE_SLURRING_OR_OUT_OF_PROPORTION_TO_DYSPHAGIA\", \"MUTE_ANARTHRIC\", \"INTUBATED_UNABLE_TO_TEST\"\\n15. **Inattention**:\\n    - Options: \"NO_ABNORMALITY\", \"VISUAL_TACTILE_AUDITORY_SPATIAL_PERSONAL_INATTENTION\", \"EXTINCTION_TO_BILATERAL_SIMULTANEOUS_STIMULATION\", \"PROFOUND_HEMI_INATTENTION\", \"EXTINCTION_TO_GREATER_THAN_1_MODALITY\"",
-            "keywords": {
-                "containsAll": ["Consciousness", "Month and Age Questions", "Blink Eyes and Squeeze Hands", "Horizontal Extraocular Movements", "Visual Fields", "Facial Palsy", "Left Arm Motor Drift", "Right Arm Motor Drift", "Left Leg Motor Drift", "*Right Leg Motor Drift", "*Limb Ataxia", "*Sensation", "*Language", "*Dysarthria", "*Inattention"]
-            }
+            "keywords": ["Consciousness", "Month and Age Questions", "Blink Eyes and Squeeze Hands", "Horizontal Extraocular Movements", "Visual Fields", "Facial Palsy", "Left Arm Motor Drift", "Right Arm Motor Drift", "Left Leg Motor Drift", "*Right Leg Motor Drift", "*Limb Ataxia", "*Sensation", "*Language", "*Dysarthria", "*Inattention"]
         },
         "notes": "Chatbot should know what inputs are valid for calculators."
     },
@@ -163,9 +131,7 @@
         "query": "How can glomerular filtration rate be estimated?",
         "rubric": {
             "standard": "Glomerular filtration rate can be estimated using either the 2021 CKD-EPI equations or the MDRD equation.",
-            "keywords": {
-                "containsAll": ["CKD-EPI", "MDRD"]
-            }
+            "keywords": ["CKD-EPI", "MDRD"]
         },
         "notes": "Chatbot should understand the relationships between different calculators."
     },
@@ -173,9 +139,7 @@
         "query": "Which two calculations require only the patient's height and weight?",
         "rubric": {
             "standard": "Body Mass Index and Body Surface Area",
-            "keywords": {
-                "containsAll": ["Body Mass Index", "Body Surface Area"]
-            }
+            "keywords": ["Body Mass Index", "Body Surface Area"]
         },
         "notes": "Chatbot should understand the relationships between different calculators."
     },
@@ -183,9 +147,7 @@
         "query": "Which two calculations predict disease risk with a score rather than a probability?",
         "rubric": {
             "standard": "CHA2DS2-VASc Score and Wells' Criteria",
-            "keywords": {
-                "containsAll": ["CHA2DS2-VASc", "Wells"]
-            }
+            "keywords": ["CHA2DS2-VASc", "Wells"]
         },
         "notes": "Chatbot should understand the relationships between different calculators."
     },
@@ -193,9 +155,7 @@
         "query": "Which calculations have race as either a required or optional parameter?",
         "rubric": {
             "standard": "2013 ASCVD Risk Calculator and MDRD Equation for GFR, ",
-            "keywords": {
-                "containsAll": ["ASCVD", "MDRD"]
-            }
+            "keywords": ["ASCVD", "MDRD"]
         },
         "notes": "Chatbot should understand the relationships between different calculators."
     }

@@ -63,16 +63,37 @@ class KeywordEvaluator(Evaluator):
     """
     def score(self, response: str, exchange: dict) -> float:
         keywords = exchange["rubric"]["keywords"]
-        for rule in keywords:
-            if rule == "containsAll":
-                if not all(term.casefold() in response.casefold() for term in keywords[rule]):
-                    return 0.0
-            elif rule.startswith("containsAny"):
-                if not any(term.casefold() in response.casefold() for term in keywords[rule]):
-                    return 0.0
-            else:
-                raise ValueError("Invalid field {} found in keywords!".format(rule))
+        
+        for keyword in keywords:
+            if not self.keyword_match(keyword, response):
+                return 0.0
         return 1.0
+    
+    def keyword_match(self, keyword, response: str) -> bool:
+        response_lc = response.casefold()
+        if isinstance(keyword, str):
+            return keyword.casefold() in response_lc
+        elif isinstance(keyword, float):
+            if str(keyword) in response_lc:
+                return True
+            else:
+                decimal_places = len(str(keyword)) - str(keyword).find('.') - 1
+                for i in range(decimal_places - 1, -1, -1):
+                    if str(int(round(keyword, i))) in response_lc:
+                        return True
+                return False
+        elif isinstance(keyword, int):
+            return str(keyword) in response_lc
+        elif isinstance(keyword, dict):
+            if "any" in keyword:
+                if isinstance(keyword["any"], list):
+                    for keyword_any in keyword["any"]:
+                        if self.keyword_match(keyword_any, response):
+                            return True
+                    return False
+            raise ValueError("Invalid object {} found in keywords.".format(keyword))
+        else:
+            raise ValueError("Invalid object {} found in keywords.".format(keyword))
     
     def get_name(self) -> str:
         return "Keyword"
