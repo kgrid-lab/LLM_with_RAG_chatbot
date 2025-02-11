@@ -5,15 +5,12 @@ Each object has two fields: "query", which is the query given to the chatbot,
 and "rubric", an object containing information regarding how to evaluate the
 response.
 The rubric object has two fields, "standard", which is an example of a
-correct output, and "keywords", which is an object containing terms
-that should appear in a correct response.
-The keywords object has fields "containsAny" and/or "containsAll".
-Each of these fields contains a list of strings.
-"containsAny" means that the chatbot response must contain any one of
-these strings (ignoring case) to be considered correct.
-"containsAll" means that the chatbot response must contain ALL of
-these strings (ignoring case) to be considered correct.
-If both fields are present, both conditions must be met.
+correct output, and "keywords", which is an list containing terms
+that should appear in a correct response. Comparison happens
+in lower case. If there is flexibility regarding which term should appear,
+the list entry is an object containing an "any" field listing the options
+rather than the term itself. If the term is a number, rounding error
+is accounted for in the comparison.
 """
 
 import argparse
@@ -32,13 +29,10 @@ TIME_FMT = "%Y-%m-%d-%H%M.%S.%f"
 ENC = "utf-8"
 
 def select(conversation: list, indices: list) -> list:
-    if indices is None:
-        return conversation
-    else:
-        for i in indices:
-            if (i < 0) or i >= len(conversation):
-                raise ValueError("Invalid test case {}".format(i))
-        return (conversation[i] for i in indices)
+    for i in indices:
+        if (i < 0) or i >= len(conversation):
+            raise ValueError("Invalid test case {}".format(i))
+    return [conversation[i] for i in indices]
 
 start_time = datetime.now()
 
@@ -87,31 +81,28 @@ logger.info("\n")
 # Keep track of chat transcript for logging purposes.
 transcript = []
 
-# Feed the chatbot each query in the conversation and score each resulting response.
+# Load the conversation from the file.
 with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
     conversation = json.load(conversation_file)
 
-    # Select a subset of the conversation if desired.
-    selected_conversation = select(conversation, args.test_cases)
+# Select a subset of the conversation if desired.
+if args.test_cases is not None:
+    conversation = select(conversation, args.test_cases)
 
-    for exchange in selected_conversation:
-        query = exchange["query"]
-        transcript.append("USR> {}\n".format(query))
-        logger.info(transcript[-1])
+# Have a conversation with the chatbot.
+responses = [chatbot.invoke(exchange["query"]) for exchange in conversation]
 
-        # Feed the chatbot the query.
-        response = chatbot.invoke(query)
-        transcript.append("BOT> {}\n".format(response))
-        logger.info(transcript[-1])
+# Print transcript of conversation.
+logger.info("Chat Transcript:\n{}\n".format(
+    "\n".join([
+        "USR> {}\nBOT> {}".format(conversation[i]["query"], responses[i])
+        for i in range(len(conversation))
+        ])
+    ))
 
-        # Score the response using each method of evaluation.
-        for e in evaluators:
-            e.record_response(response, exchange)
-
-# Report results of chatbot testing.
-logger.info("Chat Transcript:\n{}\n".format("\n".join(transcript)))
+# Print evaluation results.
 for e in evaluators:
-    logger.info("{}\n".format(e.get_results()))
+    logger.info("{}\n".format(e.score_conversation(responses, conversation)))
 
 # Record time elapsed.
 end_time = datetime.now()

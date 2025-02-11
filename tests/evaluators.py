@@ -20,8 +20,6 @@ class Evaluator:
     """
     Evaluates chatbot responses.
     """
-    def __init__(self):
-        self._scores = []
 
     def get_name(self) -> str:
         """
@@ -31,30 +29,33 @@ class Evaluator:
 
     def score(self, response: str, exchange: dict) -> float:
         """
-        Scores the chatbot response and makes an internal note of its correctness.
+        Scores an individual response from the chatbot
 
         :param response: the chatbot response
         :param exchange: a dict containing the query given to the chatbot and a rubric with which to evaluate the chatbot's response
+        Returns the score, which can range from 0.0 to 1.0
         """
         pass
 
-    def record_response(self, response: str, exchange: dict) -> None:
+    def score_conversation(self, responses: list[str], conversation: list[dict]) -> str:
         """
-        Scores the chatbot response and makes an internal note of its correctness.
+        Scores the chatbot responses as part of the tested conversation.
 
-        :param response: the chatbot response
-        :param exchange: a dict containing the query given to the chatbot and a rubric with which to evaluate the chatbot's response
+        :param responses: the chatbot responses
+        :param conversations: contains the queries given to the chatbot and rubrics with which to evaluate the chatbot's responses
+        Returns the results of scoring as a string
         """
-        self._scores.append(self.score(response, exchange))
+        # Tabulate the scores.
+        total = len(responses)
+        if total != len(conversation):
+            raise ValueError("Responses and conversation have different lengths.")
+        scores = [self.score(responses[i], conversation[i]) for i in range(total)]
+        points = sum(scores)
 
-    def get_results(self) -> str:
-        """
-        Returns results of evaluating all chatbot responses.
-        """
-        points = sum(self._scores)
-        total = len(self._scores)
-        scores = "\n".join(("Item {}: {}".format(i, self._scores[i]) for i in range(total)))
-        return "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items:\n{}".format(self.get_name(), points / total, points, total, scores)
+        # Return the results as a string.
+        scores_str = "\n".join(("Item {}: {}".format(i, scores[i]) for i in range(total)))
+        return "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items:\n{}\n".format(self.get_name(), points / total, points, total, scores_str)
+        
 
 class KeywordEvaluator(Evaluator):
     """
@@ -146,7 +147,6 @@ class LlmEvaluator(Evaluator):
     Uses an LLM to assess how close the chatbot's responses are to gold standard responses.
     """
     def __init__(self, openai_api_key: str, model: str):
-        super().__init__()
         self._openai_api_key = openai_api_key
         self._model = model
 
