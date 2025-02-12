@@ -6,8 +6,7 @@ Each Evaluator class performs the evaluation using a different method.
 import logging
 
 import evaluate
-from langchain_core.prompts import PromptTemplate
-from langchain_openai.chat_models import ChatOpenAI
+import openai
 
 
 logger = logging.getLogger(__name__)
@@ -147,30 +146,42 @@ class LlmEvaluator(Evaluator):
     Uses an LLM to assess how close the chatbot's responses are to gold standard responses.
     """
     def __init__(self, openai_api_key: str, model: str):
-        self._openai_api_key = openai_api_key
-        self._model = model
+        # Initialize OpenAI client.
+        self._client = openai.OpenAI(api_key=openai_api_key)
+        self._model_name = model
 
     def score(self, response: str, exchange: dict) -> float:
-        model = ChatOpenAI(openai_api_key=self._openai_api_key, model=self._model)
-        prompt = PromptTemplate.from_template(
-            """You are grading an agent's responses to questions.
-            Question: {question}
-            Example of correct response: {standard}
+        # Write prompt.
+        prompt = f"""You are grading an agent's responses to questions.
+            Question: {exchange["query"]}
+            Example of correct response: {exchange["rubric"]["standard"]}
             Agent's response: {response}
             The agent's response is considered correct if it has the same meaning as the example response, even if it is not identical.
             Is the agent's response correct?
             Please answer CORRECT or INCORRECT.
             """
+
+        # Ask the LLM to respond to using the OpenAI Chat Completions API.
+        response = self._client.chat.completions.create(
+            messages=[{"content": prompt, "role": "system"}],
+            model=self._model_name,
+            temperature=0
         )
-        fields = {
-            "question": exchange["query"],
-            "standard": exchange["rubric"]["standard"],
-            "response": response
-        }
-        result = model.invoke(prompt.invoke(fields))
-        if result.content.lower() == "correct":
-            return 1.0
+
+        # Process the response.
+        if len(response.choices) != 1:
+            logger.error(f"Unexpected number of choice entries in Chat Completions response {response}")
+            return "ERROR"
+        response_entry = response.choices[0]
+
+        # If the LLM is done, return the response.
+        if response_entry.finish_reason == "stop":
+            if response_entry.message.content.lower() == "correct":
+                return 1.0
+            else:
+                return 0.0
         else:
+            logger.error(f"Unexpected finish reason in Chat Completions response {response_entry.finish_reason}")
             return 0.0
         
     def get_name(self) -> str:
