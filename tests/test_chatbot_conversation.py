@@ -85,17 +85,41 @@ def get_openai_usage(openai_admin_key: str, start_time: datetime, end_time: date
 
     return all_data
 
-def get_cost(openai_admin_key: str, start_time: datetime, end_time: datetime) -> float:
-    """Gets the OpenAI API usage cost in US dollars from start_time up to end_time."""
+def get_cost(token_usage: dict, model: str, emb_model: str) -> float:
+    """Gets the OpenAI API usage cost in US dollars given token usage."""
 
-    # URL of OpenAI Admin Cost API endpoint.
-    url = "https://api.openai.com/v1/organization/costs"
+    M = 1000000
+    G = 1000000000
+    COST = {
+        "gpt-4o": {
+            "input_tokens": 2.50 / M,
+            "input_cached_tokens": 1.25 / M,
+            "output_tokens": 10.00 / M
+        },
+        "text-embedding-3-small": {
+            "input_tokens": 0.020 / M
+        },
+        "text-embedding-ada-002": {
+            "input_tokens": 0.100 / M
+        },
+        "file_search": {
+            "usage_bytes": 0.10 / G
+        }
+    }
 
-    all_data = get_openai_usage(openai_admin_key, start_time, end_time, url)
-    return sum(sum(result["amount"]["value"] for result in data["results"]) for data in all_data)
+    uncached_input_tokens = token_usage["completions"]["input_tokens"] - token_usage["completions"]["input_cached_tokens"]
+
+    return sum([
+        uncached_input_tokens * COST[model]["input_tokens"],
+        token_usage["completions"]["input_cached_tokens"] * COST[model]["input_cached_tokens"],
+        token_usage["completions"]["output_tokens"] * COST[model]["output_tokens"],
+        token_usage["embeddings"]["input_tokens"] * COST[emb_model]["input_tokens"],
+        max(0, (token_usage["vector_store"]["usage_bytes"] - G) * COST["file_search"]["usage_bytes"])
+    ])
+
 
 def get_token_usage(openai_admin_key: str, start_time: datetime, end_time: datetime) -> dict:
-    """Gets the OpenAI API usage cost in US dollars from start_time up to end_time."""
+    """Returns an object containing relevant token and byte usage statistics."""
 
     # URL of OpenAI Admin Completions Usage API endpoint.
     chat_url = "https://api.openai.com/v1/organization/usage/completions"
@@ -125,9 +149,6 @@ def get_token_usage(openai_admin_key: str, start_time: datetime, end_time: datet
         "vector_store": vector_store
     }
 
-
-start_time = datetime.now()
-
 # Print message so that user does not think program has frozen.
 print("Chatbot test running...\n")
 
@@ -140,7 +161,7 @@ parser.add_argument("--chatbot_architecture", "-a", type=str, choices=("LlmWithR
 parser.add_argument("--conversation", "-c", type=str, required=True, help="Text file containing prepared conversation.")
 parser.add_argument("--test_cases", "-t", nargs="+", type=int, help="If desired, specify which test cases to run. The first is #0. Default is to run all tests.")
 parser.add_argument("--output_log", "-o",
-                    default="chatbot_test_output_{}.log".format(start_time.strftime(TIME_FMT)),
+                    default="chatbot_test_output_{}.log".format(datetime.now().strftime(TIME_FMT)),
                     type=str, help="If desired, specify a file other than the default to which the log the chatbot test output.")
 parser.add_argument("--log_level", "-l", default="INFO", type=str, choices=("DEBUG", "INFO", "WARNING", "ERROR"),
                     help="If desired, specify a logging level other than the default of INFO.")
@@ -153,14 +174,33 @@ logging.basicConfig(filename=args.output_log, filemode="w", level=logging.getLev
 # Initialize Evaluator objects to keep track of correctness.
 evaluators = (KeywordEvaluator(), BleuEvaluator(), Rouge1Evaluator(), Rouge2Evaluator(), RougeLEvaluator(), LlmEvaluator(os.getenv("OPENAI_API_KEY"), os.getenv("EVAL_MODEL")))
 
-# Initialize chatbot.
+# Load the conversation from the file.
+with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
+    conversation = json.load(conversation_file)
+
+# Select a subset of the conversation if desired.
+if args.test_cases is not None:
+    conversation = select(conversation, args.test_cases)
+
+# Load environment variables
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
 embedding_model = os.getenv("EMBEDDING_MODEL")
 embedding_dimension = int(os.getenv("EMBEDDING_DIMENSION"))
+
+# Log start time.
+start_time = datetime.now()
+
+# Initialize chatbot.
 chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base, embedding_model, embedding_dimension)
+
+# Have a conversation with the chatbot.
+responses = [chatbot.invoke(exchange["query"]) for exchange in conversation]
+
+# Record end time
+end_time = datetime.now()
 
 # Print model and architecture information.
 logger.info("Model and Architecture Information:\n")
@@ -170,36 +210,21 @@ logger.info("Model seed: {}\n".format(model_seed))
 logger.info("RAG Knowledge Base: {}\n".format(knowledge_base))
 logger.info("\n")
 
-# Keep track of chat transcript for logging purposes.
-transcript = []
-
-# Load the conversation from the file.
-with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
-    conversation = json.load(conversation_file)
-
-# Select a subset of the conversation if desired.
-if args.test_cases is not None:
-    conversation = select(conversation, args.test_cases)
-
-# Have a conversation with the chatbot.
-responses = [chatbot.invoke(exchange["query"]) for exchange in conversation]
-
 # Print time information.
-end_time = datetime.now()
 run_time = end_time - start_time
 logger.info(f"Time: {run_time}")
 logger.info(f"Average time per query: {run_time / len(conversation)}")
-
-# Print cost information.
-cost = get_cost(os.getenv("OPENAI_ADMIN_KEY"), start_time, end_time)
-logger.info(f"Cost: ${cost}")
-logger.info(f"Average cost per query: ${cost / len(conversation)}")
 
 # Print token usage information.
 token_usage = get_token_usage(os.getenv("OPENAI_ADMIN_KEY"), start_time, end_time)
 logger.info(f"Completions token usage:\n{token_usage}")
 avg_token_usg = {c: {k: int(v / len(conversation)) for k, v in cv.items()} for c, cv in token_usage.items()}
 logger.info(f"Average completions token usage per query:\n{avg_token_usg}")
+
+# Print cost information.
+cost = get_cost(token_usage, model_name, embedding_model)
+logger.info(f"Cost: ${cost}")
+logger.info(f"Average cost per query: ${cost / len(conversation)}")
 
 # Print transcript of conversation.
 logger.info("Chat Transcript:\n{}\n".format(
