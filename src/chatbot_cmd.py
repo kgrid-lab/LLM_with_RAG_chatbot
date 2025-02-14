@@ -9,7 +9,7 @@ import os
 
 from dotenv import load_dotenv
 
-from chatbots import init_chatbot_from_str
+from chatbots import init_chatbot_from_str, chatbot_options
 
 # Load environment variables
 load_dotenv()
@@ -27,7 +27,7 @@ parser.add_argument(
     "-a",
     default="LlmWithKoCodeTools",
     type=str,
-    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm", "LlmWithKoRagMetadataAndCodeTools"),
+    choices=chatbot_options,
     help="Which chatbot architecture to use.",
 )
 args = parser.parse_args()

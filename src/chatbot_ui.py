@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 from flask_caching import Cache
 
-from chatbots import init_chatbot_from_str
+from chatbots import init_chatbot_from_str, chatbot_options
 
 parser = argparse.ArgumentParser(
     description="Web UI for chatbot. Point your browser to http://localhost:5000"
@@ -26,7 +26,7 @@ parser.add_argument(
     "-a",
     default="LlmWithKoCodeTools",
     type=str,
-    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools", "PlainLlm", "LlmWithKoRagMetadataAndCodeTools"),
+    choices=chatbot_options,
     help="Which chatbot architecture to use.",
 )
 args = parser.parse_args()
