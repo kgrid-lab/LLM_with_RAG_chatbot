@@ -36,13 +36,13 @@ class Evaluator:
         """
         pass
 
-    def score_conversation(self, responses: list[str], conversation: list[dict]) -> str:
+    def score_conversation(self, responses: list[str], conversation: list[dict]) -> dict:
         """
         Scores the chatbot responses as part of the tested conversation.
 
         :param responses: the chatbot responses
         :param conversations: contains the queries given to the chatbot and rubrics with which to evaluate the chatbot's responses
-        Returns the results of scoring as a string
+        Returns the key result as well as a verbose string with more detail.
         """
         # Tabulate the scores.
         total = len(responses)
@@ -50,11 +50,15 @@ class Evaluator:
             raise ValueError("Responses and conversation have different lengths.")
         scores = [self.score(responses[i], conversation[i]) for i in range(total)]
         points = sum(scores)
+        overall_score = points / total
 
-        # Return the results as a string.
+        # Generate verbose item-by-item reporting
         scores_str = "\n".join(("Item {}: {}".format(i, scores[i]) for i in range(total)))
-        return "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items:\n{}\n".format(self.get_name(), points / total, points, total, scores_str)
-        
+
+        return {
+            "key_result": overall_score,
+            "verbose": "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items:\n{}\n".format(self.get_name(), overall_score, points, total, scores_str)
+        }
 
 class KeywordEvaluator(Evaluator):
     """
