@@ -16,6 +16,7 @@ is accounted for in the comparison.
 import argparse
 import csv
 from datetime import datetime
+from itertools import chain
 import json
 import logging
 from math import ceil
@@ -121,6 +122,12 @@ def get_cost(token_usage: dict, model: str, emb_model: str) -> float:
 
 def get_token_usage(openai_admin_key: str, start_time: datetime, end_time: datetime) -> dict:
     """Returns an object containing relevant token and byte usage statistics."""
+
+    # Necessary to wait 1 minute because minimum granularity of OpenAI
+    # token usage reporting is 1 minute.
+    # If there is less spacing between runs of the chatbot, usage information
+    # from one run can spill into reporting for another run.
+    time.sleep(60)
 
     # URL of OpenAI Admin Completions Usage API endpoint.
     chat_url = "https://api.openai.com/v1/organization/usage/completions"
@@ -265,7 +272,7 @@ embedding_dimension = int(os.getenv("EMBEDDING_DIMENSION"))
 # Process command line arguments.
 parser = argparse.ArgumentParser()
 parser.add_argument("--chatbot_architectures", "-a", nargs="+", type=str, choices=chatbot_options, required=True, help="Which chatbot architecture to test.")
-parser.add_argument("--conversation", "-c", type=str, required=True, help="Text file containing prepared conversation.")
+parser.add_argument("--conversations", "-c", nargs="+", type=str, required=True, help="Text files containing prepared conversations.")
 parser.add_argument("--test_cases", "-t", nargs="+", type=int, help="If desired, specify which test cases to run. The first is #0. Default is to run all tests.")
 parser.add_argument("--output_log", "-o",
                     default=f"chatbot_test_output_{timestamp}.log",
@@ -281,42 +288,47 @@ args = parser.parse_args()
 logger = logging.getLogger(__name__)
 logging.basicConfig(filename=args.output_log, filemode="w", level=logging.getLevelNamesMapping()[args.log_level], encoding=ENC)
 
-# Load the conversation from the file.
-with open(args.conversation, mode='r', encoding=ENC) as conversation_file:
-    conversation = json.load(conversation_file)
-
-# Select a subset of the conversation if desired.
-if args.test_cases is not None:
-    conversation = select(conversation, args.test_cases)
-
-# Run the test conversation for each chatbot architecture and save key results.
+# Run the test conversation for each conversation and architecture and save key results.
 key_results = {}
-for chatbot_architecture in args.chatbot_architectures:
-    result = run_test(
-        conversation,
-        chatbot_architecture,
-        OPENAI_API_KEY,
-        model_name,
-        model_seed,
-        knowledge_base,
-        embedding_model,
-        embedding_dimension
-    )
-    logger.info(f"Result of running conversation {conversation} on architecture {chatbot_architecture}:\n{result}")
+for convo_path in args.conversations:
+    key_results[convo_path] = {}
 
-    key_results[chatbot_architecture] = result
+    # Load conversation from file
+    with open(convo_path, mode='r', encoding=ENC) as convo_file:
+        convo_data = json.load(convo_file)
 
-    # Necessary to wait 1 minute because minimum granularity of OpenAI
-    # token usage reporting is 1 minute.
-    # If there is less spacing between runs of the chatbot, usage information
-    # from one run can spill into reporting for another run.
-    time.sleep(60)
+        # Select a subset of the conversation if desired.
+        if args.test_cases is not None:
+            convo_data = select(convo_data, args.test_cases)
 
-with open(args.output_csv, "w", encoding=ENC) as ocsv:
+    # For this conversation, run the chatbot on each architecture.
+    for chatbot_architecture in args.chatbot_architectures:
+        result = run_test(
+            convo_data,
+            chatbot_architecture,
+            OPENAI_API_KEY,
+            model_name,
+            model_seed,
+            knowledge_base,
+            embedding_model,
+            embedding_dimension
+        )
+        logger.info(f"Result of running conversation {convo_path} on architecture {chatbot_architecture}:\n{result}")
+
+        key_results[convo_path][chatbot_architecture] = result
+
+        # Necessary to wait 1 minute because minimum granularity of OpenAI
+        # token usage reporting is 1 minute.
+        # If there is less spacing between runs of the chatbot, usage information
+        # from one run can spill into reporting for another run.
+        time.sleep(60)
+
+with open(args.output_csv, "w", encoding=ENC, newline='') as ocsv:
     csv_writer = csv.writer(ocsv)
-    csv_writer.writerow([""] + args.chatbot_architectures)
-    for row_name in key_results[args.chatbot_architectures[0]].keys():
-        csv_writer.writerow([row_name] + [key_results[arch][row_name] for arch in args.chatbot_architectures])
+    csv_writer.writerow(["Conversation"] + list(chain.from_iterable([([convo] + [""] * len(args.chatbot_architectures)) for convo in args.conversations])))
+    csv_writer.writerow([""] + args.chatbot_architectures * len(args.conversations))
+    for row_name in key_results[args.conversations[0]][args.chatbot_architectures[0]].keys():
+        csv_writer.writerow([row_name] + list(chain.from_iterable([[key_results[convo][arch][row_name] for arch in args.chatbot_architectures] for convo in args.conversations])))
 
 print(f"Ran test in {datetime.now() - script_start_time}")
 print(f"Data in {args.output_csv}")
