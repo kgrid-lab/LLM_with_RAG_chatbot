@@ -1,6 +1,7 @@
 [
     {
         "query": "Cr clerance for 60yo F weighing 80 kg w SCr 0.8?",
+        "query_categories": ["calculation"],
         "rubric": {
             "standard": "The patient's creatinine clearance using the Cockcroft-Gault formula is *94* mL/min.",
             "keywords": ["cockcroft", 94]
@@ -9,6 +10,7 @@
     },
     {
         "query": "Cr clearance for 72yo M w SCr 0.9?",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "To calculate the patient's creatinine clearance using the Cockcroft-Gault formula, please provide his weight.",
             "keywords": ["cockcroft", "weight"]
@@ -17,6 +19,7 @@
     },
     {
         "query": "Wt 65 kg",
+        "query_categories": ["information_gathering", "calculation"],
         "rubric": {
             "standard": "The patient's creatinine clearance is *68* mL/min.",
             "keywords": [68]
@@ -25,6 +28,7 @@
     },
     {
         "query": "Cr clearance for 55yo 180lb AA F?",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "To calculate the patient's creatinine clearance using the Cockcroft-Gault formula, please provide her serum creatinine level in mg/dL.",
             "keywords": ["cockcroft", "creatinine"]
@@ -33,6 +37,7 @@
     },
     {
         "query": "0.9",
+        "query_categories": ["information_gathering", "calculation"],
         "rubric": {
             "standard": "The patient's creatinine clearance is *91* mL/min.",
             "keywords": [91]
@@ -41,6 +46,7 @@
     },
     {
         "query": "GFR for this pt using MDRD?",
+        "query_categories": ["information_gathering", "calculation", "context_switching"],
         "rubric": {
             "standard": "Carol's glomerular filtration rate is *78.8* mL/min/1.73m^2.",
             "keywords": [78.79]
@@ -49,6 +55,7 @@
     },
     {
         "query": "MDRD GFR for 62yo Asian-American M w SCr 0.85?",
+        "query_categories": ["optional_parameter", "calculation"],
         "rubric": {
             "standard": "The patient's glomerular filtration rate *91.3* mL/min/1.73m^2.",
             "keywords": [91.3]
@@ -57,6 +64,7 @@
     },
     {
         "query": "MDRD GFR for 150 lb F w SCr 0.85?",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "To calculate the patient's glomerular filtration rate, please provide her age, and optionally, whether her race is Black.",
             "keywords": ["age", {"any": ["black", "race"]}, {"any": ["option", "like", "prefer", "without"]}]
@@ -65,6 +73,7 @@
     },
     {
         "query": "58yo F",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "The MDRD GFR Equation optionally includes information about the patient's race, specifically whether they are black. Would you like to provide this optional information?",
             "keywords": [{"any": ["black", "race"]}, {"any": ["option", "like", "prefer", "without"]}]
@@ -73,6 +82,7 @@
     },
     {
         "query": "No race",
+        "query_categories": ["information_gathering", "optional_parameter", "calculation"],
         "rubric": {
             "standard": "Emily's glomerular filtration rate is *68.7* mL/min/1.73m^2.",
             "keywords": [68.69]
@@ -81,6 +91,7 @@
     },
     {
         "query": "GFR for 74yo M w SCr 0.7?",
+        "query_categories": ["information_gathering", "calculator_discovery"],
         "rubric": {
             "standard": "The patient's glomerular filtration rate can be calculated using either the MDRD GFR Equation or the 2021 CKD-EPI Equation. Please specify which methodology to use.",
             "keywords": ["MDRD", "CKD-EPI"]
@@ -89,6 +100,7 @@
     },
     {
         "query": "Use CKD-EPI",
+        "query_categories": ["information_gathering", "optional_parameter", "context_switching"],
         "rubric": {
             "standard": "The 2021 CKD-EPI Equations optionally allow specification of the patient's serum cystatin-C level. Would you like to provide the patient's serum cystatin-C level?",
             "keywords": ["cystatin-c", {"any": ["option", "like", "prefer", "without"]}]   
@@ -97,6 +109,7 @@
     },
     {
         "query": "No cystatin-C",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "Using the 2021 CKD-EPI Equation, the patient's glomerular filtration rate is *97* mL/min/1.73m^2.",
             "keywords": [96.69]
@@ -105,6 +118,7 @@
     },
     {
         "query": "CKD-EPI GFR for 74yo F w SCr 0.7?",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "The 2021 CKD-EPI Equations optionally allow specification of the patient's serum cystatin-C level. Would you like to provide the patient's serum cystatin-C level?",
             "keywords": ["cystatin-c", {"any": ["option", "like", "prefer", "without"]}]
@@ -113,6 +127,7 @@
     },
     {
         "query": "cystatin-C is 0.62",
+        "query_categories": ["information_gathering", "optional_parameter", "calculation"],
         "rubric": {
             "standard": "Using the 2021 CKD-EPI Creatinine-Cystatin C Equation, Gloria's glomerular filtration rate is *106* mL/min/1.73m^2.",
             "keywords": [105.71]
@@ -121,6 +136,7 @@
     },
     {
         "query": "MAP for pt w BP 120/80?",
+        "query_categories": ["calculation"],
         "rubric": {
             "standard": "The patient's mean arterial pressure is *93* mm Hg.",
             "keywords": [93.3]
@@ -129,6 +145,7 @@
     },
     {
         "query": "MAP for pt w SBP 110?",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "To calculate the patient's mean artieral pressure, please provide her diastolic blood pressure.",
             "keywords": ["diastolic"]
@@ -137,6 +154,7 @@
     },
     {
         "query": "DBP 71",
+        "query_categories": ["information_gathering", "calculation"],
         "rubric": {
             "standard": "The patient's mean arterial pressure is *84* mm Hg.",
             "keywords": [84]
@@ -145,6 +163,7 @@
     },
     {
         "query": "Pt BP 98/57. MAP?",
+        "query_categories": ["unit_translation", "calculation"],
         "rubric": {
             "standard": "James' mean arterial pressure is *71* mm Hg.",
             "keywords": [70.67]
@@ -153,6 +172,7 @@
     },
     {
         "query": "Karen is 58yo F w BP 145/91. What is her MAP?",
+        "query_categories": ["unit_translation", "calculation"],
         "rubric": {
             "standard": "Karen's mean arterial pressure is *109* mm Hg.",
             "keywords": [109]
@@ -161,6 +181,7 @@
     },
     {
         "query": "Karen has afib. What is her stroke risk?",
+        "query_categories": ["calculator_discovery", "context_switching"],
         "rubric": {
             "standard": "Since Karen has atrial fibrillation, her stroke risk can be estimated by calculating the CHA2DS2-VASc score.",
             "keywords": ["-VASc"]
@@ -169,6 +190,7 @@
     },
     {
         "query": "Calculate Karen's CHA2DS2-VASc score.",
+        "query_categories": ["information_gathering", "context_switching"],
         "rubric": {
             "standard": "To calculate Karen's CHA2DS2-VASc score, please provide some elements of her medical history, including whether she has heart failure, whether she has hypertension, whether she has diabetes, whether she has had a stroke or TIA, and whether she has a history of vascular disease.",
             "keywords": ["heart failure", "hypertension", "diabetes", "stroke", "vascular"]
@@ -177,6 +199,7 @@
     },
     {
         "query": "Karen has no h/o CHF or CKD. Had TIA 3y ago.",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "To calculate the Karen's CHA2DS2-VASc score, some more elements of her medical history are needed. These include whether she has a history of hypertension, diabetes, or vascular disease.",
             "keywords": ["hypertension", "diabetes", "vascular"]
@@ -185,6 +208,7 @@
     },
     {
         "query": "Karen has diabetes, HTN, & asthma, but no h/o vascular disease.",
+        "query_categories": ["information_gathering", "calculation"],
         "rubric": {
             "standard": "Karen's CHA2DS2-VASc score is *5*.",
             "keywords": [5]
@@ -193,6 +217,7 @@
     },
     {
         "query": "CHA2DS2-VASc score for 82yo M w PMH of afib & HTN, and no other PMH?",
+        "query_categories": ["catch-all", "calculation"],
         "rubric": {
             "standard": "The patient's CHA2DS2-VASc score is *3*.",
             "keywords": [3]
@@ -201,6 +226,7 @@
     },
     {
         "query": "Mary has Ca 8.6 and albumin 2.8. What is her corrected Ca?",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "Would you like to specify a normal serum albumin level or use the default of 4 g/dL?",
             "keywords": ["normal", "albumin"]
@@ -209,6 +235,7 @@
     },
     {
         "query": "Use nl albumin 4.2",
+        "query_categories": ["information_gathering", "optional_parameter", "calculation"],
         "rubric": {
             "standard": "Mary's corrected serum calcium level is *9.7* mg/dL.",
             "keywords": [9.7]
@@ -217,6 +244,7 @@
     },
     {
         "query": "Nick: Ca 7.7, albumin 2.9. What is his corrected Ca using same nl albumin as before?",
+        "query_categories": ["information_gathering", "optional_parameter", "calculation", "context_switching"],
         "rubric": {
             "standard": "Nick's corrected serum calcium level is *8.7* mg/dL.",
             "keywords": [8.7]
@@ -225,6 +253,7 @@
     },
     {
         "query": "Another pt has albumin 2.5. Corrected Ca for this other pt using normal albumin as 2.5?",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "To calculate the patient's corrected serum calcium level, please provide her measured serum calcium level.",
             "keywords": ["calcium"]
@@ -233,6 +262,7 @@
     },
     {
         "query": "Ca 10.2",
+        "query_categories": ["information_gathering", "optional_parameter", "calculation"],
         "rubric": {
             "standard": "The patient's corrected serum calcium level is *10.2* mg/dL.",
             "keywords": [10.2]
@@ -241,6 +271,7 @@
     },
     {
         "query": "Paul is 62yo M currently treated for colon cancer presenting to ED w T 38C, HR 104, BP 95/62. What is his risk of PE?",
+        "query_categories": ["information_gathering", "calculator_discovery"],
         "rubric": {
             "standard": "Paul's risk of having a pulmonary embolism can be estimated by calculating Wells' Criteria.",
             "keywords": ["Wells"]
@@ -249,6 +280,7 @@
     },
     {
         "query": "Calculate Wells' Criteria",
+        "query_categories": ["information_gathering", "context_switching"],
         "rubric": {
             "standard": "To calculate Wells' Criteria for Paul, please share whether Paul has clinical signs and symptoms of DVT, whether pulmonary embolism is the most likely diagnosis, whether he has been immbilized for 3 days or undergone surgery in the past 4 weeks, whether he has been previously been objectively diagnosed with a DVT or PE, and whether he is exhibiting hemoptysis.",
             "keywords": ["DVT", "diagnosis", "surgery", "hemoptysis", {"any": ["previous", "prior", "past", "before", "objective"]}] 
@@ -257,6 +289,7 @@
     },
     {
         "query": "Pt has no sx of DVT. PE is most likely dx. Underwent colon adenocarcinoma resection 8w ago. No prior dx of DVT/PE.",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "Is Paul having hemoptysis?",
             "keywords": ["hemoptysis"]
@@ -265,6 +298,7 @@
     },
     {
         "query": "No hemoptysis",
+        "query_categories": ["information_gathering", "calculation"],
         "rubric": {
             "standard": "Paul's Wells' Criteria score is *5.5* points.",
             "keywords": ["5.5"]
@@ -273,6 +307,7 @@
     },
     {
         "query": "Calculate Wells' criteria 87yo F w PMH PE 2y ago & no h/o immobilization, surgery, or malignancy, presenting to ED w new-onset dyspnea, cough, hemoptysis, & erythematous edematous right leg. Vitals: HR 112, BP 88/52. PE is most likely dx.",
+        "query_categories": ["calculation"],
         "rubric": {
             "standard": "The patient's Wells' Criteria score is *10* points.",
             "keywords": [10]
@@ -281,6 +316,7 @@
     },
     {
         "query": "10y ASCVD risk for 68yo White M smoker w diabetes, total cholesterol 220, HDL 15, BP 145/92, currently not treated for HTN.",
+        "query_categories": ["optional_parameter", "calculation"],
         "rubric": {
             "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *65.8%*.",
             "keywords": ["65.8"]
@@ -289,6 +325,7 @@
     },
     {
         "query": "10y ASCVD risk for 53yo AA F w total cholesterol 170 & HDL 35?",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "The patient's risk of atherosclerotic cardiovascular disease can be estimated using the ASCVD 2013 Risk Calculator from AHA/ACC. To perform this calculation, please share whether she has diabetes, whether she smokes, her systolic blood pressure, and whether she is being treated for hypertension.",
             "keywords": ["diabetes", "smok", "pressure", "treat"]
@@ -297,6 +334,7 @@
     },
     {
         "query": "Non-smoker. No h/o diabetes. SBP 118. No tx for HTN.",
+        "query_categories": ["information_gathering", "optional_parameter", "calculation"],
         "rubric": {
             "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *2.8%*.",
             "keywords": ["2.8"]
@@ -305,6 +343,7 @@
     },
     {
         "query": "10y ASCVD risk for 44yo M non-smoker wo diabetes w total cholesterol 151 & HDL 57 mg/dL and BP 109/62, never treated for HTN?",
+        "query_categories": ["information_gathering", "optional_parameter"],
         "rubric": {
             "standard": "The ASCVD 2013 Risk Calculator from AHA/ACC requires the patient's race. What is the patient's race?",
             "keywords": ["race"]
@@ -313,6 +352,7 @@
     },
     {
         "query": "Pt is White.",
+        "query_categories": ["information_gathering", "optional_parameter", "calculation"],
         "rubric": {
             "standard": "The patient's risk of atherosclerotic cardiovascular disease using the ASCVD 2013 Risk Calculator from AHA/ACC is *0.7%*.",
             "keywords": ["0.7"]
@@ -321,6 +361,7 @@
     },
     {
         "query": "NIHSS for 67yo F in ED w suspected stroke?",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "To calculate the patient's NIH Stroke Score (NIHSS), please specify her level of consciousness, correctness of answers to questions about month and age, ability to follow commands to blink eyes and squeeze hands, ability to perform horizontal extraocular eye movements, integrity of visual fields, presence of facial palsy, presence of left arm, right arm, left leg, and right leg motor drift, presence of limb ataxia, language function, presence of dysarthria, and presence of inattention or extinction.",
             "keywords": ["conscious", "month", "age", "blink", "squeez", "horizontal", "vis", "fac", "sens", "language", "attention", {"any": ["ataxia", "coordinat"]}, {"any": ["drift", "hold", "resist"]}, {"any": ["dysarthria", "sounds of language"]}]
@@ -329,6 +370,7 @@
     },
     {
         "query": "Arouses to minor stimulation. Cannot answer age or month. Blinks eyes, can't squeeze hands.",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "To calculate the patient's NIH Stroke Score (NIHSS), please specify her ability to perform horizontal extraocular eye movements, integrity of visual fields, presence of facial palsy, presence of left arm, right arm, left leg, and right leg motor drift, presence of limb ataxia, sensory function, language function, presence of dysarthria, and presence of inattention or extinction.",
             "keywords": ["horizontal", "vis", "fac", "sens", "language", "attention", {"any": ["ataxia", "coordinat"]}, {"any": ["drift", "hold", "resist"]}, {"any": ["dysarthria", "sounds of language"]}]
@@ -337,6 +379,7 @@
     },
     {
         "query": "Horizontal EOM, VF intact. Unilateral complete facial paralysis. L arm: no movement. R arm: no drift for 10s. L leg: some motor drift but doesn't hit bed. R leg: some motor drift but doesn't hit bed. No limb ataxia. Mild-moderate sensory loss (can still sense being touched).",
+        "query_categories": ["information_gathering"],
         "rubric": {
             "standard": "To calculate the patient's NIH Stroke Score (NIHSS), please specify her language function, presence of dysarthria, and presence of inattention or extinction.",
             "keywords": ["language", "dysarthria", "attention"]
@@ -345,6 +388,7 @@
     },
     {
         "query": "Severe aphasia. No dysarthria. Extinction to bilateral simultaneous stimulation.",
+        "query_categories": ["information_gathering", "calculation"],
         "rubric": {
             "standard": "The patient's NIH Stroke Score (NIHSS) is *17*.",
             "keywords": [17]
@@ -353,6 +397,7 @@
     },
     {
         "query": "Zachary is 72yo M in ED w a suspected stroke. Moves in response to pain. Can't answer month or age. Can't follow commands to blink eyes or squeeze hands. Forced gaze palsy that cannot be overcome. Bilaterally blind. Normal facial symmetry. No movement of any limbs. Doesn't understand commands to test ataxia. Unresponsive when testing sensation and language. Mute. Extinction to more than one modality.",
+        "query_categories": ["calculation"],
         "rubric": {
             "standard": "Zachary's NIH Stroke Score (NIHSS) is *36*",
             "keywords": [36]
@@ -361,6 +406,7 @@
     },
     {
         "query": "Ashley is 79yo F weighing 55 kg and 173 cm tall. What is her BMI?",
+        "query_categories": ["calculation"],
         "rubric": {
             "standard": "Ashley's Body Mass Index (BMI) is *18.4* kg/m^2.",
             "keywords": [18.38]
@@ -369,6 +415,7 @@
     },
     {
         "query": "Ashley's BSA?",
+        "query_categories": ["context_switching", "calculation"],
         "rubric": {
             "standard": "Ashley's body surface area is *1.63* m^2.",
             "keywords": [1.626]
@@ -377,6 +424,7 @@
     },
     {
         "query": "BMI of pt 75 in. tall and weighing 193 lbs?",
+        "query_categories": ["calculation", "unit_translation"],
         "rubric": {
             "standard": "The patient's Body Mass Index is *24.1* kg/m^2.",
             "keywords": [24.1]
@@ -385,6 +433,7 @@
     },
     {
         "query": "This pt's BSA?",
+        "query_categories": ["calculation", "unit_translation", "context_switching"],
         "rubric": {
             "standard": "This patient's body surface area is *2.15* m^2.",
             "keywords": [2.15]
@@ -393,6 +442,7 @@
     },
     {
         "query": "BMI of pt 5 ft. 9 in. tall and weighing 137 lbs?",
+        "query_categories": ["calculation", "unit_translation"],
         "rubric": {
             "standard": "The patient's Body Mass Index is *20.2* kg/m^2.",
             "keywords": [20.2]

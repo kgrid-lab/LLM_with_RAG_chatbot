@@ -36,6 +36,7 @@ for ko_metadata in ko_metadata_list:
         value = ko_metadata[field]
         query_list.append({
             "query": "What is the {} field of the {} Knowledge Object?".format(field, title),
+            "query_categories": ["metadata_field_retrieval"],
             "rubric": {
                 "standard": value,
                 "keywords": [value],
