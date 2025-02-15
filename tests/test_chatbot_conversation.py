@@ -15,13 +15,14 @@ is accounted for in the comparison.
 
 import argparse
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import chain
 import json
 import logging
 from math import ceil
 import os
 import requests
+from statistics import mean, stdev
 import time
 
 from dotenv import load_dotenv
@@ -121,12 +122,15 @@ def get_cost(token_usage: dict, model: str, emb_model: str) -> float:
 
 
 def get_token_usage(openai_admin_key: str, start_time: datetime, end_time: datetime) -> dict:
-    """Returns an object containing relevant token and byte usage statistics."""
+    """
+    Returns an object containing relevant token and byte usage statistics.
+    Note that this function is quite slow because two minutes are spent sleeping.
+    """
 
     # Necessary to wait 1 minute because minimum granularity of OpenAI
     # token usage reporting is 1 minute.
-    # If there is less spacing between runs of the chatbot, usage information
-    # from one run can spill into reporting for another run.
+    # We wait to ensure that no usage information from the previous run
+    # spills into reporting for the current run.
     time.sleep(60)
 
     # URL of OpenAI Admin Completions Usage API endpoint.
@@ -150,6 +154,13 @@ def get_token_usage(openai_admin_key: str, start_time: datetime, end_time: datet
 
     vec_data = get_openai_usage(openai_admin_key, start_time, end_time, vec_url)
     vector_store = {"usage_bytes": sum(sum(result["usage_bytes"] for result in data["results"]) for data in vec_data)}
+
+    # We wait 1 minutes again here because the minimum granularity of OpenAI
+    # token usage reporting is 1 minute.
+    # If there is less spacing after getting the usage and the start of the
+    # next run, usage information from this run can spill into reporting
+    # of the next run.
+    time.sleep(60)
 
     return {
         "completions": completions,
@@ -253,6 +264,17 @@ def run_test(conversation: str,
 
     return result
 
+def compute_mean_and_standard_deviation(vals) -> tuple:
+    if isinstance(vals[0], timedelta):
+        m = sum(vals, start=timedelta()) / len(vals)
+        vals_sec = [v.total_seconds() for v in vals]
+        sd_sec = stdev(vals_sec)
+        sd = timedelta(seconds=sd_sec)
+    else:
+        m = mean(vals)
+        sd = stdev(vals)
+    return (m, sd)
+
 # Log script start time for reporting purposes.
 script_start_time = datetime.now()
 timestamp = script_start_time.strftime(TIME_FMT)
@@ -273,6 +295,7 @@ embedding_dimension = int(os.getenv("EMBEDDING_DIMENSION"))
 parser = argparse.ArgumentParser()
 parser.add_argument("--chatbot_architectures", "-a", nargs="+", type=str, choices=chatbot_options, required=True, help="Which chatbot architecture to test.")
 parser.add_argument("--conversations", "-c", nargs="+", type=str, required=True, help="Text files containing prepared conversations.")
+parser.add_argument("--num_trials", "-n", default=1, type=int, help="Number of times to run each test. Default is 1.")
 parser.add_argument("--test_cases", "-t", nargs="+", type=int, help="If desired, specify which test cases to run. The first is #0. Default is to run all tests.")
 parser.add_argument("--output_log", "-o",
                     default=f"chatbot_test_output_{timestamp}.log",
@@ -303,29 +326,39 @@ for convo_path in args.conversations:
 
     # For this conversation, run the chatbot on each architecture.
     for chatbot_architecture in args.chatbot_architectures:
-        result = run_test(
-            convo_data,
-            chatbot_architecture,
-            OPENAI_API_KEY,
-            model_name,
-            model_seed,
-            knowledge_base,
-            embedding_model,
-            embedding_dimension
-        )
-        logger.info(f"Result of running conversation {convo_path} on architecture {chatbot_architecture}:\n{result}")
 
-        key_results[convo_path][chatbot_architecture] = result
+        # Run this chatbot architecture on this conversation the specified number of times.
+        results = []
+        for trial in range(args.num_trials):
+            result = run_test(
+                convo_data,
+                chatbot_architecture,
+                OPENAI_API_KEY,
+                model_name,
+                model_seed,
+                knowledge_base,
+                embedding_model,
+                embedding_dimension
+            )
 
-        # Necessary to wait 1 minute because minimum granularity of OpenAI
-        # token usage reporting is 1 minute.
-        # If there is less spacing between runs of the chatbot, usage information
-        # from one run can spill into reporting for another run.
-        time.sleep(60)
+            # Log results of this run.
+            logger.info(f"Result of trial {trial} of running architecture {chatbot_architecture} on conversation {convo_path}:\n{result}")
+            results.append(result)
+
+        # Aggregate the results of multiple runs.
+        key_result = {}
+        for field in results[0].keys():
+            vals = [r[field] for r in results]
+            m, sd = compute_mean_and_standard_deviation(vals)
+            key_result[field] = f"{m} +/- {sd}"
+
+        # Log aggregated result.
+        logger.info(f"Aggregated results of running architecture {chatbot_architecture} on conversation {convo_path}:\n{key_result}")
+        key_results[convo_path][chatbot_architecture] = key_result
 
 with open(args.output_csv, "w", encoding=ENC, newline='') as ocsv:
     csv_writer = csv.writer(ocsv)
-    csv_writer.writerow(["Conversation"] + list(chain.from_iterable([([convo] + [""] * len(args.chatbot_architectures)) for convo in args.conversations])))
+    csv_writer.writerow(["Conversation"] + list(chain.from_iterable([([convo] + [""] * (len(args.chatbot_architectures) - 1)) for convo in args.conversations])))
     csv_writer.writerow([""] + args.chatbot_architectures * len(args.conversations))
     for row_name in key_results[args.conversations[0]][args.chatbot_architectures[0]].keys():
         csv_writer.writerow([row_name] + list(chain.from_iterable([[key_results[convo][arch][row_name] for arch in args.chatbot_architectures] for convo in args.conversations])))
