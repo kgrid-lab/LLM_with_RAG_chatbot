@@ -5,6 +5,7 @@ Each Evaluator class performs the evaluation using a different method.
 
 import logging
 
+from collections.abc import Mapping, Sequence
 import evaluate
 import openai
 
@@ -14,6 +15,24 @@ logger = logging.getLogger(__name__)
 
 bleu_metric = evaluate.load("bleu")
 rouge_metric = evaluate.load("rouge")
+
+class EvaluationResult:
+    """Contains the results of evaluation."""
+    def __init__(self, evaluator_name: str, overall_result: float, category_results: Mapping[str, float], item_results: Sequence[float]):
+        self.evaluator_name = evaluator_name
+        self.overall_result = overall_result
+        self.category_results = category_results
+        self.item_results = item_results
+
+    def __str__(self) -> str:
+        cat_res_str = "\n".join([f"{cat_name}: {cat_val}" for cat_name, cat_val in self.category_results.items()])
+        item_str = "\n".join([f"Item {i}: {val}" for i, val in enumerate(self.item_results)])
+        return f"""{self.evaluator_name} results:
+        overall_result: {self.overall_result}
+        category_results:
+        {cat_res_str}
+        item_results:
+        {item_str}"""
 
 class Evaluator:
     """
@@ -36,7 +55,7 @@ class Evaluator:
         """
         pass
 
-    def score_conversation(self, responses: list[str], conversation: list[dict]) -> dict:
+    def score_conversation(self, responses: list[str], conversation: list[dict]) -> EvaluationResult:
         """
         Scores the chatbot responses as part of the tested conversation.
 
@@ -49,16 +68,18 @@ class Evaluator:
         if total != len(conversation):
             raise ValueError("Responses and conversation have different lengths.")
         scores = [self.score(responses[i], conversation[i]) for i in range(total)]
-        points = sum(scores)
-        overall_score = points / total
+        overall_score = sum(scores) / total
 
-        # Generate verbose item-by-item reporting
-        scores_str = "\n".join(("Item {}: {}".format(i, scores[i]) for i in range(total)))
+        # Generate per-category reporting.
+        category_results = {}
+        for i in range(total):
+            for cat in conversation[i]["query_categories"]:
+                if cat not in category_results:
+                    category_results[cat] = []
+                category_results[cat].append(scores[i])
+        category_avg_results = {cat: sum(category_results[cat]) / len(category_results[cat]) for cat in category_results}
 
-        return {
-            "key_result": overall_score,
-            "verbose": "{} Evaluation Results:\nTotal score {}\n{} points out of {}\nIndividual items:\n{}\n".format(self.get_name(), overall_score, points, total, scores_str)
-        }
+        return EvaluationResult(self.get_name(), overall_score, category_avg_results, scores)
 
 class KeywordEvaluator(Evaluator):
     """
@@ -128,7 +149,8 @@ class RougeEvaluator(Evaluator):
         pass
 
     def score(self, response: str, exchange: dict) -> float:
-        return rouge_metric.compute(predictions=[response], references=[exchange["rubric"]["standard"]], rouge_types=[self.get_name()])[self.get_name()]
+        rouge_t = self.get_name()
+        return rouge_metric.compute(predictions=[response], references=[exchange["rubric"]["standard"]], rouge_types=[rouge_t])[rouge_t]
 
 class Rouge1Evaluator(RougeEvaluator):
     """ROUGE-1 (ROUGE with n-grams of length 1)"""
@@ -169,7 +191,8 @@ class LlmEvaluator(Evaluator):
         response = self._client.chat.completions.create(
             messages=[{"content": prompt, "role": "system"}],
             model=self._model_name,
-            temperature=0
+            temperature=0,
+            timeout=120  # Timeout errors were observed with the default timeout.
         )
 
         # Process the response.

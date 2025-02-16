@@ -165,6 +165,7 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
         # Load KO metadata JSON files into vector database.
         # Payload is file with original formatting.
         # Embeddings are derived from minified JSON.
+        # Also include a list of calculators available.
         points = [
             PointStruct(
                 id=idx,
