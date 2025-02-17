@@ -4,7 +4,7 @@
         "query_categories": ["full_menu", "calculator_discovery"],
         "rubric": {
             "standard": "1. ASCVD (Atherosclerotic Cardiovascular Disease) 2013 Risk Calculator from AHA/ACC: Estimates the patient's risk of developing their first myocardial infarction or stroke in the next 10 years\\n2. Body Mass Index: Computed using the patient's height in meters and weight in kilograms. It can be used to estimate whether a patient is underweight or overweight. 18.5 - 25 is the normal range.\\n3. Body Surface Area: Estimates the patient's body surface area in square meters using the Mosteller formula, given the patient's height in centimeters and weight in kilograms.\\n4. CHA2DS2-VASc Score: A score that can be used to estimate the risk of stroke in a patient with atrial fibrillation. 0 is low-risk in males. 0 or 1 is low-risk in females. All other scores are higher risk.\\n5. 2021 CKD-EPI equation for Glomerular Filtration Rate (GFR): Steady-state estimate of glomerular filtration rate (GFR) using the 2021 CKD-EPI equations from NKF/ASN using either creatinine alone or both creatinine and cystatin-C.\\n6. Cockcroft-Gault Creatinine Clearance: Estimates creatinine clearance in adults using the Cockcroft-Gault model.\\n7. Corrected Calcium for Hypo- or Hyperalbuminemia: Corrects the patient's measured serum calcium level to account for their serum albumin level.\\n8. MDRD GFR: Estimates the patient's glomerular filtration rate (GFR) given their sex, age, serum creatinine, and race.\\n9. Mean Arterial Pressure: Estimates the patient's mean arterial pressure given their systolic and diastolic pressures.\\n10. NIH Stroke Scale: Uses the patient's presenting symptoms and signs to quantify the severity of a suspected stroke.\\n11. Wells' Criteria for Pulmonary Embolism: Given features of the patient's history and presenting symptoms and signs, computes a score that can be used to estimate the probability of a non-pregnant adult patient having a pulmonary embolism in the emergency department.",
-            "keywords": ["ASCVD", "Body Mass Index", "Body Surface Area", "CHA2DS2-VASc", "CKD-EPI", "Cockcroft", "albumin", "MDRD", "Mean Arterial Pressure", "NIH", "Wells"]
+            "keywords": [{"any": ["ASCVD", "Atherosclerotic Cardiovascular Disease"]}, {"any": ["Body Mass Index", "BMI"]}, {"any": ["Body Surface Area", "BSA"]}, {"any": ["CHA2DS2-VASc", "chads-vasc"]}, "CKD-EPI", "Cockcroft", "albumin", "MDRD", {"any": ["Mean Arterial Pressure", "MAP"]}, "NIH", "Wells"]
         },
         "notes": "Chatbot should be fully aware of what it can do."
     },
@@ -144,39 +144,84 @@
         "notes": "Chatbot should know what inputs are valid for calculators."
     },
     {
-        "query": "How can glomerular filtration rate be estimated?",
+        "query": "Which calculations estimate glomerular filtration rate?",
         "query_categories": ["indication", "output_information", "physiologic_quantities", "calculator_discovery"],
         "rubric": {
-            "standard": "Glomerular filtration rate can be estimated using either the 2021 CKD-EPI equations or the MDRD equation.",
+            "standard": "Glomerular filtration rate can be estimated using either the 2021 CKD-EPI equation or the MDRD equation.",
             "keywords": ["CKD-EPI", "MDRD"]
         },
-        "notes": "Chatbot should understand the relationships between different calculators."
+        "notes": "Chatbot should understand similarities between different calculators."
     },
     {
         "query": "Which two calculations require only the patient's height and weight?",
         "query_categories": ["input_information", "calculator_discovery"],
         "rubric": {
             "standard": "Body Mass Index and Body Surface Area",
-            "keywords": ["Body Mass Index", "Body Surface Area"]
+            "keywords": [{"any": ["Body Mass Index", "BMI"]}, {"any": ["Body Surface Area", "BSA"]}]
         },
-        "notes": "Chatbot should understand the relationships between different calculators."
+        "notes": "Chatbot should understand similarities between different calculators."
     },
     {
-        "query": "Which two calculations predict disease risk with a score rather than a probability?",
-        "query_categories": ["output_information", "units", "calculator_discovery"],
+        "query": "Which calculations predict long-term disease risk?",
+        "query_categories": ["output_information", "calculator_discovery"],
         "rubric": {
-            "standard": "CHA2DS2-VASc Score and Wells' Criteria",
-            "keywords": ["CHA2DS2-VASc", "Wells"]
+            "standard": "ASCVD 2013 Risk Calculator and CHA2DS2-VASc Score",
+            "keywords": [{"any": ["ASCVD", "Atherosclerotic Cardiovascular Disease"]}, {"any": ["CHA2DS2-VASc", "chads-vasc"]}]
         },
-        "notes": "Chatbot should understand the relationships between different calculators."
+        "notes": "Chatbot should understand similarities between different calculators."
     },
     {
         "query": "Which calculations have race as either a required or optional parameter?",
         "query_categories": ["input_information", "optional_parameter", "calculator_discovery"],
         "rubric": {
-            "standard": "2013 ASCVD Risk Calculator and MDRD Equation for GFR, ",
-            "keywords": ["ASCVD", "MDRD"]
+            "standard": "2013 ASCVD Risk Calculator and MDRD Equation for GFR",
+            "keywords": [{"any": ["ASCVD", "Atherosclerotic Cardiovascular Disease"]}, "MDRD"]
         },
-        "notes": "Chatbot should understand the relationships between different calculators."
+        "notes": "Chatbot should understand similarities between different calculators."
+    },
+    {
+        "query": "Which calculations have one or more optional parameters?",
+        "query_categories": ["input_information", "optional_parameter", "calculator_discovery"],
+        "rubric": {
+            "standard": "2021 CKD-EPI Equation for GFR, Corrected Calcium for Hypo- or Hyperalbuminemia, and MDRD GFR Equation",
+            "keywords": ["CKD-EPI", "correct", "ca", "MDRD"]
+        },
+        "notes": "Chatbot should understand similarities between different calculators."
+    },
+    {
+        "query": "For each of these calculations, what is the optional parameter?",
+        "query_categories": ["input_information", "optional_parameter", "context_switching"],
+        "rubric": {
+            "standard": "For the 2021 CKD-EPI Equation for GFR, cystatin-c is an optional parameter. For Corrected Calcium for Hypo- or Hyperalbuminemia, the normal albumin level is an optional parameter. For the MDRD GFR Equation, whether the race is Black is an optional parameter.",
+            "keywords": ["cystatin", "normal", "albumin", "race", "black"]
+        },
+        "notes": "Chatbot should find information about a subset of calculators."
+    },
+    {
+        "query": "Of these optional parameters, which ones are levels of substances found in the serum?",
+        "query_categories": ["input_information", "context_switching", "physiologic_quantities"],
+        "rubric": {
+            "standard": "Cystatin-c and the normal albumin level",
+            "keywords": ["cystatin", "normal", "albumin"]
+        },
+        "notes": "Chatbot should be able to answer queries about parameters, not just calculations."
+    },
+    {
+        "query": "Among all calculations, which produce a numeric probability, not a score?",
+        "query_categories": ["output_information", "units", "calculator_discovery", "context_switching"],
+        "rubric": {
+            "standard": "2013 ASCVD Risk Calculator",
+            "keywords": [{"any": ["ASCVD", "Atherosclerotic Cardiovascular Disease"]}]
+        },
+        "notes": "Chatbot should understand what is unique about certain calculators. Chatbot should also be able to switch back to answer queries about all the calculators."
+    },
+    {
+        "query": "Which calculations produce a score?",
+        "query_categories": ["output_information", "units", "calculator_discovery"],
+        "rubric": {
+            "standard": "CHA2DS2-VASc, NIH Stroke Scale, and Modified Wells' Criteria",
+            "keywords": [{"any": ["CHA2DS2-VASc", "chads-vasc"]}, "NIH", "Wells"]
+        },
+        "notes": "Chatbot should understand similarities between different calculators."
     }
 ]
