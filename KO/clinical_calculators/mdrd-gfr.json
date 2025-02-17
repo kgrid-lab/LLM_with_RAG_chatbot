@@ -3,7 +3,7 @@
     "@id": "mdrd-gfr",
     "koio:kgrid": "2",
     "@type": "koio:KnowledgeObject",
-    "dc:title": "MDRD GFR",
+    "dc:title": "MDRD GFR Equation",
     "dc:identifier": "ark:mdrd-gfr",
     "version": "v1.0",
     "dc:description": "Estimates the patient's glomerular filtration rate (GFR) given their sex, age, serum creatinine, and race.",
