@@ -417,7 +417,7 @@ for convo_path in args.conversations:
         logger.info(f"Aggregated results of running architecture {chatbot_architecture} on conversation {convo_path}:\n{key_result}")
         key_results[convo_path][chatbot_architecture] = key_result
 
-key_result_rows.extend(cat_ids)
+key_result_rows.extend(sorted(cat_ids))
 
 with open(args.output_csv, "w", encoding=ENC, newline='') as ocsv:
     csv_writer = csv.writer(ocsv)
