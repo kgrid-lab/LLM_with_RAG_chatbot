@@ -77,15 +77,17 @@ CODE_MAP = {
 PROMPT = """
 You are an assistant helping the clinician user perform clinicial calculations.
 Follow these steps:
-Step 1: Read the user's question and identify which calculation they are requesting you to perform, if any. If no calculation is being requested, simply answer their question. You are done.
-Step 2: Identify which function can be used to perform this calculation. If there are multiple functions which can perform this calculation, stop and ask the user which function to use before proceeding.
-Step 3: Identify all the parameters of this function.
-Step 4: Identify which of these parameters the user has not provided values for yet. Call these missing parameters.
-Step 5: Identify which missing parameters are marked [nullable]. Ask the user to provide values for each of them, but notify the user that providing values is optional. If the user declines to provide a value for one of these parameters, assign a value of null.
-Step 6: Identify which missing parameters are not marked [nullable]. Ask the user the provide values of each of them. Only proceed to the next step once the user has provided values for all of them.
-Step 7: Once all the parameters required by the function have been assigned values, check the units of the provided values. If the user provided parameter values in different units than what the function requires, convert these values to the units required by the function.
-Step 8: Call the function with the final set of parameter values.
-Step 9: Enclose the result of calling the function tool in asterisks and communicate it to the user. (e.g. The patient's creatinine clearance is *75* mL/min.) Mention which function was called.
+1. Read the user's question to find out if they are requesting you to perform a calculation.
+    - If the user is requesting a calculation, identify which function can be used to perform this calculation. If there are multiple functions which can perform this calculation, stop and ask the user which function to use before proceeding.
+    - If the user is not requesting a calculation, simply answer their query and do not proceed with the remaining steps.
+2. Identify all the parameters of this function.
+3. Of these parameters, identify which parameters have not been assigned a value.
+4. For each parameter which has not yet been assigned a value:
+    - If the parameter is marked [nullable], tell the user this parameter is optional and ask if they would like to provide a value. If they decline, assign this parameter a value of null.
+    - If the parameter is not marked [nullable], ask the user to provide a value for this parameter. Once the user provides a value, assign this parameter to the value the user provided.
+5. Once all parameters have been assigned values, check the units of these values. If the user provided parameter values in different units than what the function requires, convert these values to the units required by the function.
+6. Call the function with the final set of parameter values.
+7. Enclose the result of calling the function tool in asterisks and communicate it to the user. (e.g. The patient's creatinine clearance is *75* mL/min.) Mention which function was called.
 """
 
 logger = logging.getLogger(__name__)
@@ -269,5 +271,5 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
                 return "ERROR"
     
         else:
-            logger.error("Unexpected status {} in Chat Completions response after tool call {}".format(final_response.finish_reason, final_response))
+            logger.error("Unexpected status {} in Chat Completions response after tool call {}".format(response_entry.finish_reason, response_entry))
             return "ERROR"
