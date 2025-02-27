@@ -27,7 +27,6 @@
           "description": "The patient's weight in kilograms."
         }
       },
-      "requiredParameters": ["height", "weight"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/bsa.py"
     }
   }

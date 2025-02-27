@@ -30,11 +30,10 @@
           "description": "The patient's serum albumin level in grams per deciliter."
         },
         "nl_alb": {
-          "type": "number",
-          "description": "The normal serum albumin level. Optional. The default is 4 mg/dL."
+          "type": ["number", "null"],
+          "description": "[nullable] The normal serum albumin level to use as a reference in the calculation."
         }
       },
-      "requiredParameters": ["ca", "albumin"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/corr_ca_alb.py"
     }
   }

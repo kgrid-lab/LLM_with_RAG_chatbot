@@ -21,6 +21,7 @@
       "parameters": {
         "sex": {
           "type": "string",
+          "enum": ["male", "female"],
           "description": "Sex of the patient, male or female."
         },
         "age": {
@@ -32,11 +33,10 @@
           "description": "Serum creatinine concentration for the patient, in milligrams per deciliter."
         },
         "cystatinc": {
-          "type": "number",
-          "description": "[optional] Serum cystatin-c concentration for the patient, in milligrams per liter."
+          "type": ["number", "null"],
+          "description": "[nullable] Serum cystatin-c concentration for the patient, in milligrams per liter."
         }
       },
-      "requiredParameters": ["sex", "age", "creatinine"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/ckd_epi_gfr_2021.py"
     }
   }

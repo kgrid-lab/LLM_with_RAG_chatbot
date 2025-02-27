@@ -75,6 +75,7 @@ CODE_MAP = {
 
 
 def convert_ko_to_tool_metadata(ko_metadata):
+    params = ko_metadata["koio:hasKnowledge"]["parameters"]
     return {
         "type": "function",
         "function": {
@@ -82,10 +83,12 @@ def convert_ko_to_tool_metadata(ko_metadata):
             "description": "{}: {}".format(
                 ko_metadata["dc:title"], ko_metadata["dc:description"]
             ),
+            "strict": True,
             "parameters": {
                 "type": "object",
-                "properties": ko_metadata["koio:hasKnowledge"]["parameters"],
-                "required": ko_metadata["koio:hasKnowledge"]["requiredParameters"],
+                "properties": params,
+                "required": list(params.keys()),
+                "additionalProperties": False,
             },
         },
     }
@@ -141,19 +144,21 @@ class LlmWithKoCodeTools(Chatbot):
         self._assistant = self._client.beta.assistants.create(
             name="Clinical Calculator",
             instructions="""
-        You are an assistant helping the clinician user perform clinicial calculations.
-        Follow these steps:
-        Step 1: Read the user's question and identify which calculation they are requesting you to perform, if any.
-                If no calculation is being requested, simply answer their question. You are done.
-        Step 2: Gather values for all the required parameters.
-                - If the user has not provided values for all the required parameters, please ask them for the missing values. Do not proceed until the user has provided them all. You may need to ask multiple times.
-                - Some parameters are optional. Ask the user if they would like to provide values for the optional parameters. Do not proceed until the user has either provided values for the optional parameters or explicitly stated that they do not want to provide values.
-                - Sometimes, the user might provide values in different units than what the code requires. In this case, please convert them to the units required by the code.
-        Step 3: Once values have been obtained for all required parameters, call the function tool for the requested calculation with the gathered parameter values.
-        Step 4: Enclose the result of calling the function tool in asterisks and communicate it to the user. (e.g. The patient's creatinine clearance is *75* mL/min.)
-        """,
+You are an assistant helping the clinician user perform clinicial calculations.
+Follow these steps:
+Step 1: Read the user's question and identify which calculation they are requesting you to perform, if any. If no calculation is being requested, simply answer their question. You are done.
+Step 2: Identify which function can be used to perform this calculation. If there are multiple functions which can perform this calculation, stop and ask the user which function to use before proceeding.
+Step 3: Identify all the parameters of this function.
+Step 4: Identify which of these parameters the user has not provided values for yet. Call these missing parameters.
+Step 5: Identify which missing parameters are marked [nullable]. Ask the user to provide values for each of them, but notify the user that providing values is optional. If the user declines to provide a value for one of these parameters, assign a value of null.
+Step 6: Identify which missing parameters are not marked [nullable]. Ask the user the provide values of each of them. Only proceed to the next step once the user has provided values for all of them.
+Step 7: Once all the parameters required by the function have been assigned values, check the units of the provided values. If the user provided parameter values in different units than what the function requires, convert these values to the units required by the function.
+Step 8: Call the function with the final set of parameter values.
+Step 9: Enclose the result of calling the function tool in asterisks and communicate it to the user. (e.g. The patient's creatinine clearance is *75* mL/min.) Mention which function was called.
+            """,
             tools=tool_metadata_list,
             model=model_name,
+            temperature=0,
         )
 
         # Create a thread, which represents a conversation between

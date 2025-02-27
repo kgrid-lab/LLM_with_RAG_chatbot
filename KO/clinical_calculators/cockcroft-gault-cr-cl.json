@@ -21,6 +21,7 @@
       "parameters": {
         "sex": {
           "type": "string",
+          "enum": ["male", "female"],
           "description": "Sex of the patient, male or female."
         },
         "age": {
@@ -36,7 +37,6 @@
           "description": "Serum creatinine concentration for the patient, in milligrams per deciliter."
         }
       },
-      "requiredParameters": ["sex", "age", "weight", "creatinine"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/cockcroft_gault_cr_cl.py"
     }
   }

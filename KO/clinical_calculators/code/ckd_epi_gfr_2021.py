@@ -1,4 +1,6 @@
-def ckd_epi_gfr_2021(sex: str, age: int, creatinine: float, cystatinc=None) -> float:
+from typing import Optional
+
+def ckd_epi_gfr_2021(sex: str, age: int, creatinine: float, cystatinc: Optional[float]) -> float:
     """
     Parameters:
     - sex (str): Sex of the patient, male or female.

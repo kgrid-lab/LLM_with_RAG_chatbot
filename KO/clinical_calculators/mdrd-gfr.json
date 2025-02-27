@@ -3,7 +3,7 @@
     "@id": "mdrd-gfr",
     "koio:kgrid": "2",
     "@type": "koio:KnowledgeObject",
-    "dc:title": "MDRD GFR",
+    "dc:title": "MDRD GFR Equation",
     "dc:identifier": "ark:mdrd-gfr",
     "version": "v1.0",
     "dc:description": "Estimates the patient's glomerular filtration rate (GFR) given their sex, age, serum creatinine, and race.",
@@ -22,6 +22,7 @@
       "parameters": {
         "sex": {
           "type": "string",
+          "enum": ["male", "female"],
           "description": "The patient's sex, either male or female."
         },
         "age": {
@@ -33,11 +34,10 @@
           "description": "The patient's serum creatinine level in miligrams per deciliter."
         },
         "race_black": {
-          "type": "boolean",
-          "description": "Optional. True if the patient's race is Black. False otherwise."
+          "type": ["boolean", "null"],
+          "description": "[nullable] True if the patient's race is Black. False otherwise."
         }
       },
-      "requiredParameters": ["sex", "age", "cr"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/mdrd_gfr.py"
     }
   }

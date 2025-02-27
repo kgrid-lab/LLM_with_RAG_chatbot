@@ -1,4 +1,6 @@
-def mdrd_gfr(sex: str, age: int, cr: float, race_black: bool = False) -> float:
+from typing import Optional
+
+def mdrd_gfr(sex: str, age: int, cr: float, race_black: Optional[bool]) -> float:
     """
     Parameters:
     - sex: The patient's sex, either male or female.

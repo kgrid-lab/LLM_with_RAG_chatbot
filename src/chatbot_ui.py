@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, request
 from flask_caching import Cache
 
-from chatbots import LlmWithKoCodeTools, LlmWithRagKosAndExternalInterpreter
+from chatbots import init_chatbot_from_str, chatbot_options
 
 parser = argparse.ArgumentParser(
     description="Web UI for chatbot. Point your browser to http://localhost:5000"
@@ -26,15 +26,10 @@ parser.add_argument(
     "-a",
     default="LlmWithKoCodeTools",
     type=str,
-    choices=("LlmWithRagKosAndExternalInterpreter", "LlmWithKoCodeTools"),
+    choices=chatbot_options,
     help="Which chatbot architecture to use.",
 )
 args = parser.parse_args()
-
-class_mapping = {
-    "LlmWithRagKosAndExternalInterpreter": LlmWithRagKosAndExternalInterpreter,
-    "LlmWithKoCodeTools": LlmWithKoCodeTools,
-}
 
 # Configure logging to include date and time
 logger = logging.getLogger()
@@ -64,9 +59,9 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 model_name = os.getenv("MODEL")
 knowledge_base = os.getenv("KNOWLEDGE_BASE")
 model_seed = int(os.getenv("MODEL_SEED"))
-chatbot = class_mapping[args.chatbot_architecture](
-    OPENAI_API_KEY, model_name, model_seed, knowledge_base
-)
+embedding_model = os.getenv("EMBEDDING_MODEL")
+embedding_dimension = int(os.getenv("EMBEDDING_DIMENSION"))
+chatbot = init_chatbot_from_str(args.chatbot_architecture, OPENAI_API_KEY, model_name, model_seed, knowledge_base, embedding_model, embedding_dimension)
 
 
 @app.route("/")

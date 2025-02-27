@@ -195,23 +195,6 @@
           "description": "The patient's ability to maintain attention or lack thereof."
         }
       },
-      "requiredParameters": [
-        "consciousness",
-        "month_and_age_questions",
-        "blink_eyes_and_squeeze_hands",
-        "horizontal_extraocular_movements",
-        "visual_fields",
-        "facial_palsy",
-        "left_arm_motor_drift",
-        "right_arm_motor_drift",
-        "left_leg_motor_drift",
-        "right_leg_motor_drift",
-        "limb_ataxia",
-        "sensation",
-        "language",
-        "dysarthria",
-        "inattention"
-      ],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/nihss.py"
     }
   }

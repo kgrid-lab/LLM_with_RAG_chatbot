@@ -50,7 +50,6 @@
           "description": "True if the patient has a malignancy that has been treated within the past 6 months or has received palliative care. False otherwise."
         }
       },
-      "requiredParameters": ["clin_sx_dvt", "pe_1_dx", "hr_gt_100", "immob_surg", "prev_dx", "hemoptysis", "malignancy"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/wells.py"
     }
   }

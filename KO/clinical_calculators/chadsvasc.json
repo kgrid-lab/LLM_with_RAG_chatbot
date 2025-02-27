@@ -25,6 +25,7 @@
         },
         "sex": {
           "type": "string",
+          "enum": ["male", "female"],
           "description": "The patient's sex, male or female."
         },
         "chf": {
@@ -48,7 +49,6 @@
           "description": "True if the patient has a history of diabetes. False otherwise."
         }
       },
-      "requiredParameters": ["age", "sex", "chf", "htn", "stroke", "vasc", "dm"],
       "implementedBy": "https://raw.githubusercontent.com/kgrid-lab/LLM_with_RAG_chatbot/main/KO/clinical_calculators/code/chadsvasc.py"
     }
   }

@@ -3,3 +3,4 @@ flask_session
 __pycache__/
 *.log
 chatbot_logs.log.*
+*.csv
