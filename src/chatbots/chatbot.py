@@ -7,7 +7,7 @@ class Chatbot:
         """Returns a human-readable string describing the architecture of the Chatbot."""
         pass
 
-    def invoke(self, query: str) -> str:
+    def invoke(self, query: str, session_id: str) -> str:
         """
         The main entry point to interact with a Chatbot.
         Parameters:

@@ -62,7 +62,7 @@ class PlainLlm(Chatbot):
             "role": "system"
         }]
 
-    def invoke(self, query: str) -> str:
+    def invoke(self, query: str, session_id:str) -> str:
         # Add the user's query to the end of the message list.
         self._messages.append({
             "content": query,

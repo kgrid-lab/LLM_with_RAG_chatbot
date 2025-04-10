@@ -21,6 +21,7 @@ from KO.clinical_calculators.code.mean_arterial_pressure import mean_arterial_pr
 import KO.clinical_calculators.code.nihss as nihss
 from KO.clinical_calculators.code.wells import wells
 
+
 def nihss_adapter(
     consciousness: str,
     month_and_age_questions: str,
@@ -55,6 +56,7 @@ def nihss_adapter(
         nihss.Dysarthria[dysarthria],
         nihss.ExtinctionInattention[inattention],
     )
+
 
 ENC = "utf-8"
 
@@ -92,6 +94,7 @@ Follow these steps:
 
 logger = logging.getLogger(__name__)
 
+
 def convert_ko_to_tool_metadata(ko_metadata):
     params = ko_metadata["koio:hasKnowledge"]["parameters"]
     return {
@@ -111,6 +114,7 @@ def convert_ko_to_tool_metadata(ko_metadata):
         },
     }
 
+
 class LlmWithKoRagMetadataAndCodeTools(Chatbot):
     """
     Through RAG, the LLM has access to a database of the KO metadata files in
@@ -122,7 +126,12 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
     """
 
     def __init__(
-        self, openai_api_key: str, model_name: str, embedding_model_name: str, embedding_dimension: int, knowledge_base: str
+        self,
+        openai_api_key: str,
+        model_name: str,
+        embedding_model_name: str,
+        embedding_dimension: int,
+        knowledge_base: str,
     ):
         """
         Constructor
@@ -139,6 +148,8 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
 
         # Initialize Qdrant client.
         self._db_client = QdrantClient(location=":memory:")
+
+        self._thread_messages = {}
 
         # Save certain variables for later use.
         self._model_name = model_name
@@ -161,7 +172,9 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
         if not self._db_client.collection_exists(KO_DB_NAME):
             self._db_client.create_collection(
                 collection_name=KO_DB_NAME,
-                vectors_config=VectorParams(size=self._embedding_dimension, distance=Distance.COSINE),
+                vectors_config=VectorParams(
+                    size=self._embedding_dimension, distance=Distance.COSINE
+                ),
             )
 
         # Load KO metadata JSON files into vector database.
@@ -171,8 +184,8 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
         points = [
             PointStruct(
                 id=idx,
-                vector = self.create_embedding(json.dumps(ko_metadata)),
-                payload = ko_metadata
+                vector=self.create_embedding(json.dumps(ko_metadata)),
+                payload=ko_metadata,
             )
             for idx, ko_metadata in enumerate(ko_metadata_list)
         ]
@@ -180,44 +193,39 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
 
         # Build a list of messages for the LLM to respond to.
         # The list will begin with a system message containing the prompt.
-        self._messages = [{
-            "content": PROMPT,
-            "role": "system"
-        }]
-    
-    def create_embedding(self, input: str):
-        return self._client.embeddings.create(
-            input=input,
-            model=self._embedding_model_name
-        ).data[0].embedding
+        #self._messages = [{"content": PROMPT, "role": "system"}]
 
-    def invoke(self, query: str) -> str:
+    def create_embedding(self, input: str):
+        return (
+            self._client.embeddings.create(
+                input=input, model=self._embedding_model_name
+            )
+            .data[0]
+            .embedding
+        )
+
+    def invoke(self, query: str, session_id: str) -> str:
+        if session_id not in self._thread_messages:
+            self._thread_messages[session_id] = [{"content": PROMPT, "role": "system"}]
+        thread_messages = self._thread_messages[session_id]
         # Create an embedding from the query.
         query_embedding = self.create_embedding(query)
-        
+
         # Retrieve the closest-match KO metadata JSON file from the database based on the query embedding.
         hits = self._db_client.search(
-            collection_name=KO_DB_NAME,
-            query_vector=query_embedding,
-            limit=1
+            collection_name=KO_DB_NAME, query_vector=query_embedding, limit=1
         )
         ko_metadata_str = json.dumps(hits[0].payload)
 
         # RAG: Add a message to the list containing the KO metadata file.
-        self._messages.append({
-            "content": ko_metadata_str,
-            "role": "system"
-        })
+        thread_messages.append({"content": ko_metadata_str, "role": "system"})
 
         # Add the user's query to the end of the message list.
-        self._messages.append({
-            "content": query,
-            "role": "user"
-        })
+        thread_messages.append({"content": query, "role": "user"})
 
         # Ask the LLM to respond to the messages using the OpenAI Chat Completions API.
         response = self._client.chat.completions.create(
-            messages=self._messages,
+            messages=thread_messages,
             model=self._model_name,
             tools=self._tool_metadata_list,
             temperature=0
@@ -225,34 +233,48 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
 
         # Process the response.
         if len(response.choices) != 1:
-            logger.error("Unexpected number of choice entries in Chat Completions response {}".format(response))
+            logger.error(
+                "Unexpected number of choice entries in Chat Completions response {}".format(
+                    response
+                )
+            )
             return "ERROR"
         response_entry = response.choices[0]
 
         # If the LLM is done, return the response.
         if response_entry.finish_reason == "stop":
-            self._messages.append(response_entry.message)
+            thread_messages.append(response_entry.message)
             return response_entry.message.content
-        
+
         # If the LLM is waiting for a function tool to be called,
         # call that function and send the LLM the result.
         elif response_entry.finish_reason == "tool_calls":
-            self._messages.append(response_entry.message)
+            thread_messages.append(response_entry.message)
             if len(response_entry.message.tool_calls) != 1:
-                logger.error("Unexpected number of tool calls in Chat Completions response {}".format(response))
+                logger.error(
+                    "Unexpected number of tool calls in Chat Completions response {}".format(
+                        response
+                    )
+                )
                 return "ERROR"
             tool_call = response_entry.message.tool_calls[0]
             if tool_call.type != "function":
-                logger.error("Unexpected tool call type in Chat Completions response {}".format(response))
+                logger.error(
+                    "Unexpected tool call type in Chat Completions response {}".format(
+                        response
+                    )
+                )
             func = tool_call.function.name
             args = json.loads(tool_call.function.arguments)
-            self._messages.append({
-                "role": "tool",
-                "content": str(CODE_MAP[func](**args)),
-                "tool_call_id": tool_call.id
-            })
+            thread_messages.append(
+                {
+                    "role": "tool",
+                    "content": str(CODE_MAP[func](**args)),
+                    "tool_call_id": tool_call.id,
+                }
+            )
             response_after_tool_call = self._client.chat.completions.create(
-                messages=self._messages,
+                messages=thread_messages,
                 model=self._model_name,
                 tools=self._tool_metadata_list,
                 temperature=0
@@ -260,16 +282,28 @@ class LlmWithKoRagMetadataAndCodeTools(Chatbot):
 
             # Extract the final response from the LLM and return it.
             if len(response_after_tool_call.choices) != 1:
-                logger.error("Unexpected number of choice entries in Chat Completions response {}".format(response))
+                logger.error(
+                    "Unexpected number of choice entries in Chat Completions response {}".format(
+                        response
+                    )
+                )
                 return "ERROR"
             final_response = response_after_tool_call.choices[0]
             if final_response.finish_reason == "stop":
-                self._messages.append(final_response.message)
+                thread_messages.append(final_response.message)
                 return final_response.message.content
             else:
-                logger.error("Unexpected status {} in Chat Completions response after tool call {}".format(final_response.finish_reason, final_response))
+                logger.error(
+                    "Unexpected status {} in Chat Completions response after tool call {}".format(
+                        final_response.finish_reason, final_response
+                    )
+                )
                 return "ERROR"
-    
+
         else:
-            logger.error("Unexpected status {} in Chat Completions response after tool call {}".format(response_entry.finish_reason, response_entry))
+            logger.error(
+                "Unexpected status {} in Chat Completions response after tool call {}".format(
+                    response_entry.finish_reason, response_entry
+                )
+            )
             return "ERROR"

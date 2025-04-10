@@ -163,25 +163,31 @@ Step 9: Enclose the result of calling the function tool in asterisks and communi
 
         # Create a thread, which represents a conversation between
         # the clinician and the assistant.
-        self._thread = self._client.beta.threads.create()
-
-    def invoke(self, query: str) -> str:
+        #self._thread = self._client.beta.threads.create()
+        self._user_threads={}
+        
+    def invoke(self, query: str, session_id:str) -> str:
         # Add a message to the thread containing the clinician's query.
+        if session_id not in self._user_threads:
+            thread = self._client.beta.threads.create()
+            self._user_threads[session_id] = thread.id
+        
+        thread_id =self._user_threads[session_id]    
         self._client.beta.threads.messages.create(
-            thread_id=self._thread.id, role="user", content=query
+            thread_id=thread_id, role="user", content=query
         )
 
         # Asking the LLM to respond to the query is an asynchronous task,
         # so we simply wait until it is done (i.e. create_and_poll).
         run = self._client.beta.threads.runs.create_and_poll(
-            thread_id=self._thread.id, assistant_id=self._assistant.id
+            thread_id=thread_id, assistant_id=self._assistant.id
         )
 
         # If the LLM finishes without needing to call a tool, return the response.
         # If the LLM requires a tool call, call the python function and feed the LLM
         # the result.
         if run.status == "completed":
-            return get_latest_response(self._client, self._thread.id, run.id)
+            return get_latest_response(self._client, thread_id, run.id)
         elif run.status == "requires_action":
             # Define the list to store tool outputs
             tool_outputs = []
@@ -203,7 +209,7 @@ Step 9: Enclose the result of calling the function tool in asterisks and communi
             if tool_outputs:
                 run_w_tool_outputs = (
                     self._client.beta.threads.runs.submit_tool_outputs_and_poll(
-                        thread_id=self._thread.id,
+                        thread_id=thread_id,
                         run_id=run.id,
                         tool_outputs=tool_outputs,
                     )
@@ -211,7 +217,7 @@ Step 9: Enclose the result of calling the function tool in asterisks and communi
 
                 if run_w_tool_outputs.status == "completed":
                     return get_latest_response(
-                        self._client, self._thread.id, run_w_tool_outputs.id
+                        self._client, thread_id, run_w_tool_outputs.id
                     )
                 else:
                     logger.error(

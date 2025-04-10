@@ -197,7 +197,7 @@ class LlmWithRagKosAndExternalInterpreter(Chatbot):
     def get_architecture(self) -> str:
         return "LLM with RAG KOs and external evaluator"
 
-    def invoke(self, query: str) -> str:
+    def invoke(self, query: str, session_id:str) -> str:
         response = self.process(query, self._conversation_history)
 
         code = extract_code(response)

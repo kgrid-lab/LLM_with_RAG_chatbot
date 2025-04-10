@@ -24,7 +24,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument(
     "--chatbot_architecture",
     "-a",
-    default="LlmWithKoCodeTools",
+    default="LlmWithKoRagMetadataAndCodeTools",
     type=str,
     choices=chatbot_options,
     help="Which chatbot architecture to use.",
@@ -69,8 +69,8 @@ def home():
     return render_template("index.html")
 
 
-def background_task(task_id, user_question):
-    response = chatbot.invoke(user_question)
+def background_task(task_id, user_question, session_id):
+    response = chatbot.invoke(user_question, session_id)
     # Log the question and response with date and time
     logger.info("Question: %s", user_question)
     logger.info("Response: %s", response)
@@ -81,9 +81,13 @@ def background_task(task_id, user_question):
 def get_response():
     data = request.get_json()
     user_question = data["question"]
-
+    session_id = data["session_id"]
+    
+    if not session_id or not user_question:
+        return jsonify({"error": "Missing session_id or query"}), 400
+    
     task_id = str(uuid.uuid4())
-    thread = threading.Thread(target=background_task, args=(task_id, user_question))
+    thread = threading.Thread(target=background_task, args=(task_id, user_question, session_id))
     thread.start()
 
     return jsonify(task_id=task_id)

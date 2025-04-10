@@ -163,7 +163,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ question: question, history: history })
+                body: JSON.stringify({ question: question, history: history, session_id: getSessionId() })
             })
             .then(response => response.json())
             .then(data => {
@@ -227,6 +227,15 @@
                     <div class="conversation-divider"></div>
                 `;
             });
+        }
+
+        function getSessionId() {
+            let sessionId = localStorage.getItem("session_id");
+            if (!sessionId) {
+                sessionId = crypto.randomUUID(); // Or a secure custom generator
+                localStorage.setItem("session_id", sessionId);
+            }
+            return sessionId;
         }
 
         window.onload = function() {

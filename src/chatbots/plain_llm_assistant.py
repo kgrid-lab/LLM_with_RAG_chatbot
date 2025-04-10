@@ -55,7 +55,7 @@ Step 6: Communicate the result of the calculation to the user.
         # the clinician and the assistant.
         self._thread = self._client.beta.threads.create()
 
-    def invoke(self, query: str) -> str:
+    def invoke(self, query: str, session_id: str) -> str:
         # Add a message to the thread containing the clinician's query.
         self._client.beta.threads.messages.create(
             thread_id=self._thread.id, role="user", content=query
