@@ -1,4 +1,5 @@
 # Integrating LLMs with CBK for Clinical Decision Support
+**This is an experimental system for research purposes only. It is not intended for medical use.**
 We have implemented a conversational chatbot that clinicians can use to perform calculations. By integrating with Computational Biomedical Knowledge (CBK), ensure computations rely on curated, evidence-based rules, thereby avoiding hallucinations and nondeterminism, which unaided LLMs may be prone to. We implemented this chatbot in two different ways, for purposes of comparison:
 
 ## Intelligent Chatbot for Biomedical Knowledge Retrieval and Execution, Using Retrieval-Augmented Generation with LLMs
